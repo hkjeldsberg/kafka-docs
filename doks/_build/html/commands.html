@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Kafka Basics &#8212; Kafta Basics</title>
+    <title>Kafka Basics &#8212; Kafka Fundamentals Docs</title>
   
   
   
@@ -65,7 +65,7 @@ const thebe_selector_output = ".output, .cell_output"
     <script>DOCUMENTATION_OPTIONS.pagename = 'commands';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="Kafta Documentation" href="index.html" />
+    <link rel="prev" title="Kafka Documentations" href="index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="None"/>
   </head>
@@ -152,13 +152,15 @@ const thebe_selector_output = ".output, .cell_output"
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
                 <a class="reference internal" href="index.html">
-                    Kafta Documentation
+                    Kafka Documentations
                 </a>
             </li>
         </ul>
-        <p aria-level="2" class="caption" role="heading"><span class="caption-text">kafka basics</span></p>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Fundamentals</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Kafka Basics</a></li>
+
+
 </ul>
 
     </div>
@@ -352,6 +354,7 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Kafka Basics</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tough-concepts-of-kafka">Tough concepts of Kafka</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-kafka-and-log-system">Why Kafka and log system?</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kafka-fundamentals">Kafka Fundamentals</a></li>
@@ -368,6 +371,16 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#compacted-topics">Compacted topics</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#security">Security</a></li>
 </ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#integrating-kafka-into-you-environment">Integrating Kafka into you Environment</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#confluent-rest-proxy">Confluent REST Proxy</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#schema-evolution">Schema evolution</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#confluent-ksqldb">Confluent ksqlDB</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#kafka-streams">Kafka Streams</a></li>
+</ul>
+
             </nav>
         </div>
     </div>
@@ -555,6 +568,37 @@ entries in the partition.</p>
 supports authentication and authorization, but using security is <em>optional</em>. However,</p>
 </section>
 </section>
+<section class="tex2jax_ignore mathjax_ignore" id="integrating-kafka-into-you-environment">
+<h1>Integrating Kafka into you Environment<a class="headerlink" href="#integrating-kafka-into-you-environment" title="Permalink to this headline">#</a></h1>
+<p>Kafka can be integrated with any system; through <strong>Kafka Connect API</strong> – a data integration framework to get data in and
+out of Kafka. Connect runs on a separate server, between the source and the Kafka cluster. Similarly, betwene the Kafka
+cluster and the sink. Lots of these connectors already exists between existing frameworks and Kafka Connect. Connect is
+a distrituted system with <span class="math notranslate nohighlight">\(n\)</span> workers running one or more <strong>tasks</strong>. Each task runs with a connector, which can again be
+partitioned into multiple pieces. Connectors can thus be split between multiple workers.</p>
+<section id="confluent-rest-proxy">
+<h2>Confluent REST Proxy<a class="headerlink" href="#confluent-rest-proxy" title="Permalink to this headline">#</a></h2>
+<p>Used to talk to non-native Kafka Apps and outside the Firewall – using a RESTful interface.</p>
+</section>
+<section id="schema-evolution">
+<h2>Schema evolution<a class="headerlink" href="#schema-evolution" title="Permalink to this headline">#</a></h2>
+<p>This can be solved using a Schema Registry; a type descrition will translate into a expected field for each Kafka
+topics. A schema registry works outside the Kafka Cluster, and are kepy in an internal topic in the Kafka cluster,
+communicating with the Producer and Consumer. Consumer can ask for schema though a <strong>schema ID</strong>, to recognize the data
+format.</p>
+<p>Avro: a container file which consists of a <em>metadata</em> (schema) part and a <em>data</em> part, where the schema syntax is
+similar to <code class="docutils literal notranslate"><span class="pre">json</span></code>.</p>
+</section>
+<section id="confluent-ksqldb">
+<h2>Confluent ksqlDB<a class="headerlink" href="#confluent-ksqldb" title="Permalink to this headline">#</a></h2>
+<p>Streaming SQL enging for Kafka using SQL-like semantics. Example use cases include streaming ETL, anomaly detection and
+event monitoring. The system can be accessed via CLI, REST or headless using any programming language.</p>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="kafka-streams">
+<h1>Kafka Streams<a class="headerlink" href="#kafka-streams" title="Permalink to this headline">#</a></h1>
+<p>Kafka Streams is a Java API for doing stream processing on data in Apache Kafka. This combines the streams for Java with
+the Kafka, particularly usefull for microservices and continous queries and transformations.</p>
+</section>
 
     <script type="text/x-thebe-config">
     {
@@ -590,7 +634,7 @@ supports authentication and authorization, but using security is <em>optional</e
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Kafta Documentation</p>
+        <p class="prev-next-title">Kafka Documentations</p>
       </div>
     </a>
 </div>
@@ -608,6 +652,7 @@ supports authentication and authorization, but using security is <em>optional</e
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Kafka Basics</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tough-concepts-of-kafka">Tough concepts of Kafka</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-kafka-and-log-system">Why Kafka and log system?</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kafka-fundamentals">Kafka Fundamentals</a></li>
@@ -624,6 +669,16 @@ supports authentication and authorization, but using security is <em>optional</e
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#compacted-topics">Compacted topics</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#security">Security</a></li>
 </ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#integrating-kafka-into-you-environment">Integrating Kafka into you Environment</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#confluent-rest-proxy">Confluent REST Proxy</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#schema-evolution">Schema evolution</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#confluent-ksqldb">Confluent ksqlDB</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#kafka-streams">Kafka Streams</a></li>
+</ul>
+
   </nav></div>
 
 </div></div>

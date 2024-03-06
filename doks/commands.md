@@ -194,7 +194,7 @@ entries in the partition.
 Kafka will encrypt using SSL or similar all types of transits (producer to broker, broker to consumer, ect.). Kafka also
 supports authentication and authorization, but using security is *optional*. However,
 
-# Integrating Kafka into you Environment
+## Integrating Kafka into you Environment
 
 Kafka can be integrated with any system; through **Kafka Connect API** – a data integration framework to get data in and
 out of Kafka. Connect runs on a separate server, between the source and the Kafka cluster. Similarly, betwene the Kafka
@@ -221,7 +221,7 @@ similar to `json`.
 Streaming SQL enging for Kafka using SQL-like semantics. Example use cases include streaming ETL, anomaly detection and
 event monitoring. The system can be accessed via CLI, REST or headless using any programming language.
 
-# Kafka Streams
+## Kafka Streams
 
 Kafka Streams is a Java API for doing stream processing on data in Apache Kafka. This combines the streams for Java with
 the Kafka, particularly usefull for microservices and continous queries and transformations. 

@@ -192,4 +192,37 @@ entries in the partition.
 ## Security
 
 Kafka will encrypt using SSL or similar all types of transits (producer to broker, broker to consumer, ect.). Kafka also
-supports authentication and authorization, but using security is *optional*. However, 
+supports authentication and authorization, but using security is *optional*. However,
+
+# Integrating Kafka into you Environment
+
+Kafka can be integrated with any system; through **Kafka Connect API** – a data integration framework to get data in and
+out of Kafka. Connect runs on a separate server, between the source and the Kafka cluster. Similarly, betwene the Kafka
+cluster and the sink. Lots of these connectors already exists between existing frameworks and Kafka Connect. Connect is
+a distrituted system with $n$ workers running one or more **tasks**. Each task runs with a connector, which can again be
+partitioned into multiple pieces. Connectors can thus be split between multiple workers.
+
+## Confluent REST Proxy
+
+Used to talk to non-native Kafka Apps and outside the Firewall – using a RESTful interface.
+
+## Schema evolution
+
+This can be solved using a Schema Registry; a type descrition will translate into a expected field for each Kafka
+topics. A schema registry works outside the Kafka Cluster, and are kepy in an internal topic in the Kafka cluster,
+communicating with the Producer and Consumer. Consumer can ask for schema though a **schema ID**, to recognize the data
+format.
+
+Avro: a container file which consists of a *metadata* (schema) part and a *data* part, where the schema syntax is
+similar to `json`.
+
+## Confluent ksqlDB
+
+Streaming SQL enging for Kafka using SQL-like semantics. Example use cases include streaming ETL, anomaly detection and
+event monitoring. The system can be accessed via CLI, REST or headless using any programming language.
+
+# Kafka Streams
+
+Kafka Streams is a Java API for doing stream processing on data in Apache Kafka. This combines the streams for Java with
+the Kafka, particularly usefull for microservices and continous queries and transformations. 
+
