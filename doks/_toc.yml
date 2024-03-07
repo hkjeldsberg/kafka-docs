@@ -8,4 +8,14 @@ parts:
   - caption: Kafka Fundamentals
     chapters:
       - file: commands
+      - file: fundamentals
+      - file: streams
+      - file: connect
+      - file: producers
+      - file: consumers
+      - file: ksql
+      - file: avro
+      - file: config
+      - file: schemreg
+      - file: auth
 

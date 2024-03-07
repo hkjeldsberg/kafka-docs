@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Kafka Documentations &#8212; Kafka Fundamentals Docs</title>
+    <title>Kafka configuration &#8212; Kafka Fundamentals Docs</title>
   
   
   
@@ -60,10 +60,11 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'index';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'config';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Kafka basic CLI commands" href="commands.html" />
+    <link rel="next" title="&lt;no title&gt;" href="monitoring.html" />
+    <link rel="prev" title="&lt;no title&gt;" href="avro.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="None"/>
   </head>
@@ -129,7 +130,7 @@ const thebe_selector_output = ".output, .cell_output"
         <div class="sidebar-primary-item">
   
 
-<a class="navbar-brand logo" href="#">
+<a class="navbar-brand logo" href="index.html">
   
   
   
@@ -148,20 +149,20 @@ const thebe_selector_output = ".output, .cell_output"
     <div class="bd-toc-item navbar-nav active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
-            <li class="toctree-l1 current active">
-                <a class="reference internal" href="#">
+            <li class="toctree-l1">
+                <a class="reference internal" href="index.html">
                     Kafka Documentations
                 </a>
             </li>
         </ul>
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Fundamentals</span></p>
-<ul class="nav bd-sidenav">
+<ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="commands.html">Kafka basic CLI commands</a></li>
 <li class="toctree-l1"><a class="reference internal" href="fundamentals.html">Kafka Basics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="streams.html">Kafka Streams</a></li>
 <li class="toctree-l1"><a class="reference internal" href="producers.html">Working with Producers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="consumers.html">Working with Consumers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="config.html">Kafka configuration</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Kafka configuration</a></li>
 </ul>
 
     </div>
@@ -233,7 +234,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="https://github.com/kvslab/OasisMove/issues/new?title=Issue%20on%20page%20%2Findex.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/kvslab/OasisMove/issues/new?title=Issue%20on%20page%20%2Fconfig.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -263,7 +264,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="_sources/index.md" target="_blank"
+      <li><a href="_sources/config.md" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -345,7 +346,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Kafka Documentations</h1>
+    <h1>Kafka configuration</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -355,7 +356,9 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contents">Contents</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cli-configuration">CLI configuration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#programmatic-configuration">Programmatic configuration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#things-to-consider-when-configuring-topics">Things to consider when configuring Topics</a></li>
 </ul>
             </nav>
         </div>
@@ -367,22 +370,53 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="kafka-documentations">
-<h1>Kafka Documentations<a class="headerlink" href="#kafka-documentations" title="Permalink to this headline">#</a></h1>
-<p>This documentation contains fundamentals of Kafka and Kafka related services.</p>
-<section id="contents">
-<h2>Contents<a class="headerlink" href="#contents" title="Permalink to this headline">#</a></h2>
-<div class="toctree-wrapper compound">
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Fundamentals</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="commands.html">Kafka basic CLI commands</a></li>
-<li class="toctree-l1"><a class="reference internal" href="fundamentals.html">Kafka Basics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="streams.html">Kafka Streams</a></li>
-<li class="toctree-l1"><a class="reference internal" href="producers.html">Working with Producers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="consumers.html">Working with Consumers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="config.html">Kafka configuration</a></li>
-</ul>
+  <section class="tex2jax_ignore mathjax_ignore" id="kafka-configuration">
+<h1>Kafka configuration<a class="headerlink" href="#kafka-configuration" title="Permalink to this headline">#</a></h1>
+<section id="cli-configuration">
+<h2>CLI configuration<a class="headerlink" href="#cli-configuration" title="Permalink to this headline">#</a></h2>
+<p>Modifying broker configuration can be performed by editing <code class="docutils literal notranslate"><span class="pre">server.properties</span></code> or by using <code class="docutils literal notranslate"><span class="pre">kafka-configs</span></code>. Given a
+current configuration for a broker (1):</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">kafka-configs --bootstrap-server localhost:9092 --entity-type brokers --entity-name 1 --describe</span>
+</pre></div>
 </div>
+<p>We can modify this configuration by passing the <code class="docutils literal notranslate"><span class="pre">--alter</span></code> command:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">kafka-configs --bootstrap-server localhost:9092 --entity-type brokers --entity-name 1 --alter --addconfig log.cleaner.threads=2</span>
+</pre></div>
+</div>
+<p>Configurations can also be specified when creating a new topic with <code class="docutils literal notranslate"><span class="pre">kafka-topics</span></code>:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">kafka-topics .... --config max.message.bytes=64000</span>
+</pre></div>
+</div>
+<p>Similarly, these topics can be altered by using <code class="docutils literal notranslate"><span class="pre">--entity-type</span> <span class="pre">topics</span></code> with <code class="docutils literal notranslate"><span class="pre">kafka-configs</span></code>.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">kafka-configs --zookeeper localhost:2181 --entity-type topics --entity-name configured-topic --alter</span>
+<span class="go">--add-config max.message.bytes=65000</span>
+</pre></div>
+</div>
+<p>Furthermore, a <strong>broker-wide</strong> default topic configuration may be applied using `kafka-configs:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">kafka-configs --bootstrap-server localhost:9092 --entity-type brokers --entity-name 1 --alter --addconfig message.max.bytes=66000</span>
+</pre></div>
+</div>
+</section>
+<section id="programmatic-configuration">
+<h2>Programmatic configuration<a class="headerlink" href="#programmatic-configuration" title="Permalink to this headline">#</a></h2>
+<p>Clients can be confuigured programmatically in Java using a <code class="docutils literal notranslate"><span class="pre">Properties</span></code> object:</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">Properties</span><span class="w"> </span><span class="n">props</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Properties</span><span class="p">();</span>
+<span class="n">props</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&quot;bootstrap.servers&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;localhost:9092&quot;</span><span class="p">);</span>
+<span class="n">props</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&quot;key.serializer&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;org.apache.kafka.common.serialization.StringSerializer&quot;</span><span class="p">);</span>
+<span class="n">props</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&quot;value.serializer&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;org.apache.kafka.common.serialization.StringSerializer&quot;</span><span class="p">);</span>
+<span class="n">Producer</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">producer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">KafkaProducer</span><span class="o">&lt;&gt;</span><span class="p">(</span><span class="n">props</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="things-to-consider-when-configuring-topics">
+<h2>Things to consider when configuring Topics<a class="headerlink" href="#things-to-consider-when-configuring-topics" title="Permalink to this headline">#</a></h2>
+<p>When designing topics, consider the following:</p>
+<ul class="simple">
+<li><p>How many brokers are available? (limits number of replicas)</p></li>
+<li><p>What is the need for fault tolerance (through replication factor)</p></li>
+<li><p>How many consumers per consumer group (determines number of partitions)</p></li>
+<li><p>How much memory is available (brokers have default 1 MB per partition)</p></li>
+</ul>
 </section>
 </section>
 
@@ -414,12 +448,21 @@ document.write(`
                 <footer class="bd-footer-article">
                   <!-- Previous / next buttons -->
 <div class="prev-next-area">
+    <a class="left-prev"
+       href="avro.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">&lt;no title&gt;</p>
+      </div>
+    </a>
     <a class="right-next"
-       href="commands.html"
+       href="monitoring.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Kafka basic CLI commands</p>
+        <p class="prev-next-title">&lt;no title&gt;</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -438,7 +481,9 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contents">Contents</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cli-configuration">CLI configuration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#programmatic-configuration">Programmatic configuration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#things-to-consider-when-configuring-topics">Things to consider when configuring Topics</a></li>
 </ul>
   </nav></div>
 

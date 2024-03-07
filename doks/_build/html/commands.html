@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Kafka Basics &#8212; Kafka Fundamentals Docs</title>
+    <title>Kafka basic CLI commands &#8212; Kafka Fundamentals Docs</title>
   
   
   
@@ -60,11 +60,10 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
-    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'commands';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Kafka Basics" href="fundamentals.html" />
     <link rel="prev" title="Kafka Documentations" href="index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="None"/>
@@ -158,9 +157,12 @@ const thebe_selector_output = ".output, .cell_output"
         </ul>
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Fundamentals</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Kafka Basics</a></li>
-
-
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Kafka basic CLI commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fundamentals.html">Kafka Basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="streams.html">Kafka Streams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="producers.html">Working with Producers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="consumers.html">Working with Consumers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config.html">Kafka configuration</a></li>
 </ul>
 
     </div>
@@ -344,7 +346,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Kafka Basics</h1>
+    <h1>Kafka basic CLI commands</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -354,33 +356,9 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Kafka Basics</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tough-concepts-of-kafka">Tough concepts of Kafka</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-kafka-and-log-system">Why Kafka and log system?</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kafka-fundamentals">Kafka Fundamentals</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#brokers">Brokers</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#producers">Producers</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#consumers">Consumers</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#creating-topics-producers-and-consumers-command-line">Creating topics, producers and consumers (Command-line)</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-kafka-works">How Kafka works</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#leadershit-and-replication-within-a-partition">Leadershit and Replication within a Partition</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-retention">Data retention</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#producer-design">Producer design</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exactly-once-semantics">Exactly once semantics</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#consumer-groups">Consumer groups</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#compacted-topics">Compacted topics</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#security">Security</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#metrics-and-monitoring">Metrics and Monitoring</a></li>
 </ul>
-</li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#integrating-kafka-into-you-environment">Integrating Kafka into you Environment</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#confluent-rest-proxy">Confluent REST Proxy</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#schema-evolution">Schema evolution</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#confluent-ksqldb">Confluent ksqlDB</a></li>
-</ul>
-</li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#kafka-streams">Kafka Streams</a></li>
-</ul>
-
             </nav>
         </div>
     </div>
@@ -391,86 +369,8 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="kafka-basics">
-<span id="cmd-imp"></span><h1>Kafka Basics<a class="headerlink" href="#kafka-basics" title="Permalink to this headline">#</a></h1>
-<p>Data is described by logs or <strong>topics</strong>. An alternative way to store data as opposed to databased.
-<strong>Events</strong> are stored in the topics. Currently, the trend is to create smaller applications that can communicate through
-the Kafka topic. This enables <em>real-time</em> analysis of data stored in topics, instaed of batch processing. Writing data
-from a database into a topic can be done with <strong>Kafka connect</strong>. This framework is also used to input data from topics
-to other services.
-<strong>Kafka streams API</strong> handles framework and infrastructure to connect/join topics. For database queries Kafka
-includes <strong>kSQL</strong>, which outputs into a topic.
-<strong>Kafka cloud</strong> enables cloud services with Kafka.</p>
-<section id="tough-concepts-of-kafka">
-<h2>Tough concepts of Kafka<a class="headerlink" href="#tough-concepts-of-kafka" title="Permalink to this headline">#</a></h2>
-<p>Main misconception: “Kafka is a queue”. Instead, <strong>Kafka is a log</strong>. Second: event streams are <strong>immutable</strong>. If
-databases are brief “snapshots” in time, Kafka is a “live broadcast”. Leads to Stream/Table duality; one can be derived
-by the other. Third: materialized view of database query – using <strong>kSQLdb</strong>, which updates the data based on the stream.</p>
-</section>
-<section id="why-kafka-and-log-system">
-<h2>Why Kafka and log system?<a class="headerlink" href="#why-kafka-and-log-system" title="Permalink to this headline">#</a></h2>
-<p>Fist, consider the existing techonology:
-Pros:</p>
-<ul class="simple">
-<li><p>Suitable for heavy, complex data transformations and aggregations.</p></li>
-<li><p>Optimized for high-volume, periodic updates and historical data analysis.</p></li>
-</ul>
-<p>Cons:</p>
-<ul class="simple">
-<li><p>Latency issues; not suited for real-time data processing.</p></li>
-<li><p>Complex and potentially costly ETL (Extract, Transform, Load) processes.</p></li>
-<li><p>Scalability can be challenging, requiring significant resources.</p></li>
-</ul>
-<p>In contrast, because there is a growing interest in real-time processing of data, we propose the use of <strong>logs</strong>. Pros:</p>
-<ul class="simple">
-<li><p>Enables real-time data processing (ETL) and immediate data availability to multi-subscriber data feeds.</p></li>
-<li><p>Simplifies data integration across distributed systems.</p></li>
-<li><p>Enhances system resilience and data recovery through append-only nature.</p></li>
-<li><p>Logs are at the heart of <em>stream processing</em>; infrastructure for continuous data processing.</p></li>
-<li><p>Logs act as a buffer allowing processes to be restarted or fail withoyt slowing down other parts of the processing
-graph.</p></li>
-</ul>
-</section>
-<section id="kafka-fundamentals">
-<h2>Kafka Fundamentals<a class="headerlink" href="#kafka-fundamentals" title="Permalink to this headline">#</a></h2>
-<p>A <strong>producer</strong> – a service that writes events to the Kafka cluster. A <strong>Kafka cluster</strong> consists of one or several **
-brokers**, with each its local storage. Produces write into these storages. Brokers may be machines, VMs, servers,
-containers, or similar. To read data from the cluster, we use a <strong>consumer</strong>. A lot of the work happens on the
-consume-side of the framework. The consumed data may then be further processed and presented in reports, dashboards or
-visualizations, ect. Producers and consumers are <strong>de-coupled</strong>  – hence slow consumers will not affect producers and
-vice versa. Access control, cluster management, and failure detection &amp; recovery is controlled by a leader broker node (
-previously <em>Zookeeper</em>). A <strong>topic</strong> is a collection of related messages or events – a log or sequence of events. In
-theory, you can have an unlimited number of topics. Within a topic, we find one or several <strong>partitions</strong> corresponding
-to a log, which are allocated to different brokers in the cluster. You can think of partitions as a log; strictly
-ordered. Within a partitions, we have individual <strong>segments</strong>, existing on the disk. Kafka performs distributions of the
-topics to brokers, but the user needs to set resource limitations and requests.</p>
-<figure class="align-default" id="log">
-<img alt="_images/log.png" src="_images/log.png" />
-<figcaption>
-<p><span class="caption-number">Fig. 1 </span><span class="caption-text">A representation of a log in Kafka.</span><a class="headerlink" href="#log" title="Permalink to this image">#</a></p>
-</figcaption>
-</figure>
-<p>A log consists of several <strong>events</strong> which contitutes a <strong>stream</strong>. Each Kafka message consists of a <strong>key</strong> and
-<strong>value</strong>, with an optional <strong>header</strong> and a <strong>timestamp</strong> (creation/ingestion time).</p>
-</section>
-<section id="brokers">
-<h2>Brokers<a class="headerlink" href="#brokers" title="Permalink to this headline">#</a></h2>
-<p>Basic function: manage partitions locally. Takes input from producers and places them in partitions. Recieves requests
-from consumers and let them read from partitions. Each partition has replicas (controller by replication factor), such
-that partitions are replicated on separate brokers working as a backup.</p>
-</section>
-<section id="producers">
-<h2>Producers<a class="headerlink" href="#producers" title="Permalink to this headline">#</a></h2>
-<p>Written in any language or can be initiated throught the command line. With no key for partitioning stratergy the
-producer will use a <em>round-robing</em> strategy. Alternative the default strategy is <code class="docutils literal notranslate"><span class="pre">hash(key)</span> <span class="pre">%</span> <span class="pre">number_of_partitions</span></code>.
-Messages of the same key land in order.</p>
-</section>
-<section id="consumers">
-<h2>Consumers<a class="headerlink" href="#consumers" title="Permalink to this headline">#</a></h2>
-<p>A consumer pull messages from 1, …, <span class="math notranslate nohighlight">\(n\)</span> topics. The consumer offset is also stored in memory, and is stored in a
-special topic: <em>consumer offset</em> which keeps track of the consumers “position”. Consumers can also belong to a consumer
-group.</p>
-</section>
+  <section class="tex2jax_ignore mathjax_ignore" id="kafka-basic-cli-commands">
+<span id="cmd-imp"></span><h1>Kafka basic CLI commands<a class="headerlink" href="#kafka-basic-cli-commands" title="Permalink to this headline">#</a></h1>
 <section id="creating-topics-producers-and-consumers-command-line">
 <h2>Creating topics, producers and consumers (Command-line)<a class="headerlink" href="#creating-topics-producers-and-consumers-command-line" title="Permalink to this headline">#</a></h2>
 <p>Connect to a Kafka server and create a topic using:</p>
@@ -498,106 +398,14 @@ group.</p>
 </pre></div>
 </div>
 </section>
-<section id="how-kafka-works">
-<h2>How Kafka works<a class="headerlink" href="#how-kafka-works" title="Permalink to this headline">#</a></h2>
-<p>The standard producer (in <code class="docutils literal notranslate"><span class="pre">Java</span></code>) contains of several fundamental blocks. This includes the <strong>configuration</strong> with
-information about the cluster. Then you create the producer using the <code class="docutils literal notranslate"><span class="pre">KafkaProducer</span></code> passing the configuration. Then a
-part which produces data and sends it to the <code class="docutils literal notranslate"><span class="pre">producer</span></code>, using the class <code class="docutils literal notranslate"><span class="pre">ProducerRecord</span></code> with the topic of interest.
-See figure below.</p>
-<figure class="align-default" id="producer">
-<img alt="_images/producer-java.png" src="_images/producer-java.png" />
-<figcaption>
-<p><span class="caption-number">Fig. 2 </span><span class="caption-text">A representative producer in Java.</span><a class="headerlink" href="#producer" title="Permalink to this image">#</a></p>
-</figcaption>
-</figure>
-<p>For the consumder (here in <code class="docutils literal notranslate"><span class="pre">C#</span></code>), start the consumer file with some configuration. Then initialize some event-handlers,
-which handles messages and potential errors. The consumer is initialized using the <code class="docutils literal notranslate"><span class="pre">Consumer</span></code> class, with a
-function <code class="docutils literal notranslate"><span class="pre">Subscribe</span></code> where the <code class="docutils literal notranslate"><span class="pre">topic</span></code> of interest needs to be specified (multiple topics can be subscribed to).
-A <code class="docutils literal notranslate"><span class="pre">while</span> <span class="pre">(true)</span></code>-loop is then initiated to <code class="docutils literal notranslate"><span class="pre">Poll</span></code> (pull, consume) the date from the Kafka cluster. See figure below.</p>
-<figure class="align-default" id="consumer">
-<img alt="_images/consumer-c.png" src="_images/consumer-c.png" />
-<figcaption>
-<p><span class="caption-number">Fig. 3 </span><span class="caption-text">A representative consumer in C#.</span><a class="headerlink" href="#consumer" title="Permalink to this image">#</a></p>
-</figcaption>
-</figure>
+<section id="metrics-and-monitoring">
+<h2>Metrics and Monitoring<a class="headerlink" href="#metrics-and-monitoring" title="Permalink to this headline">#</a></h2>
+<p>Kafka metrics are accessed using <code class="docutils literal notranslate"><span class="pre">JMX</span></code>, accessable by passing a <code class="docutils literal notranslate"><span class="pre">JMX</span></code>-option via the <code class="docutils literal notranslate"><span class="pre">KAFKA_JMX_OPTS</span></code> env variable.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">KAFKA_JMX_OPTS=&quot;-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.local.only=false -</span>
+<span class="go">Djava.rmi.server.hostname=localhost&quot;</span>
+</pre></div>
+</div>
 </section>
-<section id="leadershit-and-replication-within-a-partition">
-<h2>Leadershit and Replication within a Partition<a class="headerlink" href="#leadershit-and-replication-within-a-partition" title="Permalink to this headline">#</a></h2>
-<p>When multiple partitions of the same topic are created, one act as the <strong>leader</strong> and the remaining as <strong>followers</strong>.
-The leader is telling producers and consumers that they should be written to, and similarly the consuming comes from
-this partition. When a broker crashes and contains a leader, a <strong>new leader</strong> is elected right away, with no loss of
-data.</p>
-</section>
-<section id="data-retention">
-<h2>Data retention<a class="headerlink" href="#data-retention" title="Permalink to this headline">#</a></h2>
-<p>By default, data is stored for a time of <code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">week</span></code>, but his can be edited either by per topic, or globally. How often the
-data is stored depends on the business logic, and GDRP and similar compliance perspectives. When data is expired, it is
-purged per segment.</p>
-</section>
-<section id="producer-design">
-<h2>Producer design<a class="headerlink" href="#producer-design" title="Permalink to this headline">#</a></h2>
-<p>What happends when you call <code class="docutils literal notranslate"><span class="pre">Send()</span></code>? First, it goes through <strong>serialization</strong>, turning it into the bytes. This is
-passed to the <strong>partitioner</strong> checking for a key, alternatively hashing it and deciding which patition it will be
-written to.</p>
-<p>What heppends in the broker? If <code class="docutils literal notranslate"><span class="pre">NONE</span></code> (Acks 0) sends it, we have no info what happened in the broker. If
-the <code class="docutils literal notranslate"><span class="pre">LEADER</span></code> ((Acks 1) sends the data, and waits for acknowlegement. Finally, <code class="docutils literal notranslate"><span class="pre">ALL</span></code> (Acks -1) means the leader and all
-its replicas have sent data. Safest but produces more latency.</p>
-<p>Three processes can happen: “At most once” (may lose data), “At least once” (everythig goes through, may be doubled),
-and “Exactly once” (one to one).</p>
-</section>
-<section id="exactly-once-semantics">
-<h2>Exactly once semantics<a class="headerlink" href="#exactly-once-semantics" title="Permalink to this headline">#</a></h2>
-<p>Prevents duplication. Handles failures gracefully and is a strong transactional guarantees for Kafka.</p>
-</section>
-<section id="consumer-groups">
-<h2>Consumer groups<a class="headerlink" href="#consumer-groups" title="Permalink to this headline">#</a></h2>
-<p>Consider two producers, producing two unique topics. Then two consumers can consume both topics. How is this assigned
-when the consumers have the same <strong>group ID</strong>? The consumers are doing its best at allocating the partitions. What if we
-scale the consumer? Then the partition reassigns partitions automaticalyl. If something failes, a new rebalance happens
-automatically. However, the consumer API does <em>not</em> consider <strong>state</strong>.</p>
-</section>
-<section id="compacted-topics">
-<h2>Compacted topics<a class="headerlink" href="#compacted-topics" title="Permalink to this headline">#</a></h2>
-<p>The time values are ordered, and the values vary. However, the <strong>key</strong> may be varying only between key1 to key4 (
-example), e.g. 4 unique keys. If previous states are not important, use a <strong>compacted topic</strong> which removes “old”
-entries in the partition.</p>
-</section>
-<section id="security">
-<h2>Security<a class="headerlink" href="#security" title="Permalink to this headline">#</a></h2>
-<p>Kafka will encrypt using SSL or similar all types of transits (producer to broker, broker to consumer, ect.). Kafka also
-supports authentication and authorization, but using security is <em>optional</em>. However,</p>
-</section>
-</section>
-<section class="tex2jax_ignore mathjax_ignore" id="integrating-kafka-into-you-environment">
-<h1>Integrating Kafka into you Environment<a class="headerlink" href="#integrating-kafka-into-you-environment" title="Permalink to this headline">#</a></h1>
-<p>Kafka can be integrated with any system; through <strong>Kafka Connect API</strong> – a data integration framework to get data in and
-out of Kafka. Connect runs on a separate server, between the source and the Kafka cluster. Similarly, betwene the Kafka
-cluster and the sink. Lots of these connectors already exists between existing frameworks and Kafka Connect. Connect is
-a distrituted system with <span class="math notranslate nohighlight">\(n\)</span> workers running one or more <strong>tasks</strong>. Each task runs with a connector, which can again be
-partitioned into multiple pieces. Connectors can thus be split between multiple workers.</p>
-<section id="confluent-rest-proxy">
-<h2>Confluent REST Proxy<a class="headerlink" href="#confluent-rest-proxy" title="Permalink to this headline">#</a></h2>
-<p>Used to talk to non-native Kafka Apps and outside the Firewall – using a RESTful interface.</p>
-</section>
-<section id="schema-evolution">
-<h2>Schema evolution<a class="headerlink" href="#schema-evolution" title="Permalink to this headline">#</a></h2>
-<p>This can be solved using a Schema Registry; a type descrition will translate into a expected field for each Kafka
-topics. A schema registry works outside the Kafka Cluster, and are kepy in an internal topic in the Kafka cluster,
-communicating with the Producer and Consumer. Consumer can ask for schema though a <strong>schema ID</strong>, to recognize the data
-format.</p>
-<p>Avro: a container file which consists of a <em>metadata</em> (schema) part and a <em>data</em> part, where the schema syntax is
-similar to <code class="docutils literal notranslate"><span class="pre">json</span></code>.</p>
-</section>
-<section id="confluent-ksqldb">
-<h2>Confluent ksqlDB<a class="headerlink" href="#confluent-ksqldb" title="Permalink to this headline">#</a></h2>
-<p>Streaming SQL enging for Kafka using SQL-like semantics. Example use cases include streaming ETL, anomaly detection and
-event monitoring. The system can be accessed via CLI, REST or headless using any programming language.</p>
-</section>
-</section>
-<section class="tex2jax_ignore mathjax_ignore" id="kafka-streams">
-<h1>Kafka Streams<a class="headerlink" href="#kafka-streams" title="Permalink to this headline">#</a></h1>
-<p>Kafka Streams is a Java API for doing stream processing on data in Apache Kafka. This combines the streams for Java with
-the Kafka, particularly usefull for microservices and continous queries and transformations.</p>
 </section>
 
     <script type="text/x-thebe-config">
@@ -637,6 +445,15 @@ the Kafka, particularly usefull for microservices and continous queries and tran
         <p class="prev-next-title">Kafka Documentations</p>
       </div>
     </a>
+    <a class="right-next"
+       href="fundamentals.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Kafka Basics</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
 </div>
                 </footer>
               
@@ -652,33 +469,9 @@ the Kafka, particularly usefull for microservices and continous queries and tran
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Kafka Basics</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tough-concepts-of-kafka">Tough concepts of Kafka</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-kafka-and-log-system">Why Kafka and log system?</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kafka-fundamentals">Kafka Fundamentals</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#brokers">Brokers</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#producers">Producers</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#consumers">Consumers</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#creating-topics-producers-and-consumers-command-line">Creating topics, producers and consumers (Command-line)</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-kafka-works">How Kafka works</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#leadershit-and-replication-within-a-partition">Leadershit and Replication within a Partition</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-retention">Data retention</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#producer-design">Producer design</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exactly-once-semantics">Exactly once semantics</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#consumer-groups">Consumer groups</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#compacted-topics">Compacted topics</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#security">Security</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#metrics-and-monitoring">Metrics and Monitoring</a></li>
 </ul>
-</li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#integrating-kafka-into-you-environment">Integrating Kafka into you Environment</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#confluent-rest-proxy">Confluent REST Proxy</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#schema-evolution">Schema evolution</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#confluent-ksqldb">Confluent ksqlDB</a></li>
-</ul>
-</li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#kafka-streams">Kafka Streams</a></li>
-</ul>
-
   </nav></div>
 
 </div></div>
@@ -710,7 +503,7 @@ By Henrik A. Kjeldsberg
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on Mar 06, 2024.
+  Last updated on Mar 07, 2024.
   <br/>
 </p>
   </div>
