@@ -25,6 +25,26 @@ A sample Avro schema using `JSON`:
 }
 ```
 
+## Managing Schema Evolution 
+
+The registry has a *schema compatibility checking feature*, which determines which changes can or cannot be made to a
+schema. If a schema is registered with invalid changes, an **error** will be raised. The different changes are
+controller by the schema's  **compatability type**, one of the following:
+
+- **BACKWARD**
+- **BACKWARD_TRANSITIVE**
+    - Both allow **deletion** of fields and *addition* of **optional fields**
+- **FORWARD**
+- **FORWARD_TRANSITIVE**
+    - Both allow **addition** of fields and *deletion* of **optional fields**
+- **FULL**
+- **FULL_TRANSITIVE**
+    - Both allow **addition** and **deletion** of *optional* fields
+- **NONE**
+    - All changes are accepted
+
+## Adding Avro Schemas
+
 Schemas can be added to Java projects by using the *Avro Gradle* plugin to help locate and generate a Java class from
 it. Then, as a producer, the schema can be loaded and records can be produced to Kafka:
 

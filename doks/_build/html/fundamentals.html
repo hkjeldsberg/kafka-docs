@@ -66,7 +66,7 @@ const thebe_selector_output = ".output, .cell_output"
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Kafka Streams" href="streams.html" />
-    <link rel="prev" title="Kafka basic CLI commands" href="commands.html" />
+    <link rel="prev" title="Kafka CLI commands" href="commands.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="None"/>
   </head>
@@ -159,7 +159,7 @@ const thebe_selector_output = ".output, .cell_output"
         </ul>
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Fundamentals</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="commands.html">Kafka basic CLI commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="commands.html">Kafka CLI commands</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Kafka Basics</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Streams and KSQL</span></p>
@@ -383,10 +383,9 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#producers">Producers</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#consumers">Consumers</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-kafka-works">How Kafka works</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#leadershit-and-replication-within-a-partition">Leadershit and Replication within a Partition</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#leadership-and-replication-within-a-partition">Leadership and Replication within a Partition</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-retention">Data retention</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#producer-design">Producer design</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exactly-once-semantics">Exactly once semantics</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#consumer-groups">Consumer groups</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#compacted-topics">Compacted topics</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#security">Security</a></li>
@@ -408,7 +407,7 @@ document.write(`
                 <article class="bd-article" role="main">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="kafka-basics">
-<span id="cmd-imp"></span><h1>Kafka Basics<a class="headerlink" href="#kafka-basics" title="Permalink to this headline">#</a></h1>
+<h1>Kafka Basics<a class="headerlink" href="#kafka-basics" title="Permalink to this headline">#</a></h1>
 <p>Data is described by logs or <strong>topics</strong>. An alternative way to store data as opposed to databased.
 <strong>Events</strong> are stored in the topics. Currently, the trend is to create smaller applications that can communicate through
 the Kafka topic. This enables <em>real-time</em> analysis of data stored in topics, instaed of batch processing. Writing data
@@ -510,12 +509,15 @@ A <code class="docutils literal notranslate"><span class="pre">while</span> <spa
 </figcaption>
 </figure>
 </section>
-<section id="leadershit-and-replication-within-a-partition">
-<h2>Leadershit and Replication within a Partition<a class="headerlink" href="#leadershit-and-replication-within-a-partition" title="Permalink to this headline">#</a></h2>
+<section id="leadership-and-replication-within-a-partition">
+<h2>Leadership and Replication within a Partition<a class="headerlink" href="#leadership-and-replication-within-a-partition" title="Permalink to this headline">#</a></h2>
 <p>When multiple partitions of the same topic are created, one act as the <strong>leader</strong> and the remaining as <strong>followers</strong>.
 The leader is telling producers and consumers that they should be written to, and similarly the consuming comes from
 this partition. When a broker crashes and contains a leader, a <strong>new leader</strong> is elected right away, with no loss of
-data.</p>
+data, known as <strong>leader election</strong>.</p>
+<p>In this case, only replicas that are in sync with the leader can be chosen as leaders; they are <strong>in-sync replicas</strong> (
+ISR). If no ISR is available, producers will <strong>pause</strong> producing. Alternative, a configuration settings known as **
+unclean leader election** can be set, which elects a new leder even if no ISR is available.</p>
 </section>
 <section id="data-retention">
 <h2>Data retention<a class="headerlink" href="#data-retention" title="Permalink to this headline">#</a></h2>
@@ -528,15 +530,21 @@ purged per segment.</p>
 <p>What happends when you call <code class="docutils literal notranslate"><span class="pre">Send()</span></code>? First, it goes through <strong>serialization</strong>, turning it into the bytes. This is
 passed to the <strong>partitioner</strong> checking for a key, alternatively hashing it and deciding which patition it will be
 written to.</p>
-<p>What heppends in the broker? If <code class="docutils literal notranslate"><span class="pre">NONE</span></code> (Acks 0) sends it, we have no info what happened in the broker. If
-the <code class="docutils literal notranslate"><span class="pre">LEADER</span></code> ((Acks 1) sends the data, and waits for acknowlegement. Finally, <code class="docutils literal notranslate"><span class="pre">ALL</span></code> (Acks -1) means the leader and all
-its replicas have sent data. Safest but produces more latency.</p>
+<p>What happens in the broker? If <code class="docutils literal notranslate"><span class="pre">NONE</span></code> (Acks 0) sends it, we have no info what happened in the broker. If the <code class="docutils literal notranslate"><span class="pre">LEADER</span></code> (
+Acks 1) sends the data, and waits for acknowlegement. Finally, <code class="docutils literal notranslate"><span class="pre">ALL</span></code> (Acks -1) means the leader and all its replicas
+have sent data. Safest but produces more latency.</p>
 <p>Three processes can happen: “At most once” (may lose data), “At least once” (everythig goes through, may be doubled),
 and “Exactly once” (one to one).</p>
-</section>
-<section id="exactly-once-semantics">
-<h2>Exactly once semantics<a class="headerlink" href="#exactly-once-semantics" title="Permalink to this headline">#</a></h2>
-<p>Prevents duplication. Handles failures gracefully and is a strong transactional guarantees for Kafka.</p>
+<ul class="simple">
+<li><p><strong>At most once</strong>: Can result in data loss, processes once (or never), but has <em>no</em> duplicates</p></li>
+<li><p><strong>At least once</strong>: Does not result in data loss, processes one or more times, and may result in duplicates</p></li>
+<li><p><strong>Exactly once</strong>: Does not result in data loss, processes exactly once, and does <em>not</em> produce duplicates</p>
+<ul>
+<li><p>This semantic prevents duplication, Handles failures gracefully, and is a strong transactional guarantees for
+Kafka.</p></li>
+</ul>
+</li>
+</ul>
 </section>
 <section id="consumer-groups">
 <h2>Consumer groups<a class="headerlink" href="#consumer-groups" title="Permalink to this headline">#</a></h2>
@@ -593,8 +601,8 @@ as <code class="docutils literal notranslate"><span class="pre">filter</span></c
 <h2>The Confluent Platform<a class="headerlink" href="#the-confluent-platform" title="Permalink to this headline">#</a></h2>
 <p>Confluent platform/cloud uses <strong>RBAC</strong> for authorization with pre-defined role bindings, working accross the platform.
 This includes kSQL, Connect, Schema Registry, Connectors, ect. Confluent Operator for Kubernetes runs on any plotform at
-any scale, while also using and manages persistent volumes in K8s.
-Note, there are <em>hundreds</em> of connectors available for all types of data.</p>
+any scale, while also using and manages persistent volumes in K8s. Note, there are <em>hundreds</em> of connectors available
+for all types of data.</p>
 </section>
 </section>
 
@@ -632,7 +640,7 @@ Note, there are <em>hundreds</em> of connectors available for all types of data.
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Kafka basic CLI commands</p>
+        <p class="prev-next-title">Kafka CLI commands</p>
       </div>
     </a>
     <a class="right-next"
@@ -666,10 +674,9 @@ Note, there are <em>hundreds</em> of connectors available for all types of data.
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#producers">Producers</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#consumers">Consumers</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-kafka-works">How Kafka works</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#leadershit-and-replication-within-a-partition">Leadershit and Replication within a Partition</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#leadership-and-replication-within-a-partition">Leadership and Replication within a Partition</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-retention">Data retention</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#producer-design">Producer design</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exactly-once-semantics">Exactly once semantics</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#consumer-groups">Consumer groups</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#compacted-topics">Compacted topics</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#security">Security</a></li>
@@ -711,7 +718,7 @@ By Henrik A. Kjeldsberg
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on Mar 07, 2024.
+  Last updated on Mar 08, 2024.
   <br/>
 </p>
   </div>

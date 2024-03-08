@@ -36,6 +36,14 @@ used, including:
 - `.leftJoin`, joining "left" stream and matching records from the "right" stream
 - `.outerJoin`, combining two streams with all records from both streams. (union)
 
+## Windowing
+
 One way to perform operations sequentially is by using **windowing**. This operation allows subdivision of groups into "
-time buckets", aggregating them bit by bit. 
+time buckets", aggregating them bit by bit. Different window types exist:
+
+- **Tumbling**: No overlap, no gap
+- **Hopping**: Overlap and/or gaps
+- **Sliding**: Used for joins. Defined by the length of time between timestamps of any two records. No gaps, but
+  overlap.
+- **Session**: Dynamic windows formed around activity based on the timestamps. Will contain inactivity *gaps*
 

@@ -1,5 +1,3 @@
-(cmd-imp)=
-
 # Kafka Basics
 
 Data is described by logs or **topics**. An alternative way to store data as opposed to databased.
@@ -108,12 +106,16 @@ name: consumer
 A representative consumer in C#.
 ```
 
-## Leadershit and Replication within a Partition
+## Leadership and Replication within a Partition
 
 When multiple partitions of the same topic are created, one act as the **leader** and the remaining as **followers**.
 The leader is telling producers and consumers that they should be written to, and similarly the consuming comes from
 this partition. When a broker crashes and contains a leader, a **new leader** is elected right away, with no loss of
-data.
+data, known as **leader election**.
+
+In this case, only replicas that are in sync with the leader can be chosen as leaders; they are **in-sync replicas** (
+ISR). If no ISR is available, producers will **pause** producing. Alternative, a configuration settings known as **
+unclean leader election** can be set, which elects a new leder even if no ISR is available.
 
 ## Data retention
 
@@ -127,16 +129,18 @@ What happends when you call `Send()`? First, it goes through **serialization**, 
 passed to the **partitioner** checking for a key, alternatively hashing it and deciding which patition it will be
 written to.
 
-What heppends in the broker? If `NONE` (Acks 0) sends it, we have no info what happened in the broker. If
-the `LEADER` ((Acks 1) sends the data, and waits for acknowlegement. Finally, `ALL` (Acks -1) means the leader and all
-its replicas have sent data. Safest but produces more latency.
+What happens in the broker? If `NONE` (Acks 0) sends it, we have no info what happened in the broker. If the `LEADER` (
+Acks 1) sends the data, and waits for acknowlegement. Finally, `ALL` (Acks -1) means the leader and all its replicas
+have sent data. Safest but produces more latency.
 
 Three processes can happen: "At most once" (may lose data), "At least once" (everythig goes through, may be doubled),
 and "Exactly once" (one to one).
 
-## Exactly once semantics
-
-Prevents duplication. Handles failures gracefully and is a strong transactional guarantees for Kafka.
+- **At most once**: Can result in data loss, processes once (or never), but has *no* duplicates
+- **At least once**: Does not result in data loss, processes one or more times, and may result in duplicates
+- **Exactly once**: Does not result in data loss, processes exactly once, and does *not* produce duplicates
+    - This semantic prevents duplication, Handles failures gracefully, and is a strong transactional guarantees for
+      Kafka.
 
 ## Consumer groups
 
@@ -194,5 +198,5 @@ as `filter`, `map`, `join`, and `aggregate`, working on individual Kafka logs.
 
 Confluent platform/cloud uses **RBAC** for authorization with pre-defined role bindings, working accross the platform.
 This includes kSQL, Connect, Schema Registry, Connectors, ect. Confluent Operator for Kubernetes runs on any plotform at
-any scale, while also using and manages persistent volumes in K8s.
-Note, there are *hundreds* of connectors available for all types of data. 
+any scale, while also using and manages persistent volumes in K8s. Note, there are *hundreds* of connectors available
+for all types of data. 

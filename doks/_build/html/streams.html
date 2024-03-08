@@ -157,7 +157,7 @@ const thebe_selector_output = ".output, .cell_output"
         </ul>
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Fundamentals</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="commands.html">Kafka basic CLI commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="commands.html">Kafka CLI commands</a></li>
 <li class="toctree-l1"><a class="reference internal" href="fundamentals.html">Kafka Basics</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Streams and KSQL</span></p>
@@ -379,6 +379,7 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stateful-transformations">Stateful transformations</a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#windowing">Windowing</a></li>
 </ul>
             </nav>
         </div>
@@ -427,9 +428,19 @@ used, including:</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">.leftJoin</span></code>, joining “left” stream and matching records from the “right” stream</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">.outerJoin</span></code>, combining two streams with all records from both streams. (union)</p></li>
 </ul>
-<p>One way to perform operations sequentially is by using <strong>windowing</strong>. This operation allows subdivision of groups into “
-time buckets”, aggregating them bit by bit.</p>
 </section>
+</section>
+<section id="windowing">
+<h2>Windowing<a class="headerlink" href="#windowing" title="Permalink to this headline">#</a></h2>
+<p>One way to perform operations sequentially is by using <strong>windowing</strong>. This operation allows subdivision of groups into “
+time buckets”, aggregating them bit by bit. Different window types exist:</p>
+<ul class="simple">
+<li><p><strong>Tumbling</strong>: No overlap, no gap</p></li>
+<li><p><strong>Hopping</strong>: Overlap and/or gaps</p></li>
+<li><p><strong>Sliding</strong>: Used for joins. Defined by the length of time between timestamps of any two records. No gaps, but
+overlap.</p></li>
+<li><p><strong>Session</strong>: Dynamic windows formed around activity based on the timestamps. Will contain inactivity <em>gaps</em></p></li>
+</ul>
 </section>
 </section>
 
@@ -499,6 +510,7 @@ time buckets”, aggregating them bit by bit.</p>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stateful-transformations">Stateful transformations</a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#windowing">Windowing</a></li>
 </ul>
   </nav></div>
 
@@ -531,7 +543,7 @@ By Henrik A. Kjeldsberg
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on Mar 07, 2024.
+  Last updated on Mar 08, 2024.
   <br/>
 </p>
   </div>

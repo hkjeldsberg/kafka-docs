@@ -157,7 +157,7 @@ const thebe_selector_output = ".output, .cell_output"
         </ul>
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Fundamentals</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="commands.html">Kafka basic CLI commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="commands.html">Kafka CLI commands</a></li>
 <li class="toctree-l1"><a class="reference internal" href="fundamentals.html">Kafka Basics</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Streams and KSQL</span></p>
@@ -375,7 +375,13 @@ document.write(`
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sources-and-sinks">Sources and Sinks</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kafka-connect-components">Kafka Connect Components</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#using-kafka-connect">Using Kafka Connect</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deploying-kafka-connect">Deploying Kafka Connect</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#distributed">Distributed</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#standalone">Standalone</a></li>
+</ul>
+</li>
 </ul>
             </nav>
         </div>
@@ -389,11 +395,22 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="kafka-connect">
 <h1>Kafka Connect<a class="headerlink" href="#kafka-connect" title="Permalink to this headline">#</a></h1>
-<p>Kafka Connect is a tool used to integrate Kafka against other systems, in real time.</p>
+<p>Kafka Connect is a tool used to integrate Kafka against other systems, in real time. Completely configuration-based,
+which can perform lightweight transformations on data. The system is fully de-coupled from the Kafka system.</p>
 <section id="sources-and-sinks">
 <h2>Sources and Sinks<a class="headerlink" href="#sources-and-sinks" title="Permalink to this headline">#</a></h2>
 <p>A source connector <strong>imports</strong> data from an external system <em>into</em> Kafka, while a sink connector <strong>exports</strong> from Kafka
 to an external system.</p>
+</section>
+<section id="kafka-connect-components">
+<h2>Kafka Connect Components<a class="headerlink" href="#kafka-connect-components" title="Permalink to this headline">#</a></h2>
+<p>Kafka Connect is composed of several components:</p>
+<ul class="simple">
+<li><p><strong>Connector</strong>: Defines the interaction between Kafka Connect and external technology</p></li>
+<li><p><strong>Converter</strong>: Handles serializaiton and de-serialization of data, and plays a role in persistence of schemas</p></li>
+<li><p><strong>Transformer</strong>: Optional components that perform lightweight transformations on the data, as it flows though Kafka
+Connect. Single message transformations (SMT).</p></li>
+</ul>
 </section>
 <section id="using-kafka-connect">
 <h2>Using Kafka Connect<a class="headerlink" href="#using-kafka-connect" title="Permalink to this headline">#</a></h2>
@@ -401,9 +418,9 @@ to an external system.</p>
 and is configured though a <code class="docutils literal notranslate"><span class="pre">connector.class</span></code> field. An example of creating a sink connector from Kafka to a file could
 be as follows:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">curl -X POST http://localhost:8083/connectors \</span>
-<span class="go">-H &#39;Accept: */*&#39; \</span>
-<span class="go">-H &#39;Content-Type: application/json&#39; \</span>
-<span class="go">-d &#39;{</span>
+<span class="go">-header &#39;Accept: */*&#39; \</span>
+<span class="go">-header &#39;Content-Type: application/json&#39; \</span>
+<span class="go">-data &#39;{</span>
 <span class="go">     &quot;name&quot;: &quot;file_sink_connector&quot;,</span>
 <span class="go">     &quot;config&quot;: {</span>
 <span class="go">         &quot;connector.class&quot;: &quot;org.apache.kafka.connect.file.FileStreamSinkConnector&quot;,</span>
@@ -414,6 +431,29 @@ be as follows:</p>
 <span class="go">}&#39;</span>
 </pre></div>
 </div>
+</section>
+<section id="deploying-kafka-connect">
+<h2>Deploying Kafka Connect<a class="headerlink" href="#deploying-kafka-connect" title="Permalink to this headline">#</a></h2>
+<p>Deploying Kafka Connect only applies if we’re managing self-managed Kafka!
+Kafka Connect runs under JVM as a process known as <strong>worker</strong>, which can execute multiple connectors.
+<strong>Tasks</strong> are executed by workers, which are either <strong>standalone</strong> or <strong>distributed</strong></p>
+<section id="distributed">
+<h3>Distributed<a class="headerlink" href="#distributed" title="Permalink to this headline">#</a></h3>
+<p>Kafka Connect uses Kafka Topics to store state pretaining to connector config, status, ect. The topics are configured to
+retain this information indefinetly – <strong>compacted topics</strong>. Connector instances are created and managed using the REST
+API that Kafka Connect offers. Tasks are rebalanced to redistritubet the wrokload automatically, and crashed units will
+lead to a new rebalancing. Essentially, a <em>Kafka Connect Cluster</em> consists of one or multiple <em>workers</em> (preferably two
+or more), where the workers are responsbible for separate <em>tasks</em>. See figure below.</p>
+<figure class="align-default" id="worker-dist">
+<img alt="_images/worker_dist.png" src="_images/worker_dist.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 4 </span><span class="caption-text">Multiple workers on multiple clusters in a Kafka Connect Cluster.</span><a class="headerlink" href="#worker-dist" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+</section>
+<section id="standalone">
+<h3>Standalone<a class="headerlink" href="#standalone" title="Permalink to this headline">#</a></h3>
+</section>
 </section>
 </section>
 
@@ -479,7 +519,13 @@ be as follows:</p>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sources-and-sinks">Sources and Sinks</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kafka-connect-components">Kafka Connect Components</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#using-kafka-connect">Using Kafka Connect</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deploying-kafka-connect">Deploying Kafka Connect</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#distributed">Distributed</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#standalone">Standalone</a></li>
+</ul>
+</li>
 </ul>
   </nav></div>
 
@@ -512,7 +558,7 @@ By Henrik A. Kjeldsberg
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on Mar 07, 2024.
+  Last updated on Mar 08, 2024.
   <br/>
 </p>
   </div>

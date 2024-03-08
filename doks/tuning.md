@@ -18,14 +18,14 @@ Common configuration options for producers include:
 
 Common configuration options for consumers include:
 
-- fetch.min.bytes: The minimum amount of data to fetch in a request. If there is not enough data to satisfy this
+- **fetch.min.bytes**: The minimum amount of data to fetch in a request. If there is not enough data to satisfy this
   requirement, the request will wait for more data before responding. Set this higher to get better throughput in some
   situations at the cost of some latency.
-- heartbeat.interval.ms: How often to send heartbeats to the consumer coordinator. Set this lower to allow a quicker
+- **heartbeat.interval.ms**: How often to send heartbeats to the consumer coordinator. Set this lower to allow a quicker
   rebalance response when a consumer joins or leaves the consumer group.
-- auto.offset.reset: What to do when the consumer has no initial offset
+- **auto.offset.reset**: What to do when the consumer has no initial offset
     - latest: Start at the latest record.
     - earliest: Start with the earliest record.
     - none: Throw an exception when there is no existing offset data.
-- enable.auto.commit: Periodically commit the current offset in the background. Use this to determine whether you want
-  to handle offsets manually or automatically
+- **enable.auto.commit**: Periodically commit the current offset in the background. Use this to determine whether you
+  want to handle offsets manually or automatically
