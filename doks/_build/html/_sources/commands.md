@@ -40,11 +40,9 @@ or to continuously watch the process, use `watch`:
 watch kafka-consumer-groups --bootstrap-server kafka:9092 --group vp-consumer --describe
 ```
 
-## Metrics and Monitoring
-
-Kafka metrics are accessed using `JMX`, accessable by passing a `JMX`-option via the `KAFKA_JMX_OPTS` env variable.
+Add an ACL to existing user `myuser`:
 
 ```console
-KAFKA_JMX_OPTS="-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.local.only=false -
-Djava.rmi.server.hostname=localhost"
+kafka-acls --authorizer-properties zookeeper.connect=localhost:2181 --add --allow-principal User:myuser --operation write --topic acl-test
 ```
+

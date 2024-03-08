@@ -9,13 +9,26 @@ parts:
     chapters:
       - file: commands
       - file: fundamentals
+
+  - caption: Kafka Streams and KSQL
+    chapters:
       - file: streams
-      - file: connect
+      - file: ksql
+
+  - caption: Kafka Producers and Consumers
+    chapters:
       - file: producers
       - file: consumers
-      - file: ksql
-      - file: avro
-      - file: config
+      - file: metrics
+      - file: tuning
+
+  - caption: Kafka Connect and Schemas
+    chapters:
+      - file: connect
       - file: schemreg
+
+  - caption: Kafka Configuration and Auth
+    chapters:
+      - file: config
       - file: auth
 

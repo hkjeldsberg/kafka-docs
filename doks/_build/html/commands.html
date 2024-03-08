@@ -159,10 +159,28 @@ const thebe_selector_output = ".output, .cell_output"
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Kafka basic CLI commands</a></li>
 <li class="toctree-l1"><a class="reference internal" href="fundamentals.html">Kafka Basics</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Streams and KSQL</span></p>
+<ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="streams.html">Kafka Streams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ksql.html">Confluent kSQL</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Producers and Consumers</span></p>
+<ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="producers.html">Working with Producers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="consumers.html">Working with Consumers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="metrics.html">Metrics and Monitoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tuning.html">Tuning producers and consumers</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Connect and Schemas</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="connect.html">Kafka Connect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="schemreg.html">Confluent Schema Registry</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Configuration and Auth</span></p>
+<ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="config.html">Kafka configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="auth.html">Security, Authentication and Authorization</a></li>
 </ul>
 
     </div>
@@ -357,7 +375,6 @@ document.write(`
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#creating-topics-producers-and-consumers-command-line">Creating topics, producers and consumers (Command-line)</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#metrics-and-monitoring">Metrics and Monitoring</a></li>
 </ul>
             </nav>
         </div>
@@ -397,12 +414,8 @@ document.write(`
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">watch kafka-consumer-groups --bootstrap-server kafka:9092 --group vp-consumer --describe</span>
 </pre></div>
 </div>
-</section>
-<section id="metrics-and-monitoring">
-<h2>Metrics and Monitoring<a class="headerlink" href="#metrics-and-monitoring" title="Permalink to this headline">#</a></h2>
-<p>Kafka metrics are accessed using <code class="docutils literal notranslate"><span class="pre">JMX</span></code>, accessable by passing a <code class="docutils literal notranslate"><span class="pre">JMX</span></code>-option via the <code class="docutils literal notranslate"><span class="pre">KAFKA_JMX_OPTS</span></code> env variable.</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">KAFKA_JMX_OPTS=&quot;-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.local.only=false -</span>
-<span class="go">Djava.rmi.server.hostname=localhost&quot;</span>
+<p>Add an ACL to existing user <code class="docutils literal notranslate"><span class="pre">myuser</span></code>:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">kafka-acls --authorizer-properties zookeeper.connect=localhost:2181 --add --allow-principal User:myuser --operation write --topic acl-test</span>
 </pre></div>
 </div>
 </section>
@@ -470,7 +483,6 @@ document.write(`
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#creating-topics-producers-and-consumers-command-line">Creating topics, producers and consumers (Command-line)</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#metrics-and-monitoring">Metrics and Monitoring</a></li>
 </ul>
   </nav></div>
 
