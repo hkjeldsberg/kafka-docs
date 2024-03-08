@@ -1,5 +1,3 @@
-(cmd-imp)=
-
 # Kafka Basics
 
 Data is described by logs or **topics**. An alternative way to store data as opposed to databased.
@@ -194,5 +192,5 @@ as `filter`, `map`, `join`, and `aggregate`, working on individual Kafka logs.
 
 Confluent platform/cloud uses **RBAC** for authorization with pre-defined role bindings, working accross the platform.
 This includes kSQL, Connect, Schema Registry, Connectors, ect. Confluent Operator for Kubernetes runs on any plotform at
-any scale, while also using and manages persistent volumes in K8s.
-Note, there are *hundreds* of connectors available for all types of data. 
+any scale, while also using and manages persistent volumes in K8s. Note, there are *hundreds* of connectors available
+for all types of data. 

@@ -1,6 +1,6 @@
 (cmd-imp)=
 
-# Kafka basic CLI commands
+# Kafka CLI commands
 
 ## Creating topics, producers and consumers (Command-line)
 
