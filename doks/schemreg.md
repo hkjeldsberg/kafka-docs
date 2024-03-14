@@ -1,4 +1,4 @@
-# Confluent Schema Registry
+# Confluent Schema Registry and Data Types
 
 The schema registry handles schemas, which contain information of the data structure of the log/record to be either read
 or written to Kafka. The schema consists of **metadata** that describes a complex data format, and expected **fields**
@@ -19,13 +19,14 @@ A sample Avro schema using `JSON`:
   "fields": [
     {
       "name": "<field name>",
-      "type": "<field type>"
+      "type": "<field type>",
+      "default": "<some default value>"
     }
   ]
 }
 ```
 
-## Managing Schema Evolution 
+## Managing Schema Evolution
 
 The registry has a *schema compatibility checking feature*, which determines which changes can or cannot be made to a
 schema. If a schema is registered with invalid changes, an **error** will be raised. The different changes are
