@@ -98,6 +98,29 @@ and similarly `GET` configuration for an existing connector:
 curl -i -X GET -H <header-info> ect.
 ```
 
-You can also **pause**, **restart**, and **resume** a connector or specific task on a connector.
+You can also **pause**, **restart**, and **resume** a connector or specific task on a connector. Pausing a connected
+does pause the tasts.
 
+## Error handling
+
+Can be handled using different patterns:
+Using an inconvert converter can trigger an error: *"Unknown magic byte!"*. Another scenario is when a topic contains
+several differently serialized messages (e.g. Avro **and** JSON).
+
+- **Fail fast**: Default method; task fails and process stops.
+- **Silent ignore**:
+- **Dead letter queue**:A dead letter queue is a queue/message where failed messages are written to. *Not* configured
+  automatically
+
+From the dead letter queue (DLQ), the errored messages may be sent into another converter in case the schema is
+different. See figure.
+
+```{figure} figures/dlq.png
+---
+name: dlq
+---
+Dead letter queue way of handling errors when serialization fails.
+```
+
+DLQ is not default because it requires setup. What should happen to the DLQ messages; this needs to be predefined.
 

@@ -9,6 +9,8 @@ parts:
     chapters:
       - file: commands
       - file: fundamentals
+      - file: exam
+      - file: testing
 
   - caption: Kafka Streams and KSQL
     chapters:

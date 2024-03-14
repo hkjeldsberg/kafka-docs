@@ -60,6 +60,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'consumers';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -157,8 +159,10 @@ const thebe_selector_output = ".output, .cell_output"
         </ul>
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Fundamentals</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="commands.html">Kafka basic CLI commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="commands.html">Kafka CLI commands</a></li>
 <li class="toctree-l1"><a class="reference internal" href="fundamentals.html">Kafka Basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="exam.html">Kafka Developed Exam Requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testing.html">Testing in Kafka</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Streams and KSQL</span></p>
 <ul class="nav bd-sidenav">
@@ -375,6 +379,7 @@ document.write(`
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#building-a-consumer-in-java">Building a Consumer in Java</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#consumer-groups">Consumer groups</a></li>
 </ul>
             </nav>
         </div>
@@ -388,6 +393,19 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="working-with-consumers">
 <h1>Working with Consumers<a class="headerlink" href="#working-with-consumers" title="Permalink to this headline">#</a></h1>
+<p>A consumer pull messages from 1, …, <span class="math notranslate nohighlight">\(n\)</span> topics. The consumer offset is also stored in memory, and is stored in a
+special topic: <em>consumer offset</em> which keeps track of the consumers “position”. Consumers can also belong to a consumer
+group.</p>
+<p>For the consumder (here in <code class="docutils literal notranslate"><span class="pre">C#</span></code>), start the consumer file with some configuration. Then initialize some event-handlers,
+which handles messages and potential errors. The consumer is initialized using the <code class="docutils literal notranslate"><span class="pre">Consumer</span></code> class, with a
+function <code class="docutils literal notranslate"><span class="pre">Subscribe</span></code> where the <code class="docutils literal notranslate"><span class="pre">topic</span></code> of interest needs to be specified (multiple topics can be subscribed to).
+A <code class="docutils literal notranslate"><span class="pre">while</span> <span class="pre">(true)</span></code>-loop is then initiated to <code class="docutils literal notranslate"><span class="pre">Poll</span></code> (pull, consume) the date from the Kafka cluster. See figure below.</p>
+<figure class="align-default" id="consumer">
+<img alt="_images/consumer-c.png" src="_images/consumer-c.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 3 </span><span class="caption-text">A representative consumer in C#.</span><a class="headerlink" href="#consumer" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
 <section id="building-a-consumer-in-java">
 <h2>Building a Consumer in Java<a class="headerlink" href="#building-a-consumer-in-java" title="Permalink to this headline">#</a></h2>
 <p>A consumer can be built though the Java <strong>Consumer API</strong>. The <code class="docutils literal notranslate"><span class="pre">KafkaConsumer</span></code> class will handle interaction between the
@@ -404,6 +422,13 @@ Java code and Kafka:</p>
 <span class="n">consumer</span><span class="p">.</span><span class="na">commitSync</span><span class="p">();</span>
 </pre></div>
 </div>
+</section>
+<section id="consumer-groups">
+<h2>Consumer groups<a class="headerlink" href="#consumer-groups" title="Permalink to this headline">#</a></h2>
+<p>Consider two producers, producing two unique topics. Then two consumers can consume both topics. How is this assigned
+when the consumers have the same <strong>group ID</strong>? The consumers are doing its best at allocating the partitions. What if we
+scale the consumer? Then the partition reassigns partitions automaticalyl. If something failes, a new rebalance happens
+automatically. However, the consumer API does <em>not</em> consider <strong>state</strong>.</p>
 </section>
 </section>
 
@@ -469,6 +494,7 @@ Java code and Kafka:</p>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#building-a-consumer-in-java">Building a Consumer in Java</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#consumer-groups">Consumer groups</a></li>
 </ul>
   </nav></div>
 
@@ -501,7 +527,7 @@ By Henrik A. Kjeldsberg
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on Mar 07, 2024.
+  Last updated on Mar 13, 2024.
   <br/>
 </p>
   </div>
