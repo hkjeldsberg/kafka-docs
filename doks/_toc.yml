@@ -10,6 +10,7 @@ parts:
       - file: commands
       - file: fundamentals
       - file: topics
+      - file: storage
       - file: exam
       - file: testing
 
