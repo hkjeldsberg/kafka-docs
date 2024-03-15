@@ -193,8 +193,6 @@
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Producers and Consumers</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="procon.html">Working with Producers and Consumers</a></li>
-
-
 <li class="toctree-l1"><a class="reference internal" href="metrics.html">Metrics and Monitoring</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tuning.html">Tuning producers and consumers</a></li>
 </ul>
@@ -422,7 +420,7 @@ document.write(`
 <section id="security-in-kafka">
 <h2>Security in Kafka<a class="headerlink" href="#security-in-kafka" title="Permalink to this heading">#</a></h2>
 <p>SSL and SASL authentication is supported between Clients (Producers and Consumers) and Brokers, between Brokers, and
-between Brokers and Tools. Different SASL methods are available (GSSAPI, PLAIN, SCRAM-SHA-256, OAUTHBEARER with JWT).
+between Brokers and Tools. Different SASL methods are available (GSSAPI, PLAIN, SCRAM-SHA-(256/512), OAUTHBEARER with JWT).
 Authentication and authorization is supported, but is <strong>disabled</strong> by default. Creating a SSL key can be performed using
 the Java <em>keytool</em> utility, or similarly in other languages.</p>
 </section>

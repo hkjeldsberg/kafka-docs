@@ -196,8 +196,6 @@
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Producers and Consumers</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Working with Producers and Consumers</a></li>
-
-
 <li class="toctree-l1"><a class="reference internal" href="metrics.html">Metrics and Monitoring</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tuning.html">Tuning producers and consumers</a></li>
 </ul>
@@ -405,20 +403,14 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Working with Producers and Consumers</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#working-with-producers">Working with Producers</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#working-with-producers">Working with Producers</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#building-a-producer-in-java">Building a Producer in Java</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#producer-design-and-reliability">Producer design and reliability</a></li>
-</ul>
-</li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#working-with-consumers">Working with Consumers</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#working-with-consumers">Working with Consumers</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#building-a-consumer-in-java">Building a Consumer in Java</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#consumer-groups">Consumer groups</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#integrity">Integrity</a></li>
 </ul>
-</li>
-</ul>
-
             </nav>
         </div>
     </div>
@@ -431,9 +423,8 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="working-with-producers-and-consumers">
 <h1>Working with Producers and Consumers<a class="headerlink" href="#working-with-producers-and-consumers" title="Permalink to this heading">#</a></h1>
-</section>
-<section class="tex2jax_ignore mathjax_ignore" id="working-with-producers">
-<h1>Working with Producers<a class="headerlink" href="#working-with-producers" title="Permalink to this heading">#</a></h1>
+<section id="working-with-producers">
+<h2>Working with Producers<a class="headerlink" href="#working-with-producers" title="Permalink to this heading">#</a></h2>
 <p>Written in any language or can be initiated throught the command line. With no key for partitioning stratergy the
 producer will use a <em>round-robing</em> strategy. Alternative the default strategy is <code class="docutils literal notranslate"><span class="pre">hash(key)</span> <span class="pre">%</span> <span class="pre">number_of_partitions</span></code>.
 Messages of the same key land in order.</p>
@@ -447,6 +438,7 @@ See figure below.</p>
 <p><span class="caption-number">Fig. 2 </span><span class="caption-text">A representative producer in Java.</span><a class="headerlink" href="#producer" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
+</section>
 <section id="building-a-producer-in-java">
 <h2>Building a Producer in Java<a class="headerlink" href="#building-a-producer-in-java" title="Permalink to this heading">#</a></h2>
 <p>Data can be published to data though Kafka’s Java <strong>Producer API</strong>. A producer is created using the <code class="docutils literal notranslate"><span class="pre">KafkaProducer</span></code>
@@ -492,9 +484,8 @@ Kafka.</p></li>
 </figcaption>
 </figure>
 </section>
-</section>
-<section class="tex2jax_ignore mathjax_ignore" id="working-with-consumers">
-<h1>Working with Consumers<a class="headerlink" href="#working-with-consumers" title="Permalink to this heading">#</a></h1>
+<section id="working-with-consumers">
+<h2>Working with Consumers<a class="headerlink" href="#working-with-consumers" title="Permalink to this heading">#</a></h2>
 <p>A consumer pull messages from 1, …, <span class="math notranslate nohighlight">\(n\)</span> topics. The consumer offset is also stored in memory, and is stored in a
 special topic: <em>consumer offset</em> which keeps track of the consumers “position”. Consumers can also belong to a consumer
 group.</p>
@@ -508,6 +499,7 @@ A <code class="docutils literal notranslate"><span class="pre">while</span> <spa
 <p><span class="caption-number">Fig. 4 </span><span class="caption-text">A representative consumer in C#.</span><a class="headerlink" href="#consumer" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
+</section>
 <section id="building-a-consumer-in-java">
 <h2>Building a Consumer in Java<a class="headerlink" href="#building-a-consumer-in-java" title="Permalink to this heading">#</a></h2>
 <p>A consumer can be built though the Java <strong>Consumer API</strong>. The <code class="docutils literal notranslate"><span class="pre">KafkaConsumer</span></code> class will handle interaction between the
@@ -615,20 +607,14 @@ Default: <code class="docutils literal notranslate"><span class="pre">5ms</span>
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Working with Producers and Consumers</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#working-with-producers">Working with Producers</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#working-with-producers">Working with Producers</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#building-a-producer-in-java">Building a Producer in Java</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#producer-design-and-reliability">Producer design and reliability</a></li>
-</ul>
-</li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#working-with-consumers">Working with Consumers</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#working-with-consumers">Working with Consumers</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#building-a-consumer-in-java">Building a Consumer in Java</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#consumer-groups">Consumer groups</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#integrity">Integrity</a></li>
 </ul>
-</li>
-</ul>
-
   </nav></div>
 
 </div></div>

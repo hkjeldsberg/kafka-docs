@@ -1,6 +1,6 @@
 # Working with Producers and Consumers
 
-# Working with Producers
+## Working with Producers
 
 Written in any language or can be initiated throught the command line. With no key for partitioning stratergy the
 producer will use a *round-robing* strategy. Alternative the default strategy is `hash(key) % number_of_partitions`.
@@ -62,7 +62,7 @@ name: acks
 Different types of Acknowledgements in Kafka (acks).
 ```
 
-# Working with Consumers
+## Working with Consumers
 
 A consumer pull messages from 1, ..., $n$ topics. The consumer offset is also stored in memory, and is stored in a
 special topic: *consumer offset* which keeps track of the consumers "position". Consumers can also belong to a consumer

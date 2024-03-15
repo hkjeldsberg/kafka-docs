@@ -5,8 +5,8 @@ which can perform lightweight transformations on data. The system is fully de-co
 
 ## Sources and Sinks
 
-A source connector **imports** data from an external system *into* Kafka, while a sink connector **exports** from Kafka
-to an external system.
+Kafka Connects contains several **connectors**. A source connector **imports** data from an external system *into*
+Kafka, while a sink connector **exports** from Kafka to an external system.
 
 ## Kafka Connect Components
 

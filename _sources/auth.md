@@ -3,7 +3,7 @@
 ## Security in Kafka
 
 SSL and SASL authentication is supported between Clients (Producers and Consumers) and Brokers, between Brokers, and
-between Brokers and Tools. Different SASL methods are available (GSSAPI, PLAIN, SCRAM-SHA-256, OAUTHBEARER with JWT).
+between Brokers and Tools. Different SASL methods are available (GSSAPI, PLAIN, SCRAM-SHA-(256/512), OAUTHBEARER with JWT).
 Authentication and authorization is supported, but is **disabled** by default. Creating a SSL key can be performed using
 the Java *keytool* utility, or similarly in other languages.
 

@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Kafka Developed Exam Requirements &#8212; Kafka Fundamentals Docs</title>
+    <title>Topics Fundamentals &#8212; Kafka Fundamentals Docs</title>
   
   
   
@@ -59,11 +59,9 @@
     <script src="_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'exam';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'topics';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Testing in Kafka" href="testing.html" />
-    <link rel="prev" title="Kafka Basics" href="fundamentals.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
     <meta name="docbuild:last-update" content="Mar 15, 2024"/>
@@ -126,6 +124,8 @@
       
       
       
+        
+      
       <div class="bd-sidebar-primary bd-sidebar">
         
 
@@ -180,10 +180,10 @@
             </li>
         </ul>
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Fundamentals</span></p>
-<ul class="current nav bd-sidenav">
+<ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="commands.html">Kafka CLI commands</a></li>
 <li class="toctree-l1"><a class="reference internal" href="fundamentals.html">Kafka Basics</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Kafka Developed Exam Requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="exam.html">Kafka Developed Exam Requirements</a></li>
 <li class="toctree-l1"><a class="reference internal" href="testing.html">Testing in Kafka</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Streams and KSQL</span></p>
@@ -277,7 +277,7 @@
       
       
       
-      <li><a href="https://github.com/kvslab/OasisMove/issues/new?title=Issue%20on%20page%20%2Fexam.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/kvslab/OasisMove/issues/new?title=Issue%20on%20page%20%2Ftopics.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -307,7 +307,7 @@
       
       
       
-      <li><a href="_sources/exam.md" target="_blank"
+      <li><a href="_sources/topics.md" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -391,7 +391,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Kafka Developed Exam Requirements</h1>
+    <h1>Topics Fundamentals</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -401,7 +401,9 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#product-knowledge">Product knowledge</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#topic-tools">Topic Tools</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#topic-configuration">Topic Configuration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#message-behaviour">Message behaviour</a></li>
 </ul>
             </nav>
         </div>
@@ -413,22 +415,49 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="kafka-developed-exam-requirements">
-<h1>Kafka Developed Exam Requirements<a class="headerlink" href="#kafka-developed-exam-requirements" title="Permalink to this heading">#</a></h1>
-<section id="product-knowledge">
-<h2>Product knowledge<a class="headerlink" href="#product-knowledge" title="Permalink to this heading">#</a></h2>
-<p>The exam requires prior knowledge of the following Kafka topics:</p>
+  <section class="tex2jax_ignore mathjax_ignore" id="topics-fundamentals">
+<h1>Topics Fundamentals<a class="headerlink" href="#topics-fundamentals" title="Permalink to this heading">#</a></h1>
+<p>A <strong>topic</strong> is a collection of related messages or events – a log or sequence of events. In theory, you can have an
+unlimited number of topics. Within a topic, we find one or several <strong>partitions</strong> corresponding to a log, which are
+allocated to different brokers in the cluster. You can think of partitions as a log; strictly ordered with each message
+recieving an incremental ID called <strong>offset</strong>. Within a partitions, we have individual <strong>segments</strong>, existing on the
+disk. Kafka performs distributions of the topics to brokers, but the user needs to set resource limitations and
+requests.</p>
+<section id="topic-tools">
+<h2>Topic Tools<a class="headerlink" href="#topic-tools" title="Permalink to this heading">#</a></h2>
+<p>Topics are created in the following way with a given <code class="docutils literal notranslate"><span class="pre">--replication-factor</span></code> and number of <code class="docutils literal notranslate"><span class="pre">--partitions</span></code>:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">kafka-topics --bootstrap-server kafka:9092 --create  --topic &lt;topic-name&gt;  --partitions $PART  --replication-factor $REP</span>
+</pre></div>
+</div>
+<p>To (1) avoid overwriting an existing topic and (2) create a topic that does not exsist, pass the <code class="docutils literal notranslate"><span class="pre">--if-not-exists</span></code> flag.</p>
+<p>Number of partitions can be altered using the <code class="docutils literal notranslate"><span class="pre">--alter</span></code> flag:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">kafka-topics --bootstrap-server kafka:9092 --alter  --topic &lt;topic-name&gt;  --partitions $NEW_NUMBER_OF_PARTITIONS</span>
+</pre></div>
+</div>
+<p>where <code class="docutils literal notranslate"><span class="pre">&lt;topic-name&gt;</span></code> is an existing topic. You can only <strong>increase</strong> the number of partitions.</p>
+<p>Other topic commands include:</p>
 <ul class="simple">
-<li><p>A minimum of 6-12 months hands-on experience using Confluent products.</p></li>
-<li><p>Conceptual knowledge of building applications</p></li>
-<li><p>Understanding of network technologies as they relate to Confluent products</p></li>
-<li><p>Understanding of Kafka Producer applications</p></li>
-<li><p>Understanding of Kafka Consumer applications</p></li>
-<li><p>Understanding of Kafka Streams applications</p></li>
-<li><p>Capable of Developing KSQL queries</p></li>
-<li><p>Define Avro schemas for message data formats and register them in the Schema Registry</p></li>
-<li><p>Ability to Integrate Kafka with external data systems using Kafka Connect</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--topics-with-overrides</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--under-replicated-partitions</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--unavailable-partitions</span></code></p></li>
 </ul>
+</section>
+<section id="topic-configuration">
+<h2>Topic Configuration<a class="headerlink" href="#topic-configuration" title="Permalink to this heading">#</a></h2>
+<p>To get configuration for a particuler entity type (here topics) may be listed by describing the <code class="docutils literal notranslate"><span class="pre">--entity-type</span></code>
+to <code class="docutils literal notranslate"><span class="pre">kafka-configs</span></code>:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">kafka-configs --bootstrap-server kafka:9092 --describe --entity-type topics</span>
+</pre></div>
+</div>
+<p>and add configuration by using the <code class="docutils literal notranslate"><span class="pre">--add-config</span> <span class="pre">KEY=VALUE</span></code> flag (also need to specify <code class="docutils literal notranslate"><span class="pre">--entity-name</span></code>).</p>
+<p>Another approach to configure topics is through <em>consumer groups</em> accessible through <code class="docutils literal notranslate"><span class="pre">kafka-consumer-groups.sh</span></code>.
+Deleting a group with <code class="docutils literal notranslate"><span class="pre">--delete</span> <span class="pre">--group</span> <span class="pre">&lt;group-name&gt;</span></code> can only be performed for consumer groups with no
+members (<code class="docutils literal notranslate"><span class="pre">-member</span></code>). To reset the offset for an existing consumer group, use <code class="docutils literal notranslate"><span class="pre">--to-latest</span></code>. When listing topics, the
+topic <code class="docutils literal notranslate"><span class="pre">__consumer_offset</span></code> topic will be listed with information of the offset. This is created when <em>consumer groups</em>
+are enabled.</p>
+</section>
+<section id="message-behaviour">
+<h2>Message behaviour<a class="headerlink" href="#message-behaviour" title="Permalink to this heading">#</a></h2>
 </section>
 </section>
 
@@ -462,24 +491,6 @@ document.write(`
                 <footer class="prev-next-footer">
                   
 <div class="prev-next-area">
-    <a class="left-prev"
-       href="fundamentals.html"
-       title="previous page">
-      <i class="fa-solid fa-angle-left"></i>
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Kafka Basics</p>
-      </div>
-    </a>
-    <a class="right-next"
-       href="testing.html"
-       title="next page">
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Testing in Kafka</p>
-      </div>
-      <i class="fa-solid fa-angle-right"></i>
-    </a>
 </div>
                 </footer>
               
@@ -496,7 +507,9 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#product-knowledge">Product knowledge</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#topic-tools">Topic Tools</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#topic-configuration">Topic Configuration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#message-behaviour">Message behaviour</a></li>
 </ul>
   </nav></div>
 
