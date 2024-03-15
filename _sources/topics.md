@@ -49,3 +49,7 @@ topic `__consumer_offset` topic will be listed with information of the offset. T
 are enabled.
 
 ## Message behaviour
+
+By default, messages are read one per line. This can be controlled by a class extending the `kafka.common.MessageReader`
+class. Given an extended class `MyMessageReader`, this can be supplemented to the Kafka console through the
+argument `--line-reader org.example.MyMessageReader`.

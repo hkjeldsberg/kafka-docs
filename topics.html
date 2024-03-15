@@ -62,7 +62,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'topics';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Kafka Developed Exam Requirements" href="exam.html" />
+    <link rel="next" title="Kafka Storage" href="storage.html" />
     <link rel="prev" title="Kafka Basics" href="fundamentals.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -184,6 +184,7 @@
 <li class="toctree-l1"><a class="reference internal" href="commands.html">Kafka CLI commands</a></li>
 <li class="toctree-l1"><a class="reference internal" href="fundamentals.html">Kafka Basics</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Topics Fundamentals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="storage.html">Kafka Storage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="exam.html">Kafka Developed Exam Requirements</a></li>
 <li class="toctree-l1"><a class="reference internal" href="testing.html">Testing in Kafka</a></li>
 </ul>
@@ -459,6 +460,9 @@ are enabled.</p>
 </section>
 <section id="message-behaviour">
 <h2>Message behaviour<a class="headerlink" href="#message-behaviour" title="Permalink to this heading">#</a></h2>
+<p>By default, messages are read one per line. This can be controlled by a class extending the <code class="docutils literal notranslate"><span class="pre">kafka.common.MessageReader</span></code>
+class. Given an extended class <code class="docutils literal notranslate"><span class="pre">MyMessageReader</span></code>, this can be supplemented to the Kafka console through the
+argument <code class="docutils literal notranslate"><span class="pre">--line-reader</span> <span class="pre">org.example.MyMessageReader</span></code>.</p>
 </section>
 </section>
 
@@ -502,11 +506,11 @@ are enabled.</p>
       </div>
     </a>
     <a class="right-next"
-       href="exam.html"
+       href="storage.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Kafka Developed Exam Requirements</p>
+        <p class="prev-next-title">Kafka Storage</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
