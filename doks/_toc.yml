@@ -9,6 +9,7 @@ parts:
     chapters:
       - file: commands
       - file: fundamentals
+      - file: topics
       - file: exam
       - file: testing
 
