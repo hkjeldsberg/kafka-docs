@@ -46,3 +46,8 @@ Add an ACL to existing user `myuser`:
 kafka-acls --authorizer-properties zookeeper.connect=localhost:2181 --add --allow-principal User:myuser --operation write --topic acl-test
 ```
 
+To start a connector (standalone source):
+
+```console
+./bin/connect-standalone.sh config/connect-standalone.properties config/connect-file-source.properties
+```
