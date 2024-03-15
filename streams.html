@@ -409,6 +409,8 @@ document.write(`
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#windowing">Windowing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#time-in-streams">Time in Streams</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#streams-vs-database">Streams vs Database</a></li>
 </ul>
             </nav>
         </div>
@@ -422,10 +424,18 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="kafka-streams">
 <h1>Kafka Streams<a class="headerlink" href="#kafka-streams" title="Permalink to this heading">#</a></h1>
+<p>Streams are a <em>sequence of events</em>; real-time events. Example of events:</p>
+<ul class="simple">
+<li><p>Transactions</p></li>
+<li><p>Stock trades</p></li>
+<li><p>Deliveries</p></li>
+<li><p>Network events</p></li>
+<li><p>Moves in a game</p></li>
+</ul>
 <section id="stateless-and-stateful-transformations">
 <h2>Stateless and Stateful transformations<a class="headerlink" href="#stateless-and-stateful-transformations" title="Permalink to this heading">#</a></h2>
-<p>Tranformations that are <strong>stateless</strong> do not require a special data store.</p>
-<p>Transformation that are <strong>stateful</strong> require a special data store to store the current <strong>state</strong> for the stream.</p>
+<p>Tranformations that are <strong>stateless</strong> do not require a special data store. Transformation that are <strong>stateful</strong> require
+a special data store to store the current <strong>state</strong> for the stream.</p>
 <section id="stateless-transformations">
 <h3>Stateless transformations<a class="headerlink" href="#stateless-transformations" title="Permalink to this heading">#</a></h3>
 <p>Some stateless transformations inlcude:</p>
@@ -469,6 +479,26 @@ time buckets”, aggregating them bit by bit. Different window types exist:</p>
 <li><p><strong>Sliding</strong>: Used for joins. Defined by the length of time between timestamps of any two records. No gaps, but
 overlap.</p></li>
 <li><p><strong>Session</strong>: Dynamic windows formed around activity based on the timestamps. Will contain inactivity <em>gaps</em></p></li>
+</ul>
+</section>
+<section id="time-in-streams">
+<h2>Time in Streams<a class="headerlink" href="#time-in-streams" title="Permalink to this heading">#</a></h2>
+<p><em>Time</em> in the context of streams is used in operations such as <em>windowing</em>, and define time boundaries. These include:</p>
+<ul class="simple">
+<li><p><strong>Event time</strong>: Time when event was <em>created</em> at the source.</p></li>
+<li><p><strong>Ingestion time</strong>: Time when the event was <em>stored</em> in a topic partition by a Kafka broker.</p></li>
+<li><p><strong>Processing time</strong>/Wall-clock-time: Time when the event started to be <em>handled/processed</em> by the stream processing
+application.</p></li>
+</ul>
+<p>Processing time can happen days after the event actually happened. Time zones should be standardized.</p>
+</section>
+<section id="streams-vs-database">
+<h2>Streams vs Database<a class="headerlink" href="#streams-vs-database" title="Permalink to this heading">#</a></h2>
+<p>There are some notable differences, includingStreams:</p>
+<ul class="simple">
+<li><p>Streams keep a history of changes</p></li>
+<li><p>No delting a stream</p></li>
+<li><p>A table can be converted to a stream (or other way)</p></li>
 </ul>
 </section>
 </section>
@@ -543,6 +573,8 @@ overlap.</p></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#windowing">Windowing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#time-in-streams">Time in Streams</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#streams-vs-database">Streams vs Database</a></li>
 </ul>
   </nav></div>
 

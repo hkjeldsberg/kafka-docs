@@ -1,10 +1,17 @@
 # Kafka Streams
 
+Streams are a *sequence of events*; real-time events. Example of events:
+
+- Transactions
+- Stock trades
+- Deliveries
+- Network events
+- Moves in a game
+
 ## Stateless and Stateful transformations
 
-Tranformations that are **stateless** do not require a special data store.
-
-Transformation that are **stateful** require a special data store to store the current **state** for the stream.
+Tranformations that are **stateless** do not require a special data store. Transformation that are **stateful** require
+a special data store to store the current **state** for the stream.
 
 ### Stateless transformations
 
@@ -47,3 +54,21 @@ time buckets", aggregating them bit by bit. Different window types exist:
   overlap.
 - **Session**: Dynamic windows formed around activity based on the timestamps. Will contain inactivity *gaps*
 
+## Time in Streams
+
+*Time* in the context of streams is used in operations such as *windowing*, and define time boundaries. These include:
+
+- **Event time**: Time when event was *created* at the source.
+- **Ingestion time**: Time when the event was *stored* in a topic partition by a Kafka broker.
+- **Processing time**/Wall-clock-time: Time when the event started to be *handled/processed* by the stream processing
+  application.
+
+Processing time can happen days after the event actually happened. Time zones should be standardized.
+
+## Streams vs Database
+
+There are some notable differences, includingStreams:
+
+- Streams keep a history of changes
+- No delting a stream
+- A table can be converted to a stream (or other way) 
