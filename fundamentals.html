@@ -1,0 +1,741 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Kafka Basics &#8212; Kafka Fundamentals Docs</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'fundamentals';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Kafka Developed Exam Requirements" href="exam.html" />
+    <link rel="prev" title="Kafka CLI commands" href="commands.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+    <meta name="docbuild:last-update" content="Mar 15, 2024"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/logo.png" class="logo__image only-light" alt="Kafka Fundamentals Docs - Home"/>
+    <script>document.write(`<img src="_static/logo.png" class="logo__image only-dark" alt="Kafka Fundamentals Docs - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="index.html">
+                    Kafka Documentations
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Fundamentals</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="commands.html">Kafka CLI commands</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Kafka Basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="exam.html">Kafka Developed Exam Requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testing.html">Testing in Kafka</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Streams and KSQL</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="streams.html">Kafka Streams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ksql.html">Confluent kSQL</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Producers and Consumers</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="procon.html">Working with Producers and Consumers</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="metrics.html">Metrics and Monitoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tuning.html">Tuning producers and consumers</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Connect and Schemas</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="connect.html">Kafka Connect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="schemreg.html">Confluent Schema Registry and Data Types</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Configuration and Auth</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="config.html">Kafka configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="auth.html">Security, Authentication and Authorization</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/kvslab/OasisMove" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/kvslab/OasisMove/issues/new?title=Issue%20on%20page%20%2Ffundamentals.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/fundamentals.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Kafka Basics</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kafka-fundamentals">Kafka Fundamentals</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#brokers-and-clusters">Brokers and Clusters</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#leadership-and-replication-within-a-partition">Leadership and Replication within a Partition</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#replicas-in-kafka">Replicas in Kafka</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#handling-requests">Handling Requests</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#partitions-in-kafka">Partitions in Kafka</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tough-concepts-of-kafka">Tough concepts of Kafka</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-kafka-and-log-system">Why Kafka and log system?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-retention">Data retention</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#compacted-topics">Compacted topics</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#security">Security</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#integrating-kafka-into-you-environment-kafka-connect">Integrating Kafka into you Environment - Kafka Connect</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#schema-evolution-schemas">Schema evolution - Schemas</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#confluent-ksqldb-ksql">Confluent ksqlDB - KSQL</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kafka-streams">Kafka Streams</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-confluent-platform">The Confluent Platform</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="kafka-basics">
+<h1>Kafka Basics<a class="headerlink" href="#kafka-basics" title="Permalink to this heading">#</a></h1>
+<p>Data is described by logs or <strong>topics</strong>. An alternative way to store data as opposed to databased.
+<strong>Events</strong> are stored in the topics. Currently, the trend is to create smaller applications that can communicate through
+the Kafka topic. This enables <em>real-time</em> analysis of data stored in topics, instaed of batch processing. Writing data
+from a database into a topic can be done with <strong>Kafka connect</strong>. This framework is also used to input data from topics
+to other services.
+<strong>Kafka streams API</strong> handles framework and infrastructure to connect/join topics. For database queries Kafka
+includes <strong>kSQL</strong>, which outputs into a topic.
+<strong>Kafka cloud</strong> enables cloud services with Kafka.</p>
+<section id="kafka-fundamentals">
+<h2>Kafka Fundamentals<a class="headerlink" href="#kafka-fundamentals" title="Permalink to this heading">#</a></h2>
+<p>A <strong>producer</strong> – a service that writes events to the Kafka cluster. A <strong>Kafka cluster</strong> consists of one or several **
+brokers**, with each its local storage. Produces write into these storages. Brokers may be machines, VMs, servers,
+containers, or similar. To read data from the cluster, we use a <strong>consumer</strong>. A lot of the work happens on the
+consume-side of the framework. The consumed data may then be further processed and presented in reports, dashboards or
+visualizations, ect. Producers and consumers are <strong>de-coupled</strong>  – hence slow consumers will not affect producers and
+vice versa. Access control, cluster management, and failure detection &amp; recovery is controlled by a leader broker node (
+previously <em>Zookeeper</em>).</p>
+<p>A <strong>topic</strong> is a collection of related messages or events – a log or sequence of events. In theory, you can have an
+unlimited number of topics. Within a topic, we find one or several <strong>partitions</strong> corresponding to a log, which are
+allocated to different brokers in the cluster. You can think of partitions as a log; strictly ordered with each message
+recieving an incremental ID called <strong>offset</strong>. Within a partitions, we have individual <strong>segments</strong>, existing on the
+disk. Kafka performs distributions of the topics to brokers, but the user needs to set resource limitations and
+requests.</p>
+<figure class="align-default" id="log">
+<img alt="_images/log.png" src="_images/log.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 1 </span><span class="caption-text">A representation of a log in Kafka.</span><a class="headerlink" href="#log" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<p>A log consists of several <strong>events</strong> which contitutes a <strong>stream</strong>. Each Kafka message consists of a <strong>key</strong> and
+<strong>value</strong>, with an optional <strong>header</strong> and a <strong>timestamp</strong> (creation/ingestion time).</p>
+</section>
+<section id="brokers-and-clusters">
+<h2>Brokers and Clusters<a class="headerlink" href="#brokers-and-clusters" title="Permalink to this heading">#</a></h2>
+<p>A Kafka cluster consists of one or several brokers, wher one broker is the selected <strong>controller</strong>. Basic function:
+manage partitions locally. Takes input from producers and places them in partitions. Recieves requests from consumers
+and let them read from partitions. Each partition has replicas (controller by replication factor), such that partitions
+are replicated on separate brokers working as a backup. Also in charge of electing a leader. Partitions are distributed
+evenly amount available brokers.</p>
+</section>
+<section id="leadership-and-replication-within-a-partition">
+<h2>Leadership and Replication within a Partition<a class="headerlink" href="#leadership-and-replication-within-a-partition" title="Permalink to this heading">#</a></h2>
+<p>When multiple partitions of the same topic are created, one act as the <strong>leader</strong> and the remaining as <strong>followers</strong>.
+The leader is telling producers and consumers that they should be written to, and similarly the consuming comes from
+this partition. When a broker crashes and contains a leader, a <strong>new leader</strong> is elected right away, with no loss of
+data, known as <strong>leader election</strong>.</p>
+<p>In this case, only replicas that are in sync with the leader can be chosen as leaders; they are <strong>in-sync replicas</strong> (
+ISR). If no ISR is available, producers will <strong>pause</strong> producing. Alternative, a configuration settings known as **
+unclean leader election** can be set, which elects a new leder even if no ISR is available.</p>
+</section>
+<section id="replicas-in-kafka">
+<h2>Replicas in Kafka<a class="headerlink" href="#replicas-in-kafka" title="Permalink to this heading">#</a></h2>
+<p>Each topic may have multiple <strong>replicas</strong>. Replicas are distributed between brokers and provide guarantees for the
+availability of data. The amount of replicas is controller by the <strong>replication factor</strong>, set by the
+flag <code class="docutils literal notranslate"><span class="pre">--replication-factor</span> <span class="pre">N</span></code>. Give a replication factor of <code class="docutils literal notranslate"><span class="pre">3</span></code>, there will be 3 copies of each partition spread accross
+the brokers.Main goals of replicas:</p>
+<ul class="simple">
+<li><p>Spread evenly amoung brokers</p></li>
+<li><p>Each partition is on a different broker</p></li>
+<li><p>Put replicas on different “racks” – where a broker can be located</p></li>
+</ul>
+<p>A default replication factor is controlled by the variable <code class="docutils literal notranslate"><span class="pre">default.replication.factor=N</span></code> in <code class="docutils literal notranslate"><span class="pre">server.properties</span></code>.</p>
+</section>
+<section id="handling-requests">
+<h2>Handling Requests<a class="headerlink" href="#handling-requests" title="Permalink to this heading">#</a></h2>
+<p>Between the Producer/Consumer and the Broker there is a request workflow. This includes an <em>acceptor thread</em>, <em>processor
+thread</em>, <em>IO thread</em>, <em>request queue</em>, and <em>response queue</em>. A request queue, is a request waiting to be processesd.
+Similarly, a repsonse queue is all requests waiting for being “picked up” by the processor thread/network thread. The IO
+thread is also known as the <em>request handler thread</em>. A <strong>produce request</strong> happens from Producer side, and <strong>fetch
+request</strong> happens from Replicas and Consumer side. Both requests go through the leader of the replicas; and requires a
+leader to be present. Each broker has a metadata list; a cache with all paritions and replicas allowing the client to
+figure out where the <em>leader</em> is.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">acks=all</span></code>; request is stored in buffer known as <em>purgatory</em> – until data is written to <em>all</em> replicas. This is a *
+zero copy* method, no duplication. A minumum number of messages can also be set to avoid small batches.</p>
+</section>
+<section id="partitions-in-kafka">
+<h2>Partitions in Kafka<a class="headerlink" href="#partitions-in-kafka" title="Permalink to this heading">#</a></h2>
+<p>Partitions within a topic are split between brokers, but partitions will never split up. Messages are appended to a
+partition, <strong>never</strong> removed. Partitions are stored under <code class="docutils literal notranslate"><span class="pre">log.dirs</span></code>. Within a partition in <code class="docutils literal notranslate"><span class="pre">log.dirs</span></code>, additional files
+exist; <code class="docutils literal notranslate"><span class="pre">.log</span></code> – the message, <code class="docutils literal notranslate"><span class="pre">.checkpoint</span></code> – to handle (leader) failures, <code class="docutils literal notranslate"><span class="pre">.snapshot</span></code> – internal Kafka snapshots.
+Remaining files are mappings between <em>message offset</em> and  <em>physical location</em>.</p>
+</section>
+<section id="tough-concepts-of-kafka">
+<h2>Tough concepts of Kafka<a class="headerlink" href="#tough-concepts-of-kafka" title="Permalink to this heading">#</a></h2>
+<p>Main misconception: “Kafka is a queue”. Instead, <strong>Kafka is a log</strong>. Second: event streams are <strong>immutable</strong>. If
+databases are brief “snapshots” in time, Kafka is a “live broadcast”. Leads to Stream/Table duality; one can be derived
+by the other. Third: materialized view of database query – using <strong>kSQLdb</strong>, which updates the data based on the stream.</p>
+</section>
+<section id="why-kafka-and-log-system">
+<h2>Why Kafka and log system?<a class="headerlink" href="#why-kafka-and-log-system" title="Permalink to this heading">#</a></h2>
+<p>Fist, consider the existing techonology:
+Pros:</p>
+<ul class="simple">
+<li><p>Suitable for heavy, complex data transformations and aggregations.</p></li>
+<li><p>Optimized for high-volume, periodic updates and historical data analysis.</p></li>
+</ul>
+<p>Cons:</p>
+<ul class="simple">
+<li><p>Latency issues; not suited for real-time data processing.</p></li>
+<li><p>Complex and potentially costly ETL (Extract, Transform, Load) processes.</p></li>
+<li><p>Scalability can be challenging, requiring significant resources.</p></li>
+</ul>
+<p>In contrast, because there is a growing interest in real-time processing of data, we propose the use of <strong>logs</strong>. Pros:</p>
+<ul class="simple">
+<li><p>Enables real-time data processing (ETL) and immediate data availability to multi-subscriber data feeds.</p></li>
+<li><p>Simplifies data integration across distributed systems.</p></li>
+<li><p>Enhances system resilience and data recovery through append-only nature.</p></li>
+<li><p>Logs are at the heart of <em>stream processing</em>; infrastructure for continuous data processing.</p></li>
+<li><p>Logs act as a buffer allowing processes to be restarted or fail withoyt slowing down other parts of the processing
+graph.</p></li>
+</ul>
+</section>
+<section id="data-retention">
+<h2>Data retention<a class="headerlink" href="#data-retention" title="Permalink to this heading">#</a></h2>
+<p>By default, data is stored for a time of <code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">week</span></code>, but his can be edited either by per topic, or globally. How often the
+data is stored depends on the business logic, and GDRP and similar compliance perspectives. When data is expired, it is
+purged per segment.</p>
+</section>
+<section id="compacted-topics">
+<h2>Compacted topics<a class="headerlink" href="#compacted-topics" title="Permalink to this heading">#</a></h2>
+<p>The time values are ordered, and the values vary. However, the <strong>key</strong> may be varying only between key1 to key4 (
+example), e.g. 4 unique keys. If previous states are not important, use a <strong>compacted topic</strong> which removes “old”
+entries in the partition.</p>
+</section>
+<section id="security">
+<h2>Security<a class="headerlink" href="#security" title="Permalink to this heading">#</a></h2>
+<p>Kafka will encrypt using SSL or similar all types of transits (producer to broker, broker to consumer, ect.). Kafka also
+supports authentication and authorization, but using security is <em>optional</em>. However,</p>
+</section>
+<section id="integrating-kafka-into-you-environment-kafka-connect">
+<h2>Integrating Kafka into you Environment - Kafka Connect<a class="headerlink" href="#integrating-kafka-into-you-environment-kafka-connect" title="Permalink to this heading">#</a></h2>
+<p>Kafka can be integrated with any system; through <strong>Kafka Connect API</strong> – a data integration framework to get data in and
+out of Kafka. Connect runs on a separate server, between the source and the Kafka cluster. Similarly, betwene the Kafka
+cluster and the sink. Lots of these connectors already exists between existing frameworks and Kafka Connect. Connect is
+a distrituted system with <span class="math notranslate nohighlight">\(n\)</span> workers running one or more <strong>tasks</strong>. Each task runs with a connector, which can again be
+partitioned into multiple pieces. Connectors can thus be split between multiple workers.</p>
+</section>
+<section id="schema-evolution-schemas">
+<h2>Schema evolution - Schemas<a class="headerlink" href="#schema-evolution-schemas" title="Permalink to this heading">#</a></h2>
+<p>This can be solved using a Schema Registry; a type descrition will translate into a expected field for each Kafka
+topics. A schema registry works outside the Kafka Cluster, and are kepy in an internal topic in the Kafka cluster,
+communicating with the Producer and Consumer. Consumer can ask for schema though a <strong>schema ID</strong>, to recognize the data
+format.</p>
+<p>Avro: a container file which consists of a <em>metadata</em> (schema) part and a <em>data</em> part, where the schema syntax is
+similar to <code class="docutils literal notranslate"><span class="pre">json</span></code>.</p>
+</section>
+<section id="confluent-ksqldb-ksql">
+<h2>Confluent ksqlDB - KSQL<a class="headerlink" href="#confluent-ksqldb-ksql" title="Permalink to this heading">#</a></h2>
+<p>Streaming SQL enging for Kafka using SQL-like semantics. Example use cases include streaming ETL, anomaly detection and
+event monitoring. The system can be accessed via CLI, REST or headless using any programming language.</p>
+</section>
+<section id="kafka-streams">
+<h2>Kafka Streams<a class="headerlink" href="#kafka-streams" title="Permalink to this heading">#</a></h2>
+<p>Kafka Streams is a Java API for doing stream processing on data in Apache Kafka. This combines the streams for Java with
+the Kafka, particularly usefull for microservices and continous queries and transformations. Kafka streams live together
+with your code within an <strong>app instance</strong>, which communicates with the Kafka cluster. Streams include functions such
+as <code class="docutils literal notranslate"><span class="pre">filter</span></code>, <code class="docutils literal notranslate"><span class="pre">map</span></code>, <code class="docutils literal notranslate"><span class="pre">join</span></code>, and <code class="docutils literal notranslate"><span class="pre">aggregate</span></code>, working on individual Kafka logs.</p>
+</section>
+<section id="the-confluent-platform">
+<h2>The Confluent Platform<a class="headerlink" href="#the-confluent-platform" title="Permalink to this heading">#</a></h2>
+<p>Confluent platform/cloud uses <strong>RBAC</strong> for authorization with pre-defined role bindings, working accross the platform.
+This includes kSQL, Connect, Schema Registry, Connectors, ect. Confluent Operator for Kubernetes runs on any plotform at
+any scale, while also using and manages persistent volumes in K8s. Note, there are <em>hundreds</em> of connectors available
+for all types of data.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="commands.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Kafka CLI commands</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="exam.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Kafka Developed Exam Requirements</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kafka-fundamentals">Kafka Fundamentals</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#brokers-and-clusters">Brokers and Clusters</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#leadership-and-replication-within-a-partition">Leadership and Replication within a Partition</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#replicas-in-kafka">Replicas in Kafka</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#handling-requests">Handling Requests</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#partitions-in-kafka">Partitions in Kafka</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tough-concepts-of-kafka">Tough concepts of Kafka</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-kafka-and-log-system">Why Kafka and log system?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-retention">Data retention</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#compacted-topics">Compacted topics</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#security">Security</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#integrating-kafka-into-you-environment-kafka-connect">Integrating Kafka into you Environment - Kafka Connect</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#schema-evolution-schemas">Schema evolution - Schemas</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#confluent-ksqldb-ksql">Confluent ksqlDB - KSQL</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kafka-streams">Kafka Streams</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-confluent-platform">The Confluent Platform</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Henrik A. Kjeldsberg
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    <p class="last-updated">
+  Last updated on Mar 15, 2024.
+  <br/>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
