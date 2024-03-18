@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Kafka Storage &#8212; Kafka Fundamentals Docs</title>
+    <title>Kafka Storage and Data Handling &#8212; Kafka Fundamentals Docs</title>
   
   
   
@@ -66,7 +66,7 @@
     <link rel="prev" title="Topics Fundamentals" href="topics.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="Mar 15, 2024"/>
+    <meta name="docbuild:last-update" content="Mar 18, 2024"/>
   </head>
   
   
@@ -184,7 +184,7 @@
 <li class="toctree-l1"><a class="reference internal" href="commands.html">Kafka CLI commands</a></li>
 <li class="toctree-l1"><a class="reference internal" href="fundamentals.html">Kafka Basics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="topics.html">Topics Fundamentals</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Kafka Storage</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Kafka Storage and Data Handling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="exam.html">Kafka Developed Exam Requirements</a></li>
 <li class="toctree-l1"><a class="reference internal" href="testing.html">Testing in Kafka</a></li>
 </ul>
@@ -393,7 +393,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Kafka Storage</h1>
+    <h1>Kafka Storage and Data Handling</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -406,6 +406,8 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#file-formats-and-indexes">File formats and Indexes</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#file-storage-administration">File/Storage Administration</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#storage-structures">Storage Structures</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-cluster-architectures">Multi-cluster architectures</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-mirrowmaker">Example: MirrowMaker</a></li>
 </ul>
             </nav>
         </div>
@@ -417,8 +419,8 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="kafka-storage">
-<h1>Kafka Storage<a class="headerlink" href="#kafka-storage" title="Permalink to this heading">#</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="kafka-storage-and-data-handling">
+<h1>Kafka Storage and Data Handling<a class="headerlink" href="#kafka-storage-and-data-handling" title="Permalink to this heading">#</a></h1>
 <section id="file-formats-and-indexes">
 <h2>File formats and Indexes<a class="headerlink" href="#file-formats-and-indexes" title="Permalink to this heading">#</a></h2>
 <p>Data is formated in a seleceted directory, determined by the <code class="docutils literal notranslate"><span class="pre">log.dirs</span></code> configuration in <code class="docutils literal notranslate"><span class="pre">server.properties</span></code>. As more
@@ -457,6 +459,41 @@ round-robin** distribution. Example:</p>
 <li><p>Kappa architecture: V1 and V2 in parallel – Helps with migration or transitinon to continuous jobs</p></li>
 <li><p>Multiple consumption: Multi-cluster – Replicates clusters for scale or ingesting from different Kafka clusters</p></li>
 </ul>
+</section>
+<section id="multi-cluster-architectures">
+<h2>Multi-cluster architectures<a class="headerlink" href="#multi-cluster-architectures" title="Permalink to this heading">#</a></h2>
+<p>Several architectures regarding multiple clusters exist. N.B.: Brokers of the same cluster must be in <em>same</em> region!</p>
+<ul class="simple">
+<li><p>Multiple clusters may be located in different <strong>geographical</strong> location, connecting to a central Kafka clutser (*
+Hub-and-Spoke*) (Many to one) Relevant for apps that need data from multiple sources/locations.</p>
+<ul>
+<li><p>Data that can be completely separated should be kept locally</p></li>
+</ul>
+</li>
+<li><p>Multiple Kafka clusters may be communicating with each other (<em>Active-active</em>).</p>
+<ul>
+<li><p>Produce and consume events accross multiple clusters</p></li>
+<li><p>Most scalable and cost-efficient architecture.</p></li>
+<li><p>May result in a loop, going back and forth endlessly</p></li>
+</ul>
+</li>
+<li><p>A backup architecture; (<em>Active-Standby</em>) with a “main” <strong>production</strong>  cluster, and one (or multiple) <strong>failover</strong>
+cluster.</p>
+<ul>
+<li><p>Inactive copy is a <em>cold copy</em>.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="example-mirrowmaker">
+<h2>Example: MirrowMaker<a class="headerlink" href="#example-mirrowmaker" title="Permalink to this heading">#</a></h2>
+<p>A framework for replicating data between two datacenters/clusters. The MirrorMaker uses a shared producer to send all
+its events to a target cluster, but has several consumers depending on the source cluster (3 topics -&gt; 3 consumers).</p>
+<p>To perform the process:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">kafka-mirror-maker --consumer.config config/consumer.properties --producer.config config/producer.properties --new.consumer --num.streams=2 --whitelist &quot;.*&quot;</span>
+</pre></div>
+</div>
+<p>MirrorMaker can also be run as a Docker container, and needs to be run in the <em>source</em> cluster.</p>
 </section>
 </section>
 
@@ -527,6 +564,8 @@ round-robin** distribution. Example:</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#file-formats-and-indexes">File formats and Indexes</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#file-storage-administration">File/Storage Administration</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#storage-structures">Storage Structures</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-cluster-architectures">Multi-cluster architectures</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-mirrowmaker">Example: MirrowMaker</a></li>
 </ul>
   </nav></div>
 
@@ -560,7 +599,7 @@ By Henrik A. Kjeldsberg
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on Mar 15, 2024.
+  Last updated on Mar 18, 2024.
   <br/>
 </p>
   </div>

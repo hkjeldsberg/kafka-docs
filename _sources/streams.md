@@ -71,4 +71,26 @@ There are some notable differences, includingStreams:
 
 - Streams keep a history of changes
 - No delting a stream
-- A table can be converted to a stream (or other way) 
+- A table can be converted to a stream (or other way)
+
+## Streams Design Patterns
+
+Depending on the goal and purpose of the data, sevaral stream design patterns are available. Patterns:
+
+- **Single event processing**: Each event is handled independently. No state is needed.
+- **Local state processing**: May include storing min and max values; need to store some state. Suffers from increased
+  memory usage.
+- **Multiphase processing**: Partially uses local state, but kicks over to a new partition for aggregating part of the
+  incoming data.
+- **External processing**: When data is external to a stream and performs an external lookup. May cause latency issues.
+- **Windowed join**: Design where two event streams are matched within a *time window*.
+- **Out of Sequence events**: For handling events arriving at the wrong time.
+
+## Stream Frameworks
+
+What framework to use will depend on the type of application.
+
+- **Ingest**: Try Kafka Connect.
+- **Low millisecond**: Request/Response system.
+- **Real-time data analytics**:  Performing complex aggregations for insight.
+- **Asyncronous Microservices**:Rquires local state caching events.

@@ -1,4 +1,4 @@
-# Kafka Storage
+# Kafka Storage and Data Handling
 
 ## File formats and Indexes
 
@@ -39,3 +39,30 @@ Kafka supports several storage structures, including
 - Kappa architecture: V1 and V2 in parallel – Helps with migration or transitinon to continuous jobs
 - Multiple consumption: Multi-cluster – Replicates clusters for scale or ingesting from different Kafka clusters
 
+## Multi-cluster architectures
+
+Several architectures regarding multiple clusters exist. N.B.: Brokers of the same cluster must be in *same* region!
+
+- Multiple clusters may be located in different **geographical** location, connecting to a central Kafka clutser (*
+  Hub-and-Spoke*) (Many to one) Relevant for apps that need data from multiple sources/locations.
+    - Data that can be completely separated should be kept locally
+- Multiple Kafka clusters may be communicating with each other (*Active-active*).
+    - Produce and consume events accross multiple clusters
+    - Most scalable and cost-efficient architecture.
+    - May result in a loop, going back and forth endlessly
+- A backup architecture; (*Active-Standby*) with a "main" **production**  cluster, and one (or multiple) **failover**
+  cluster.
+    - Inactive copy is a *cold copy*.
+
+## Example: MirrowMaker
+
+A framework for replicating data between two datacenters/clusters. The MirrorMaker uses a shared producer to send all
+its events to a target cluster, but has several consumers depending on the source cluster (3 topics -> 3 consumers).
+
+To perform the process:
+
+```console
+kafka-mirror-maker --consumer.config config/consumer.properties --producer.config config/producer.properties --new.consumer --num.streams=2 --whitelist ".*"
+```
+
+MirrorMaker can also be run as a Docker container, and needs to be run in the *source* cluster. 

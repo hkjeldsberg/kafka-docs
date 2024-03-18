@@ -66,7 +66,7 @@
     <link rel="prev" title="Working with Producers and Consumers" href="procon.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="Mar 15, 2024"/>
+    <meta name="docbuild:last-update" content="Mar 18, 2024"/>
   </head>
   
   
@@ -184,7 +184,7 @@
 <li class="toctree-l1"><a class="reference internal" href="commands.html">Kafka CLI commands</a></li>
 <li class="toctree-l1"><a class="reference internal" href="fundamentals.html">Kafka Basics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="topics.html">Topics Fundamentals</a></li>
-<li class="toctree-l1"><a class="reference internal" href="storage.html">Kafka Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="storage.html">Kafka Storage and Data Handling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="exam.html">Kafka Developed Exam Requirements</a></li>
 <li class="toctree-l1"><a class="reference internal" href="testing.html">Testing in Kafka</a></li>
 </ul>
@@ -403,8 +403,11 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#common-broker-metrics">Common Broker Metrics</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#monitoring-in-java">Monitoring in Java</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#common-producer-metrics">Common Producer Metrics</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#common-consumer-metrics">Common Consumer Metrics</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#diagnosis">Diagnosis</a></li>
 </ul>
             </nav>
         </div>
@@ -418,11 +421,36 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="metrics-and-monitoring">
 <h1>Metrics and Monitoring<a class="headerlink" href="#metrics-and-monitoring" title="Permalink to this heading">#</a></h1>
-<p>Kafka metrics are accessed using <code class="docutils literal notranslate"><span class="pre">JMX</span></code>, accessable by passing a <code class="docutils literal notranslate"><span class="pre">JMX</span></code>-option via the <code class="docutils literal notranslate"><span class="pre">KAFKA_JMX_OPTS</span></code> env variable.</p>
+<p>Kafka metrics are accessed using <code class="docutils literal notranslate"><span class="pre">JMX</span></code>, accessable by passing a <code class="docutils literal notranslate"><span class="pre">JMX</span></code>-option via the <code class="docutils literal notranslate"><span class="pre">KAFKA_JMX_OPTS</span></code> env variable. This
+can report to logging systems such as Grafana or Splunk.</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">KAFKA_JMX_OPTS=&quot;-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.local.only=false -</span>
 <span class="go">Djava.rmi.server.hostname=localhost&quot;</span>
 </pre></div>
 </div>
+<p>Kafka also uses Yammer Metrics, for metrics reporting in the server.</p>
+<section id="common-broker-metrics">
+<h2>Common Broker Metrics<a class="headerlink" href="#common-broker-metrics" title="Permalink to this heading">#</a></h2>
+<p>Common broker metrics include:</p>
+<ul class="simple">
+<li><p><strong>ACTIVE CONTROLLER COUNT</strong>: Is the broker the controller?</p></li>
+<li><p><strong>REQUEST HANDLER IDLE RATIO</strong>: How much load is the broker under?</p></li>
+<li><p><strong>ALL TOPICS BYTES IN</strong>: Do I have enough brokers?</p></li>
+<li><p><strong>ALL TOPICS BYTES OUT</strong>: High consumer traffic?</p></li>
+<li><p><strong>ALL TOPICS MESSAGES IN</strong>: Messages per second?</p></li>
+<li><p><strong>PARTITION COUNT</strong>: Many partitions assigned to a broker?</p></li>
+<li><p><strong>LEADER COUNT</strong>: How many pertitions is this broker a leader for?</p></li>
+<li><p><strong>OFFLINE PARTITIONS</strong>: Any brokers without leader?</p></li>
+<li><p><strong>REQUEST METRICS</strong>: Number of requests to broker?</p></li>
+</ul>
+</section>
+<section id="monitoring-in-java">
+<h2>Monitoring in Java<a class="headerlink" href="#monitoring-in-java" title="Permalink to this heading">#</a></h2>
+<p>In Java, the main monitoring metrics are related to <em>garbage collection</em> (GC). This includes:</p>
+<ul class="simple">
+<li><p><strong>CollectionCount</strong>: # of GC cycles</p></li>
+<li><p><strong>CollectionTime</strong>: Time spent in GC cycle</p></li>
+</ul>
+</section>
 <section id="common-producer-metrics">
 <h2>Common Producer Metrics<a class="headerlink" href="#common-producer-metrics" title="Permalink to this heading">#</a></h2>
 <p>Common producer metrics include:</p>
@@ -450,6 +478,31 @@ processing is important, high lag might mean you need more consumers.</p></li>
 <li><p><strong>fetch-rate</strong>: Fetch requests per second. If this falls suddenly or goes to zero, it may be an indication of problems
 with the consumer.</p></li>
 </ul>
+</section>
+<section id="diagnosis">
+<h2>Diagnosis<a class="headerlink" href="#diagnosis" title="Permalink to this heading">#</a></h2>
+<p>To diagnosis a unbalanced load / under-replicated parititons, consider the following metrics:</p>
+<ul class="simple">
+<li><p><strong>Partition and leader partition count</strong></p></li>
+<li><p>For all topics:</p>
+<ul>
+<li><p>Messages <strong>in</strong> rate</p></li>
+<li><p>Bytes <strong>in</strong> rate</p></li>
+<li><p>Bytes <strong>out</strong> rate</p></li>
+</ul>
+</li>
+</ul>
+<p>The numbers will be even accross all brokers. If not, you will need to <strong>move partiitons</strong>, by using
+the <code class="docutils literal notranslate"><span class="pre">kafka-reassign-partitions.sh</span></code> command.</p>
+<p>Other problems with your brokers can include hardware failures; a broker’s ability to serve requests. Metrics to
+investigate is:</p>
+<ul class="simple">
+<li><p><strong>CPU</strong> utilization</p></li>
+<li><p><strong>Inbound and outbound</strong> network throughput</p></li>
+<li><p><strong>Disk average wait time</strong></p></li>
+<li><p><strong>Disk percentage utilization</strong></p></li>
+</ul>
+<p>Analyze these as the traffic increases. For cluster use, monitor the <strong>all topics bytes in rate</strong> metric.</p>
 </section>
 </section>
 
@@ -517,8 +570,11 @@ with the consumer.</p></li>
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#common-broker-metrics">Common Broker Metrics</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#monitoring-in-java">Monitoring in Java</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#common-producer-metrics">Common Producer Metrics</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#common-consumer-metrics">Common Consumer Metrics</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#diagnosis">Diagnosis</a></li>
 </ul>
   </nav></div>
 
@@ -552,7 +608,7 @@ By Henrik A. Kjeldsberg
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on Mar 15, 2024.
+  Last updated on Mar 18, 2024.
   <br/>
 </p>
   </div>

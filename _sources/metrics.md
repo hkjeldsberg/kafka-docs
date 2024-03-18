@@ -1,11 +1,37 @@
 # Metrics and Monitoring
 
-Kafka metrics are accessed using `JMX`, accessable by passing a `JMX`-option via the `KAFKA_JMX_OPTS` env variable.
+Kafka metrics are accessed using `JMX`, accessable by passing a `JMX`-option via the `KAFKA_JMX_OPTS` env variable. This
+can report to logging systems such as Grafana or Splunk.
 
 ```console
 KAFKA_JMX_OPTS="-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.local.only=false -
 Djava.rmi.server.hostname=localhost"
 ```
+
+Kafka also uses Yammer Metrics, for metrics reporting in the server.
+
+## Common Broker Metrics
+
+Common broker metrics include:
+
+- **ACTIVE CONTROLLER COUNT**: Is the broker the controller?
+- **REQUEST HANDLER IDLE RATIO**: How much load is the broker under?
+- **ALL TOPICS BYTES IN**: Do I have enough brokers?
+- **ALL TOPICS BYTES OUT**: High consumer traffic?
+- **ALL TOPICS MESSAGES IN**: Messages per second?
+- **PARTITION COUNT**: Many partitions assigned to a broker?
+- **LEADER COUNT**: How many pertitions is this broker a leader for?
+- **OFFLINE PARTITIONS**: Any brokers without leader?
+- **REQUEST METRICS**: Number of requests to broker?
+
+## Monitoring in Java
+
+In Java, the main monitoring metrics are related to *garbage collection* (GC). This includes:
+
+- **CollectionCount**: # of GC cycles
+- **CollectionTime**: Time spent in GC cycle
+
+
 
 ## Common Producer Metrics
 
@@ -32,3 +58,28 @@ Some importent consumer metrics include:
 - **records-consumed-rate**: Rate of records consumed per second.
 - **fetch-rate**: Fetch requests per second. If this falls suddenly or goes to zero, it may be an indication of problems
   with the consumer.
+
+## Diagnosis
+
+To diagnosis a unbalanced load / under-replicated parititons, consider the following metrics:
+
+- **Partition and leader partition count**
+- For all topics:
+    - Messages **in** rate
+    - Bytes **in** rate
+    - Bytes **out** rate
+
+The numbers will be even accross all brokers. If not, you will need to **move partiitons**, by using
+the `kafka-reassign-partitions.sh` command.
+
+Other problems with your brokers can include hardware failures; a broker's ability to serve requests. Metrics to
+investigate is:
+
+- **CPU** utilization
+- **Inbound and outbound** network throughput
+- **Disk average wait time**
+- **Disk percentage utilization**
+
+Analyze these as the traffic increases. For cluster use, monitor the **all topics bytes in rate** metric. 
+
+

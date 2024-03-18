@@ -66,7 +66,7 @@
     <link rel="prev" title="Testing in Kafka" href="testing.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="Mar 15, 2024"/>
+    <meta name="docbuild:last-update" content="Mar 18, 2024"/>
   </head>
   
   
@@ -184,7 +184,7 @@
 <li class="toctree-l1"><a class="reference internal" href="commands.html">Kafka CLI commands</a></li>
 <li class="toctree-l1"><a class="reference internal" href="fundamentals.html">Kafka Basics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="topics.html">Topics Fundamentals</a></li>
-<li class="toctree-l1"><a class="reference internal" href="storage.html">Kafka Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="storage.html">Kafka Storage and Data Handling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="exam.html">Kafka Developed Exam Requirements</a></li>
 <li class="toctree-l1"><a class="reference internal" href="testing.html">Testing in Kafka</a></li>
 </ul>
@@ -411,6 +411,8 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#windowing">Windowing</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#time-in-streams">Time in Streams</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#streams-vs-database">Streams vs Database</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#streams-design-patterns">Streams Design Patterns</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stream-frameworks">Stream Frameworks</a></li>
 </ul>
             </nav>
         </div>
@@ -501,6 +503,30 @@ application.</p></li>
 <li><p>A table can be converted to a stream (or other way)</p></li>
 </ul>
 </section>
+<section id="streams-design-patterns">
+<h2>Streams Design Patterns<a class="headerlink" href="#streams-design-patterns" title="Permalink to this heading">#</a></h2>
+<p>Depending on the goal and purpose of the data, sevaral stream design patterns are available. Patterns:</p>
+<ul class="simple">
+<li><p><strong>Single event processing</strong>: Each event is handled independently. No state is needed.</p></li>
+<li><p><strong>Local state processing</strong>: May include storing min and max values; need to store some state. Suffers from increased
+memory usage.</p></li>
+<li><p><strong>Multiphase processing</strong>: Partially uses local state, but kicks over to a new partition for aggregating part of the
+incoming data.</p></li>
+<li><p><strong>External processing</strong>: When data is external to a stream and performs an external lookup. May cause latency issues.</p></li>
+<li><p><strong>Windowed join</strong>: Design where two event streams are matched within a <em>time window</em>.</p></li>
+<li><p><strong>Out of Sequence events</strong>: For handling events arriving at the wrong time.</p></li>
+</ul>
+</section>
+<section id="stream-frameworks">
+<h2>Stream Frameworks<a class="headerlink" href="#stream-frameworks" title="Permalink to this heading">#</a></h2>
+<p>What framework to use will depend on the type of application.</p>
+<ul class="simple">
+<li><p><strong>Ingest</strong>: Try Kafka Connect.</p></li>
+<li><p><strong>Low millisecond</strong>: Request/Response system.</p></li>
+<li><p><strong>Real-time data analytics</strong>:  Performing complex aggregations for insight.</p></li>
+<li><p><strong>Asyncronous Microservices</strong>:Rquires local state caching events.</p></li>
+</ul>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -575,6 +601,8 @@ application.</p></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#windowing">Windowing</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#time-in-streams">Time in Streams</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#streams-vs-database">Streams vs Database</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#streams-design-patterns">Streams Design Patterns</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stream-frameworks">Stream Frameworks</a></li>
 </ul>
   </nav></div>
 
@@ -608,7 +636,7 @@ By Henrik A. Kjeldsberg
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on Mar 15, 2024.
+  Last updated on Mar 18, 2024.
   <br/>
 </p>
   </div>
