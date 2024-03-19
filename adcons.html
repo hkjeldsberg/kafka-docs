@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Kafka Streams &#8212; Kafka Fundamentals Docs</title>
+    <title>Advanced Consumers &#8212; Kafka Fundamentals Docs</title>
   
   
   
@@ -59,11 +59,11 @@
     <script src="_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'streams';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'adcons';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Confluent kSQL" href="ksql.html" />
-    <link rel="prev" title="Testing in Kafka" href="testing.html" />
+    <link rel="next" title="&lt;no title&gt;" href="adtopic.html" />
+    <link rel="prev" title="Advanced Prodicers" href="adprod.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
     <meta name="docbuild:last-update" content="Mar 19, 2024"/>
@@ -189,8 +189,8 @@
 <li class="toctree-l1"><a class="reference internal" href="testing.html">Testing in Kafka</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Streams and KSQL</span></p>
-<ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Kafka Streams</a></li>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="streams.html">Kafka Streams</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ksql.html">Confluent kSQL</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Producers and Consumers</span></p>
@@ -209,9 +209,9 @@
 <li class="toctree-l1"><a class="reference internal" href="config.html">Kafka configuration</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Advanced Kafka Configuration</span></p>
-<ul class="nav bd-sidenav">
+<ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="adprod.html">Advanced Prodicers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="adcons.html">Advanced Consumers</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Advanced Consumers</a></li>
 </ul>
 
     </div>
@@ -283,7 +283,7 @@
       
       
       
-      <li><a href="https://github.com/kvslab/OasisMove/issues/new?title=Issue%20on%20page%20%2Fstreams.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/kvslab/OasisMove/issues/new?title=Issue%20on%20page%20%2Fadcons.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -313,7 +313,7 @@
       
       
       
-      <li><a href="_sources/streams.md" target="_blank"
+      <li><a href="_sources/adcons.md" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -397,7 +397,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Kafka Streams</h1>
+    <h1>Advanced Consumers</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -407,16 +407,10 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stateless-and-stateful-transformations">Stateless and Stateful transformations</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stateless-transformations">Stateless transformations</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stateful-transformations">Stateful transformations</a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#windowing">Windowing</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#time-in-streams">Time in Streams</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#streams-vs-database">Streams vs Database</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#streams-design-patterns">Streams Design Patterns</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stream-frameworks">Stream Frameworks</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reading-duplicate-messages">Reading Duplicate Messages</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tracking-offsets">Tracking Offsets</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#partition-assignment-and-re-balancing">Partition Assignment and Re-balancing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#consumer-group-coordinater">Consumer Group Coordinater</a></li>
 </ul>
             </nav>
         </div>
@@ -428,107 +422,95 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="kafka-streams">
-<h1>Kafka Streams<a class="headerlink" href="#kafka-streams" title="Permalink to this heading">#</a></h1>
-<p>Streams are a <em>sequence of events</em>; real-time events. Example of events:</p>
+  <section class="tex2jax_ignore mathjax_ignore" id="advanced-consumers">
+<h1>Advanced Consumers<a class="headerlink" href="#advanced-consumers" title="Permalink to this heading">#</a></h1>
+<section id="reading-duplicate-messages">
+<h2>Reading Duplicate Messages<a class="headerlink" href="#reading-duplicate-messages" title="Permalink to this heading">#</a></h2>
+<p>The consumer controlls the throughput by pulling messages from the broker. With this control, the consumer may controll
+several variables:</p>
 <ul class="simple">
-<li><p>Transactions</p></li>
-<li><p>Stock trades</p></li>
-<li><p>Deliveries</p></li>
-<li><p>Network events</p></li>
-<li><p>Moves in a game</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fetch.min.bytes</span></code> and<code class="docutils literal notranslate"><span class="pre">fetch.max.bytes</span></code>: Min and max batch size of the request from the consumer</p>
+<ul>
+<li><p>Defaults: 1 byte and 50 MB.</p></li>
 </ul>
-<section id="stateless-and-stateful-transformations">
-<h2>Stateless and Stateful transformations<a class="headerlink" href="#stateless-and-stateful-transformations" title="Permalink to this heading">#</a></h2>
-<p>Tranformations that are <strong>stateless</strong> do not require a special data store. Transformation that are <strong>stateful</strong> require
-a special data store to store the current <strong>state</strong> for the stream.</p>
-<section id="stateless-transformations">
-<h3>Stateless transformations<a class="headerlink" href="#stateless-transformations" title="Permalink to this heading">#</a></h3>
-<p>Some stateless transformations inlcude:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">.branch</span></code>, splitting a stream into multiple streams</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">.filter</span></code>, remove records based on a criteria or condition</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">.flatMap</span></code>, converting input into any number of output records</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">.foreach</span></code>, to perform some operation on each record. Prevents further processing</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">.groupBy</span></code>, groups the stream by a new key</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">.groupByKey</span></code>, groups by existing key</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">.map</span></code>, converts and modify one and one record</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">.merge</span></code>, used to merge two streams</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">.peek</span></code>, perform stateless operation (non-terminal)</p></li>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">max.poll.records</span></code>: Max number of messages recieved by the consimer</p>
+<ul>
+<li><p>Default: 500</p></li>
 </ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">max.partition.fetch.bytes</span></code>: Max amount of data the broker will return to the consumer</p>
+<ul>
+<li><p>Defaukt: 1 MB</p></li>
+</ul>
+</li>
+</ul>
+<p>In addition, pulling is controller by the <code class="docutils literal notranslate"><span class="pre">enable.auto.commit</span></code> variable. If set to <code class="docutils literal notranslate"><span class="pre">true</span></code> (default), it will sync
+message batches automatically. If <code class="docutils literal notranslate"><span class="pre">false</span></code>, you will need to manually commit the offsets, giving more control to the
+user.</p>
 </section>
-<section id="stateful-transformations">
-<h3>Stateful transformations<a class="headerlink" href="#stateful-transformations" title="Permalink to this heading">#</a></h3>
-<p>A stateful transformation in Kafka is the aggregation of records, performed by the <code class="docutils literal notranslate"><span class="pre">.aggregate</span></code> stream function. Types
-of aggregation include:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">.aggregate</span></code>, a generalized aggregation</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">.count</span></code>, counts the number of records</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">.reduce</span></code>, combines grouped records to reduce the number of input records based on a value or condition</p></li>
-</ul>
-<p>Another stateful transformation is join operation, which combines two input streams. Different types of join can be
-used, including:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">.join</span></code>, an inner join (intersection)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">.leftJoin</span></code>, joining “left” stream and matching records from the “right” stream</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">.outerJoin</span></code>, combining two streams with all records from both streams. (union)</p></li>
-</ul>
+<section id="tracking-offsets">
+<h2>Tracking Offsets<a class="headerlink" href="#tracking-offsets" title="Permalink to this heading">#</a></h2>
+<p>Offset are message <em>indecies</em> in Kafka. Consumers use Kafka track positions via offsets. The action of updating the
+current position in the current partition is called a <strong>commit</strong>. Hence, a consumer produces a message to
+the <code class="docutils literal notranslate"><span class="pre">__consumer_offsets</span></code> topic (working as a producer) to keep track of the offset. This offset-topic will be used if a
+consumer traches and triggers a re-balance. In theory, the offset value can grow infinetley and is of type <strong>long</strong> data
+type (minimal risk of overflow).</p>
+<p>Consumers read from the leder partition, with each their offsets (which may be the same). A group coordinater lets the
+consumer know how to tell them apart.</p>
+<p>Using a consumer group is recommended, and is controller by a <code class="docutils literal notranslate"><span class="pre">groupId</span></code>. Additional consumer groups would have consumers
+with no consumer offsets. In Java this is configured as follows:</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">properties</span><span class="p">.</span><span class="na">setProperty</span><span class="p">(</span><span class="n">ConsumerConfig</span><span class="p">.</span><span class="na">GROUP_ID_config</span><span class="p">,</span><span class="w"> </span><span class="n">groupID</span><span class="p">);</span>
+</pre></div>
+</div>
 </section>
+<section id="partition-assignment-and-re-balancing">
+<h2>Partition Assignment and Re-balancing<a class="headerlink" href="#partition-assignment-and-re-balancing" title="Permalink to this heading">#</a></h2>
+<p>What happens when a new consumer is added? Consumers of the same consumer group start pulling from partitions already
+consumer from. Re-assignment happens also when topics are modified.</p>
+<p>As soon as a consumer has ownership of a partition, it will send out <strong>heartbeats</strong>. Either when it <em>pulls</em> messages or
+when it commits records it has consumed. If no heartbeat is registered it will be considered dead, and the group
+coordinated will trigger a <em>re-balance</em>.</p>
+<p>The first consumer joining the consumer group becomes the <em>group leader</em>, before assigning remaining consumers to
+partitions. The group leader then sends a list of assignments to the group coordinater sending info to all consumers.
+This repeats for each re-balance, and is automatic. Alternatively, it can be performed manually.</p>
+<p>Typee of re-balancing include <strong>round-robin</strong> (random, equally distributed, unordered) and <strong>range</strong> (equally
+distributed and ordered).</p>
+<p>After a consumer is initiated, it needs to be <strong>subscribed</strong> to a topic. Alternativeely, it can be <strong>assigned</strong> to one
+or multiple partitions, see the following Java code.</p>
+<div class="highlight-Java notranslate"><div class="highlight"><pre><span></span><span class="c1">// Subscribe</span>
+<span class="n">consumer</span><span class="p">.</span><span class="na">subscribe</span><span class="p">(</span><span class="n">Array</span><span class="p">.</span><span class="na">asList</span><span class="p">(</span><span class="n">topic</span><span class="p">));</span>
+
+<span class="c1">//  Assign</span>
+<span class="n">consumer</span><span class="p">.</span><span class="na">assign</span><span class="p">(</span><span class="n">Array</span><span class="p">.</span><span class="na">asList</span><span class="p">(</span><span class="n">partition0</span><span class="p">,</span><span class="w"> </span><span class="n">partition1</span><span class="p">));</span>
+</pre></div>
+</div>
 </section>
-<section id="windowing">
-<h2>Windowing<a class="headerlink" href="#windowing" title="Permalink to this heading">#</a></h2>
-<p>One way to perform operations sequentially is by using <strong>windowing</strong>. This operation allows subdivision of groups into “
-time buckets”, aggregating them bit by bit. Different window types exist:</p>
+<section id="consumer-group-coordinater">
+<h2>Consumer Group Coordinater<a class="headerlink" href="#consumer-group-coordinater" title="Permalink to this heading">#</a></h2>
+<p>One of the broker becomes the consumer group coordinater. The coodinater has the following tasks:</p>
 <ul class="simple">
-<li><p><strong>Tumbling</strong>: No overlap, no gap</p></li>
-<li><p><strong>Hopping</strong>: Overlap and/or gaps</p></li>
-<li><p><strong>Sliding</strong>: Used for joins. Defined by the length of time between timestamps of any two records. No gaps, but
-overlap.</p></li>
-<li><p><strong>Session</strong>: Dynamic windows formed around activity based on the timestamps. Will contain inactivity <em>gaps</em></p></li>
+<li><p>Reach out to all consumers in a consumer group to assess for a heartbeat</p></li>
+<li><p>Assign appropriate partitions when a new consumer is added</p></li>
+<li><p>Keeps track of offsets and offset commits</p></li>
 </ul>
-</section>
-<section id="time-in-streams">
-<h2>Time in Streams<a class="headerlink" href="#time-in-streams" title="Permalink to this heading">#</a></h2>
-<p><em>Time</em> in the context of streams is used in operations such as <em>windowing</em>, and define time boundaries. These include:</p>
+<p>An example of the workflow is shown in the diagram below.</p>
+<figure class="align-default" id="coord">
+<img alt="_images/coordinator.png" src="_images/coordinator.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 8 </span><span class="caption-text">The first consumer consumes from partitions on broker 1 and 3, while the second consumer consumes from partitions on broker 2. This is coordinated by broker 3 which works as the group coordinator.</span><a class="headerlink" href="#coord" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<p>Reasons for <em>not</em> adding too many consumers:</p>
 <ul class="simple">
-<li><p><strong>Event time</strong>: Time when event was <em>created</em> at the source.</p></li>
-<li><p><strong>Ingestion time</strong>: Time when the event was <em>stored</em> in a topic partition by a Kafka broker.</p></li>
-<li><p><strong>Processing time</strong>/Wall-clock-time: Time when the event started to be <em>handled/processed</em> by the stream processing
-application.</p></li>
+<li><p>Excess consumers will be idle = Wasted resources</p></li>
+<li><p>Whole consumer group will be down during the re-balancing period</p></li>
 </ul>
-<p>Processing time can happen days after the event actually happened. Time zones should be standardized.</p>
-</section>
-<section id="streams-vs-database">
-<h2>Streams vs Database<a class="headerlink" href="#streams-vs-database" title="Permalink to this heading">#</a></h2>
-<p>There are some notable differences, includingStreams:</p>
+<p>To figure out when a consumer is down or dead, assess the following metrics:</p>
 <ul class="simple">
-<li><p>Streams keep a history of changes</p></li>
-<li><p>No delting a stream</p></li>
-<li><p>A table can be converted to a stream (or other way)</p></li>
-</ul>
-</section>
-<section id="streams-design-patterns">
-<h2>Streams Design Patterns<a class="headerlink" href="#streams-design-patterns" title="Permalink to this heading">#</a></h2>
-<p>Depending on the goal and purpose of the data, sevaral stream design patterns are available. Patterns:</p>
-<ul class="simple">
-<li><p><strong>Single event processing</strong>: Each event is handled independently. No state is needed.</p></li>
-<li><p><strong>Local state processing</strong>: May include storing min and max values; need to store some state. Suffers from increased
-memory usage.</p></li>
-<li><p><strong>Multiphase processing</strong>: Partially uses local state, but kicks over to a new partition for aggregating part of the
-incoming data.</p></li>
-<li><p><strong>External processing</strong>: When data is external to a stream and performs an external lookup. May cause latency issues.</p></li>
-<li><p><strong>Windowed join</strong>: Design where two event streams are matched within a <em>time window</em>.</p></li>
-<li><p><strong>Out of Sequence events</strong>: For handling events arriving at the wrong time.</p></li>
-</ul>
-</section>
-<section id="stream-frameworks">
-<h2>Stream Frameworks<a class="headerlink" href="#stream-frameworks" title="Permalink to this heading">#</a></h2>
-<p>What framework to use will depend on the type of application.</p>
-<ul class="simple">
-<li><p><strong>Ingest</strong>: Try Kafka Connect.</p></li>
-<li><p><strong>Low millisecond</strong>: Request/Response system.</p></li>
-<li><p><strong>Real-time data analytics</strong>:  Performing complex aggregations for insight.</p></li>
-<li><p><strong>Asyncronous Microservices</strong>:Rquires local state caching events.</p></li>
+<li><p>Heartbeat interval (<code class="docutils literal notranslate"><span class="pre">heartbeat.interval.ms</span></code>)</p></li>
+<li><p>Amount of time consumer is out of contact with coordinator (default: 3 seconds)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">session.timout.ms</span></code> is how long a consumer can go without sending a heartbeat</p></li>
 </ul>
 </section>
 </section>
@@ -564,20 +546,20 @@ incoming data.</p></li>
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="testing.html"
+       href="adprod.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Testing in Kafka</p>
+        <p class="prev-next-title">Advanced Prodicers</p>
       </div>
     </a>
     <a class="right-next"
-       href="ksql.html"
+       href="adtopic.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Confluent kSQL</p>
+        <p class="prev-next-title">&lt;no title&gt;</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -597,16 +579,10 @@ incoming data.</p></li>
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stateless-and-stateful-transformations">Stateless and Stateful transformations</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stateless-transformations">Stateless transformations</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stateful-transformations">Stateful transformations</a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#windowing">Windowing</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#time-in-streams">Time in Streams</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#streams-vs-database">Streams vs Database</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#streams-design-patterns">Streams Design Patterns</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stream-frameworks">Stream Frameworks</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reading-duplicate-messages">Reading Duplicate Messages</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tracking-offsets">Tracking Offsets</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#partition-assignment-and-re-balancing">Partition Assignment and Re-balancing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#consumer-group-coordinater">Consumer Group Coordinater</a></li>
 </ul>
   </nav></div>
 

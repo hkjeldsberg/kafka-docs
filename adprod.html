@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Kafka Streams &#8212; Kafka Fundamentals Docs</title>
+    <title>Advanced Prodicers &#8212; Kafka Fundamentals Docs</title>
   
   
   
@@ -59,11 +59,11 @@
     <script src="_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'streams';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'adprod';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Confluent kSQL" href="ksql.html" />
-    <link rel="prev" title="Testing in Kafka" href="testing.html" />
+    <link rel="next" title="Advanced Consumers" href="adcons.html" />
+    <link rel="prev" title="Kafka configuration" href="config.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
     <meta name="docbuild:last-update" content="Mar 19, 2024"/>
@@ -189,8 +189,8 @@
 <li class="toctree-l1"><a class="reference internal" href="testing.html">Testing in Kafka</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Streams and KSQL</span></p>
-<ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Kafka Streams</a></li>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="streams.html">Kafka Streams</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ksql.html">Confluent kSQL</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Producers and Consumers</span></p>
@@ -209,8 +209,8 @@
 <li class="toctree-l1"><a class="reference internal" href="config.html">Kafka configuration</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Advanced Kafka Configuration</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="adprod.html">Advanced Prodicers</a></li>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Advanced Prodicers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="adcons.html">Advanced Consumers</a></li>
 </ul>
 
@@ -283,7 +283,7 @@
       
       
       
-      <li><a href="https://github.com/kvslab/OasisMove/issues/new?title=Issue%20on%20page%20%2Fstreams.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/kvslab/OasisMove/issues/new?title=Issue%20on%20page%20%2Fadprod.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -313,7 +313,7 @@
       
       
       
-      <li><a href="_sources/streams.md" target="_blank"
+      <li><a href="_sources/adprod.md" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -397,7 +397,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Kafka Streams</h1>
+    <h1>Advanced Prodicers</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -407,16 +407,10 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stateless-and-stateful-transformations">Stateless and Stateful transformations</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stateless-transformations">Stateless transformations</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stateful-transformations">Stateful transformations</a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#windowing">Windowing</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#time-in-streams">Time in Streams</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#streams-vs-database">Streams vs Database</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#streams-design-patterns">Streams Design Patterns</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stream-frameworks">Stream Frameworks</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#idempotency">Idempotency</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#batch-compression">Batch Compression</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#serializers">Serializers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#producer-buffer-memory">Producer Buffer Memory</a></li>
 </ul>
             </nav>
         </div>
@@ -428,108 +422,64 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="kafka-streams">
-<h1>Kafka Streams<a class="headerlink" href="#kafka-streams" title="Permalink to this heading">#</a></h1>
-<p>Streams are a <em>sequence of events</em>; real-time events. Example of events:</p>
-<ul class="simple">
-<li><p>Transactions</p></li>
-<li><p>Stock trades</p></li>
-<li><p>Deliveries</p></li>
-<li><p>Network events</p></li>
-<li><p>Moves in a game</p></li>
-</ul>
-<section id="stateless-and-stateful-transformations">
-<h2>Stateless and Stateful transformations<a class="headerlink" href="#stateless-and-stateful-transformations" title="Permalink to this heading">#</a></h2>
-<p>Tranformations that are <strong>stateless</strong> do not require a special data store. Transformation that are <strong>stateful</strong> require
-a special data store to store the current <strong>state</strong> for the stream.</p>
-<section id="stateless-transformations">
-<h3>Stateless transformations<a class="headerlink" href="#stateless-transformations" title="Permalink to this heading">#</a></h3>
-<p>Some stateless transformations inlcude:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">.branch</span></code>, splitting a stream into multiple streams</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">.filter</span></code>, remove records based on a criteria or condition</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">.flatMap</span></code>, converting input into any number of output records</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">.foreach</span></code>, to perform some operation on each record. Prevents further processing</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">.groupBy</span></code>, groups the stream by a new key</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">.groupByKey</span></code>, groups by existing key</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">.map</span></code>, converts and modify one and one record</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">.merge</span></code>, used to merge two streams</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">.peek</span></code>, perform stateless operation (non-terminal)</p></li>
-</ul>
+  <section class="tex2jax_ignore mathjax_ignore" id="advanced-prodicers">
+<h1>Advanced Prodicers<a class="headerlink" href="#advanced-prodicers" title="Permalink to this heading">#</a></h1>
+<section id="idempotency">
+<h2>Idempotency<a class="headerlink" href="#idempotency" title="Permalink to this heading">#</a></h2>
+<p>By setting certain properties, we can ensure that messages reach the Kafka cluster and Consumer from the producers. One
+of these properties is <strong>Idempotent Producers</strong>, controlled by the <strong>enable.idempotence</strong> property. By default, this is
+a <em>low</em> priority property. Enableing this will ensure we (1) do not lose messages, and (2) do not duplicate messages.
+Enabling idempotency attaches a <strong>produce-request-ID</strong> to the acknowledgement – which the broker can detect to avoid
+duplicates.</p>
+<p>To enable this in Java, add the following configuration:</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">properties</span><span class="p">.</span><span class="na">setProperty</span><span class="p">(</span><span class="n">ProducerConfig</span><span class="p">.</span><span class="na">ENABLE_IDEMPOTENCE_CONFIG</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;true&quot;</span><span class="p">);</span>
+
+<span class="c1">// Controllers how many partitions needs to recieve the message (all)</span>
+<span class="n">properties</span><span class="p">.</span><span class="na">setProperty</span><span class="p">(</span><span class="n">ProducerConfig</span><span class="p">.</span><span class="na">ACKS_CONFIG</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;all&quot;</span><span class="p">);</span>
+
+<span class="c1">// If error message never reaches producer – Retry sending messages from producer </span>
+<span class="n">properties</span><span class="p">.</span><span class="na">setProperty</span><span class="p">(</span><span class="n">ProducerConfig</span><span class="p">.</span><span class="na">RETRIES_CONFIG</span><span class="p">,</span><span class="w"> </span><span class="n">Integer</span><span class="p">.</span><span class="na">toString</span><span class="p">(</span><span class="n">Integer</span><span class="p">.</span><span class="na">MAX_VALUE</span><span class="p">));</span><span class="w"> </span>
+
+<span class="c1">// Controllers number of messages the producer will send without getting a response</span>
+<span class="n">properties</span><span class="p">.</span><span class="na">setProperty</span><span class="p">(</span><span class="n">ProducerConfig</span><span class="p">.</span><span class="na">MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;5&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
 </section>
-<section id="stateful-transformations">
-<h3>Stateful transformations<a class="headerlink" href="#stateful-transformations" title="Permalink to this heading">#</a></h3>
-<p>A stateful transformation in Kafka is the aggregation of records, performed by the <code class="docutils literal notranslate"><span class="pre">.aggregate</span></code> stream function. Types
-of aggregation include:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">.aggregate</span></code>, a generalized aggregation</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">.count</span></code>, counts the number of records</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">.reduce</span></code>, combines grouped records to reduce the number of input records based on a value or condition</p></li>
-</ul>
-<p>Another stateful transformation is join operation, which combines two input streams. Different types of join can be
-used, including:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">.join</span></code>, an inner join (intersection)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">.leftJoin</span></code>, joining “left” stream and matching records from the “right” stream</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">.outerJoin</span></code>, combining two streams with all records from both streams. (union)</p></li>
-</ul>
+<section id="batch-compression">
+<h2>Batch Compression<a class="headerlink" href="#batch-compression" title="Permalink to this heading">#</a></h2>
+<p>As an alternative to sending individual messages: sending from the producer in <strong>batch</strong>. Message compression will
+increase the throughput of the messages. Compression in configured on the <em>Producer</em> side. Disadvantage: requires more
+CPU power, but efficiency gained outweighs this.</p>
+<p>In the Producer the <strong>sender</strong> communicates with a <strong>RecordAccumulator</strong> on how to send the request over to a Kafka
+Cluster. The sender is only aware of the cluster’s metadata, which lets it find the broker to write to.</p>
+<p>The larger the batch, the better the compression. If it fails, we avoid duplication and loss with idempotency (see
+above).</p>
+<p>To add compression type and batch configuration in Java:</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="c1">// Set compression type (gzip, tar, snappy, lz4)</span>
+<span class="n">properties</span><span class="p">.</span><span class="na">setProperty</span><span class="p">(</span><span class="n">ProducerConfig</span><span class="p">.</span><span class="na">COMRPRESSION_TYPE_CONFIG</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;snappy&quot;</span><span class="p">);</span>
+
+<span class="c1">// Batch size</span>
+<span class="n">properties</span><span class="p">.</span><span class="na">setProperty</span><span class="p">(</span><span class="n">ProducerConfig</span><span class="p">.</span><span class="na">BATCH_SIZE_CONFIG</span><span class="p">,</span><span class="w"> </span><span class="n">Integer</span><span class="p">.</span><span class="na">toString</span><span class="p">(</span><span class="mi">32</span><span class="o">*</span><span class="mi">1024</span><span class="p">)));</span>
+
+<span class="c1">// Time to wait for additional messages before sending _NEXT_ batch</span>
+<span class="n">properties</span><span class="p">.</span><span class="na">setProperty</span><span class="p">(</span><span class="n">ProducerConfig</span><span class="p">.</span><span class="na">LINDER_MS_CONFIG</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;20&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
 </section>
+<section id="serializers">
+<h2>Serializers<a class="headerlink" href="#serializers" title="Permalink to this heading">#</a></h2>
+<p><strong>Serializers</strong> are used to control the format in which data is stored when sent from a producer to a cluster. Recall;
+each message has a time stamp to create a ordered group. A pre-built serializer is the <code class="docutils literal notranslate"><span class="pre">StringSeralizer</span></code>. Custom
+serialization can be used to translate data in a format that can be <em>stored, transmitted, and retrieved</em>. Alternative, a
+popular serializer is the <code class="docutils literal notranslate"><span class="pre">KafkaAvroSerializer</span></code>.</p>
 </section>
-<section id="windowing">
-<h2>Windowing<a class="headerlink" href="#windowing" title="Permalink to this heading">#</a></h2>
-<p>One way to perform operations sequentially is by using <strong>windowing</strong>. This operation allows subdivision of groups into “
-time buckets”, aggregating them bit by bit. Different window types exist:</p>
-<ul class="simple">
-<li><p><strong>Tumbling</strong>: No overlap, no gap</p></li>
-<li><p><strong>Hopping</strong>: Overlap and/or gaps</p></li>
-<li><p><strong>Sliding</strong>: Used for joins. Defined by the length of time between timestamps of any two records. No gaps, but
-overlap.</p></li>
-<li><p><strong>Session</strong>: Dynamic windows formed around activity based on the timestamps. Will contain inactivity <em>gaps</em></p></li>
-</ul>
-</section>
-<section id="time-in-streams">
-<h2>Time in Streams<a class="headerlink" href="#time-in-streams" title="Permalink to this heading">#</a></h2>
-<p><em>Time</em> in the context of streams is used in operations such as <em>windowing</em>, and define time boundaries. These include:</p>
-<ul class="simple">
-<li><p><strong>Event time</strong>: Time when event was <em>created</em> at the source.</p></li>
-<li><p><strong>Ingestion time</strong>: Time when the event was <em>stored</em> in a topic partition by a Kafka broker.</p></li>
-<li><p><strong>Processing time</strong>/Wall-clock-time: Time when the event started to be <em>handled/processed</em> by the stream processing
-application.</p></li>
-</ul>
-<p>Processing time can happen days after the event actually happened. Time zones should be standardized.</p>
-</section>
-<section id="streams-vs-database">
-<h2>Streams vs Database<a class="headerlink" href="#streams-vs-database" title="Permalink to this heading">#</a></h2>
-<p>There are some notable differences, includingStreams:</p>
-<ul class="simple">
-<li><p>Streams keep a history of changes</p></li>
-<li><p>No delting a stream</p></li>
-<li><p>A table can be converted to a stream (or other way)</p></li>
-</ul>
-</section>
-<section id="streams-design-patterns">
-<h2>Streams Design Patterns<a class="headerlink" href="#streams-design-patterns" title="Permalink to this heading">#</a></h2>
-<p>Depending on the goal and purpose of the data, sevaral stream design patterns are available. Patterns:</p>
-<ul class="simple">
-<li><p><strong>Single event processing</strong>: Each event is handled independently. No state is needed.</p></li>
-<li><p><strong>Local state processing</strong>: May include storing min and max values; need to store some state. Suffers from increased
-memory usage.</p></li>
-<li><p><strong>Multiphase processing</strong>: Partially uses local state, but kicks over to a new partition for aggregating part of the
-incoming data.</p></li>
-<li><p><strong>External processing</strong>: When data is external to a stream and performs an external lookup. May cause latency issues.</p></li>
-<li><p><strong>Windowed join</strong>: Design where two event streams are matched within a <em>time window</em>.</p></li>
-<li><p><strong>Out of Sequence events</strong>: For handling events arriving at the wrong time.</p></li>
-</ul>
-</section>
-<section id="stream-frameworks">
-<h2>Stream Frameworks<a class="headerlink" href="#stream-frameworks" title="Permalink to this heading">#</a></h2>
-<p>What framework to use will depend on the type of application.</p>
-<ul class="simple">
-<li><p><strong>Ingest</strong>: Try Kafka Connect.</p></li>
-<li><p><strong>Low millisecond</strong>: Request/Response system.</p></li>
-<li><p><strong>Real-time data analytics</strong>:  Performing complex aggregations for insight.</p></li>
-<li><p><strong>Asyncronous Microservices</strong>:Rquires local state caching events.</p></li>
-</ul>
+<section id="producer-buffer-memory">
+<h2>Producer Buffer Memory<a class="headerlink" href="#producer-buffer-memory" title="Permalink to this heading">#</a></h2>
+<p>What happens when the producer is producing messages faster than the broker can handle? Or if there is some broker
+failure? Where do the messages go?</p>
+<p>Messages will in this case be sent to a <strong>buffer memory</strong> on the producer. Buffer size is by default 32MB, which will be
+tuned as the producer produces messages. A configuration <code class="docutils literal notranslate"><span class="pre">max.block.ms</span></code> controls the time before an exception is raised
+if the broker is not responding (default 60 seconds).</p>
 </section>
 </section>
 
@@ -564,20 +514,20 @@ incoming data.</p></li>
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="testing.html"
+       href="config.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Testing in Kafka</p>
+        <p class="prev-next-title">Kafka configuration</p>
       </div>
     </a>
     <a class="right-next"
-       href="ksql.html"
+       href="adcons.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Confluent kSQL</p>
+        <p class="prev-next-title">Advanced Consumers</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -597,16 +547,10 @@ incoming data.</p></li>
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stateless-and-stateful-transformations">Stateless and Stateful transformations</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stateless-transformations">Stateless transformations</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stateful-transformations">Stateful transformations</a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#windowing">Windowing</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#time-in-streams">Time in Streams</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#streams-vs-database">Streams vs Database</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#streams-design-patterns">Streams Design Patterns</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stream-frameworks">Stream Frameworks</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#idempotency">Idempotency</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#batch-compression">Batch Compression</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#serializers">Serializers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#producer-buffer-memory">Producer Buffer Memory</a></li>
 </ul>
   </nav></div>
 

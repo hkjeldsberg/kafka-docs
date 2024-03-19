@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Kafka Streams &#8212; Kafka Fundamentals Docs</title>
+    <title>&lt;no title&gt; &#8212; Kafka Fundamentals Docs</title>
   
   
   
@@ -59,11 +59,10 @@
     <script src="_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'streams';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'adtopic';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Confluent kSQL" href="ksql.html" />
-    <link rel="prev" title="Testing in Kafka" href="testing.html" />
+    <link rel="prev" title="Advanced Consumers" href="adcons.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
     <meta name="docbuild:last-update" content="Mar 19, 2024"/>
@@ -189,8 +188,8 @@
 <li class="toctree-l1"><a class="reference internal" href="testing.html">Testing in Kafka</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Streams and KSQL</span></p>
-<ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Kafka Streams</a></li>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="streams.html">Kafka Streams</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ksql.html">Confluent kSQL</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Producers and Consumers</span></p>
@@ -283,7 +282,7 @@
       
       
       
-      <li><a href="https://github.com/kvslab/OasisMove/issues/new?title=Issue%20on%20page%20%2Fstreams.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/kvslab/OasisMove/issues/new?title=Issue%20on%20page%20%2Fadtopic.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -313,7 +312,7 @@
       
       
       
-      <li><a href="_sources/streams.md" target="_blank"
+      <li><a href="_sources/adtopic.md" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -397,7 +396,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Kafka Streams</h1>
+    <h1><no title></h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -406,18 +405,9 @@ document.write(`
                 <h2> Contents </h2>
             </div>
             <nav aria-label="Page">
-                <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stateless-and-stateful-transformations">Stateless and Stateful transformations</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stateless-transformations">Stateless transformations</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stateful-transformations">Stateful transformations</a></li>
+                <ul class="simple visible nav section-nav flex-column">
 </ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#windowing">Windowing</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#time-in-streams">Time in Streams</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#streams-vs-database">Streams vs Database</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#streams-design-patterns">Streams Design Patterns</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stream-frameworks">Stream Frameworks</a></li>
-</ul>
+
             </nav>
         </div>
     </div>
@@ -428,111 +418,7 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="kafka-streams">
-<h1>Kafka Streams<a class="headerlink" href="#kafka-streams" title="Permalink to this heading">#</a></h1>
-<p>Streams are a <em>sequence of events</em>; real-time events. Example of events:</p>
-<ul class="simple">
-<li><p>Transactions</p></li>
-<li><p>Stock trades</p></li>
-<li><p>Deliveries</p></li>
-<li><p>Network events</p></li>
-<li><p>Moves in a game</p></li>
-</ul>
-<section id="stateless-and-stateful-transformations">
-<h2>Stateless and Stateful transformations<a class="headerlink" href="#stateless-and-stateful-transformations" title="Permalink to this heading">#</a></h2>
-<p>Tranformations that are <strong>stateless</strong> do not require a special data store. Transformation that are <strong>stateful</strong> require
-a special data store to store the current <strong>state</strong> for the stream.</p>
-<section id="stateless-transformations">
-<h3>Stateless transformations<a class="headerlink" href="#stateless-transformations" title="Permalink to this heading">#</a></h3>
-<p>Some stateless transformations inlcude:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">.branch</span></code>, splitting a stream into multiple streams</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">.filter</span></code>, remove records based on a criteria or condition</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">.flatMap</span></code>, converting input into any number of output records</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">.foreach</span></code>, to perform some operation on each record. Prevents further processing</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">.groupBy</span></code>, groups the stream by a new key</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">.groupByKey</span></code>, groups by existing key</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">.map</span></code>, converts and modify one and one record</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">.merge</span></code>, used to merge two streams</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">.peek</span></code>, perform stateless operation (non-terminal)</p></li>
-</ul>
-</section>
-<section id="stateful-transformations">
-<h3>Stateful transformations<a class="headerlink" href="#stateful-transformations" title="Permalink to this heading">#</a></h3>
-<p>A stateful transformation in Kafka is the aggregation of records, performed by the <code class="docutils literal notranslate"><span class="pre">.aggregate</span></code> stream function. Types
-of aggregation include:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">.aggregate</span></code>, a generalized aggregation</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">.count</span></code>, counts the number of records</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">.reduce</span></code>, combines grouped records to reduce the number of input records based on a value or condition</p></li>
-</ul>
-<p>Another stateful transformation is join operation, which combines two input streams. Different types of join can be
-used, including:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">.join</span></code>, an inner join (intersection)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">.leftJoin</span></code>, joining “left” stream and matching records from the “right” stream</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">.outerJoin</span></code>, combining two streams with all records from both streams. (union)</p></li>
-</ul>
-</section>
-</section>
-<section id="windowing">
-<h2>Windowing<a class="headerlink" href="#windowing" title="Permalink to this heading">#</a></h2>
-<p>One way to perform operations sequentially is by using <strong>windowing</strong>. This operation allows subdivision of groups into “
-time buckets”, aggregating them bit by bit. Different window types exist:</p>
-<ul class="simple">
-<li><p><strong>Tumbling</strong>: No overlap, no gap</p></li>
-<li><p><strong>Hopping</strong>: Overlap and/or gaps</p></li>
-<li><p><strong>Sliding</strong>: Used for joins. Defined by the length of time between timestamps of any two records. No gaps, but
-overlap.</p></li>
-<li><p><strong>Session</strong>: Dynamic windows formed around activity based on the timestamps. Will contain inactivity <em>gaps</em></p></li>
-</ul>
-</section>
-<section id="time-in-streams">
-<h2>Time in Streams<a class="headerlink" href="#time-in-streams" title="Permalink to this heading">#</a></h2>
-<p><em>Time</em> in the context of streams is used in operations such as <em>windowing</em>, and define time boundaries. These include:</p>
-<ul class="simple">
-<li><p><strong>Event time</strong>: Time when event was <em>created</em> at the source.</p></li>
-<li><p><strong>Ingestion time</strong>: Time when the event was <em>stored</em> in a topic partition by a Kafka broker.</p></li>
-<li><p><strong>Processing time</strong>/Wall-clock-time: Time when the event started to be <em>handled/processed</em> by the stream processing
-application.</p></li>
-</ul>
-<p>Processing time can happen days after the event actually happened. Time zones should be standardized.</p>
-</section>
-<section id="streams-vs-database">
-<h2>Streams vs Database<a class="headerlink" href="#streams-vs-database" title="Permalink to this heading">#</a></h2>
-<p>There are some notable differences, includingStreams:</p>
-<ul class="simple">
-<li><p>Streams keep a history of changes</p></li>
-<li><p>No delting a stream</p></li>
-<li><p>A table can be converted to a stream (or other way)</p></li>
-</ul>
-</section>
-<section id="streams-design-patterns">
-<h2>Streams Design Patterns<a class="headerlink" href="#streams-design-patterns" title="Permalink to this heading">#</a></h2>
-<p>Depending on the goal and purpose of the data, sevaral stream design patterns are available. Patterns:</p>
-<ul class="simple">
-<li><p><strong>Single event processing</strong>: Each event is handled independently. No state is needed.</p></li>
-<li><p><strong>Local state processing</strong>: May include storing min and max values; need to store some state. Suffers from increased
-memory usage.</p></li>
-<li><p><strong>Multiphase processing</strong>: Partially uses local state, but kicks over to a new partition for aggregating part of the
-incoming data.</p></li>
-<li><p><strong>External processing</strong>: When data is external to a stream and performs an external lookup. May cause latency issues.</p></li>
-<li><p><strong>Windowed join</strong>: Design where two event streams are matched within a <em>time window</em>.</p></li>
-<li><p><strong>Out of Sequence events</strong>: For handling events arriving at the wrong time.</p></li>
-</ul>
-</section>
-<section id="stream-frameworks">
-<h2>Stream Frameworks<a class="headerlink" href="#stream-frameworks" title="Permalink to this heading">#</a></h2>
-<p>What framework to use will depend on the type of application.</p>
-<ul class="simple">
-<li><p><strong>Ingest</strong>: Try Kafka Connect.</p></li>
-<li><p><strong>Low millisecond</strong>: Request/Response system.</p></li>
-<li><p><strong>Real-time data analytics</strong>:  Performing complex aggregations for insight.</p></li>
-<li><p><strong>Asyncronous Microservices</strong>:Rquires local state caching events.</p></li>
-</ul>
-</section>
-</section>
-
+  
     <script type="text/x-thebe-config">
     {
         requestKernel: true,
@@ -564,22 +450,13 @@ incoming data.</p></li>
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="testing.html"
+       href="adcons.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Testing in Kafka</p>
+        <p class="prev-next-title">Advanced Consumers</p>
       </div>
-    </a>
-    <a class="right-next"
-       href="ksql.html"
-       title="next page">
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Confluent kSQL</p>
-      </div>
-      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
                 </footer>
@@ -596,18 +473,9 @@ incoming data.</p></li>
     <i class="fa-solid fa-list"></i> Contents
   </div>
   <nav class="bd-toc-nav page-toc">
-    <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stateless-and-stateful-transformations">Stateless and Stateful transformations</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stateless-transformations">Stateless transformations</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stateful-transformations">Stateful transformations</a></li>
+    <ul class="simple visible nav section-nav flex-column">
 </ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#windowing">Windowing</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#time-in-streams">Time in Streams</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#streams-vs-database">Streams vs Database</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#streams-design-patterns">Streams Design Patterns</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stream-frameworks">Stream Frameworks</a></li>
-</ul>
+
   </nav></div>
 
 </div></div>
