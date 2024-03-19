@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>&lt;no title&gt; &#8212; Kafka Fundamentals Docs</title>
+    <title>Advanced Topics &#8212; Kafka Fundamentals Docs</title>
   
   
   
@@ -208,9 +208,10 @@
 <li class="toctree-l1"><a class="reference internal" href="config.html">Kafka configuration</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Advanced Kafka Configuration</span></p>
-<ul class="nav bd-sidenav">
+<ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="adprod.html">Advanced Prodicers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="adcons.html">Advanced Consumers</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Advanced Topics</a></li>
 </ul>
 
     </div>
@@ -396,7 +397,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1><no title></h1>
+    <h1>Advanced Topics</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -405,9 +406,11 @@ document.write(`
                 <h2> Contents </h2>
             </div>
             <nav aria-label="Page">
-                <ul class="simple visible nav section-nav flex-column">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#topic-design">Topic Design</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#topic-options">Topic Options</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#topic-alterations">Topic Alterations</a></li>
 </ul>
-
             </nav>
         </div>
     </div>
@@ -418,7 +421,70 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  
+  <section class="tex2jax_ignore mathjax_ignore" id="advanced-topics">
+<h1>Advanced Topics<a class="headerlink" href="#advanced-topics" title="Permalink to this heading">#</a></h1>
+<section id="topic-design">
+<h2>Topic Design<a class="headerlink" href="#topic-design" title="Permalink to this heading">#</a></h2>
+<p>What do we need to consider when designing topics?</p>
+<ul class="simple">
+<li><p>Data accuracy</p>
+<ul>
+<li><p>Making sure that events that must be ordered end up in same partition (and same topic)</p></li>
+<li><p>Using key’ed records needing to be ordered, patition setup will be essential</p></li>
+<li><p>In contrast, search events may not need to be ordered</p></li>
+</ul>
+</li>
+<li><p>Popularity of events</p>
+<ul>
+<li><p>E.g. searches for tickets &gt; Any other request</p></li>
+<li><p>Consumers time spent filtering out mass of events</p></li>
+</ul>
+</li>
+<li><p>Amount of data to process</p>
+<ul>
+<li><p>Will we need multiple consumers to prosess this data?</p></li>
+<li><p>Easy solution: Increase number of partitions, but this will require more resources</p></li>
+<li><p>Hint: Start with small partitions</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="topic-options">
+<h2>Topic Options<a class="headerlink" href="#topic-options" title="Permalink to this heading">#</a></h2>
+<p>Topic options or parameters are additional parameters provided to the <code class="docutils literal notranslate"><span class="pre">kafka-topics</span></code> command. Only required parameter
+is <code class="docutils literal notranslate"><span class="pre">--bootstrap-server</span></code>, and an <em>action</em>, e.g.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--list</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--create</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--describe</span></code></p></li>
+</ul>
+<p>To make sure you do not create topics on accident, set <code class="docutils literal notranslate"><span class="pre">auto.create.topics.enable=false</span></code>.</p>
+<p>Altering the topics can be performed with the <code class="docutils literal notranslate"><span class="pre">--alter</span></code> flag, although this is only recommended for partitions without a
+key, or when there is no data. If the topics has a key, the partition logic or ordering of the messages will be
+affected.</p>
+<p>Adding and deleting configuration can be performed using <code class="docutils literal notranslate"><span class="pre">--add-config</span> <span class="pre">&lt;key&gt;=&lt;value&gt;</span></code> and <code class="docutils literal notranslate"><span class="pre">-delete-config</span> <span class="pre">&lt;key&gt;</span></code>
+options.</p>
+</section>
+<section id="topic-alterations">
+<h2>Topic Alterations<a class="headerlink" href="#topic-alterations" title="Permalink to this heading">#</a></h2>
+<p>Topic/Log compaction is different from retention; here the goal is to make sure that the latest value exists, and is
+controlled by the <code class="docutils literal notranslate"><span class="pre">--config</span> <span class="pre">cleanup.policy=compact</span></code> option. When a topic is marked for compaction, a single log can be
+observed in either a <em>clean</em> or <em>dirty</em> state.</p>
+<ul class="simple">
+<li><p><em>Clean state</em>: Messages that have been though compaction before (duplicates do not exist)</p></li>
+<li><p><em>Dirty state</em>: Messages that have <strong>not</strong> been though compaction before (duplicates exist)</p></li>
+</ul>
+<p>A partition is compacted when the ratio between dirty and total records is larger than <code class="docutils literal notranslate"><span class="pre">min.cleanable.dirty.ratio</span></code> and
+by either:</p>
+<ul class="simple">
+<li><p>AND <code class="docutils literal notranslate"><span class="pre">min.compaction.lag.ms</span></code> is reached</p></li>
+<li><p>OR <code class="docutils literal notranslate"><span class="pre">max.compaction.lag.ms</span></code> is reached</p></li>
+</ul>
+<p>When data is sparse, it is recommended to adjust the requency of log rotation. Using the option <code class="docutils literal notranslate"><span class="pre">log.roll.hours=24</span></code> will
+cause segments rotate about once a day (broker configuration).</p>
+</section>
+</section>
+
     <script type="text/x-thebe-config">
     {
         requestKernel: true,
@@ -473,9 +539,11 @@ document.write(`
     <i class="fa-solid fa-list"></i> Contents
   </div>
   <nav class="bd-toc-nav page-toc">
-    <ul class="simple visible nav section-nav flex-column">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#topic-design">Topic Design</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#topic-options">Topic Options</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#topic-alterations">Topic Alterations</a></li>
 </ul>
-
   </nav></div>
 
 </div></div>
