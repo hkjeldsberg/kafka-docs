@@ -34,7 +34,7 @@ parts:
     chapters:
       - file: config
       - file: auth
-          -
+
   - caption: Advanced Kafka Configuration
     chapters:
       - file: adprod
