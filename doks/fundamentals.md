@@ -2,7 +2,7 @@
 
 Data is described by logs or **topics**. An alternative way to store data as opposed to databased.
 **Events** are stored in the topics. Currently, the trend is to create smaller applications that can communicate through
-the Kafka topic. This enables *real-time* analysis of data stored in topics, instaed of batch processing. Writing data
+the Kafka topic. This enables *real-time* analysis of data stored in topics, instead of batch processing. Writing data
 from a database into a topic can be done with **Kafka connect**. This framework is also used to input data from topics
 to other services.
 **Kafka streams API** handles framework and infrastructure to connect/join topics. For database queries Kafka
@@ -96,7 +96,7 @@ by the other. Third: materialized view of database query – using **kSQLdb**, w
 
 ## Why Kafka and log system?
 
-Fist, consider the existing techonology:
+Fist, consider the existing technology (not stream based):
 Pros:
 
 - Suitable for heavy, complex data transformations and aggregations.
