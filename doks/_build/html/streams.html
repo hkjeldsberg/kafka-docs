@@ -159,6 +159,8 @@ const thebe_selector_output = ".output, .cell_output"
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="commands.html">Kafka CLI commands</a></li>
 <li class="toctree-l1"><a class="reference internal" href="fundamentals.html">Kafka Basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="topics.html">Topics Fundamentals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="storage.html">Kafka Storage and Data Handling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="exam.html">Kafka Developed Exam Requirements</a></li>
 <li class="toctree-l1"><a class="reference internal" href="testing.html">Testing in Kafka</a></li>
 </ul>
@@ -169,20 +171,24 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Producers and Consumers</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="producers.html">Working with Producers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="consumers.html">Working with Consumers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="procon.html">Working with Producers and Consumers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="metrics.html">Metrics and Monitoring</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tuning.html">Tuning producers and consumers</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Connect and Schemas</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="connect.html">Kafka Connect</a></li>
-<li class="toctree-l1"><a class="reference internal" href="schemreg.html">Confluent Schema Registry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="schemreg.html">Confluent Schema Registry and Data Types</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Configuration and Auth</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="config.html">Kafka configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="auth.html">Security, Authentication and Authorization</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Advanced Kafka Configuration</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="adprod.html">Advanced Prodicers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adcons.html">Advanced Consumers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adtopic.html">Advanced Topics</a></li>
 </ul>
 
     </div>
@@ -382,6 +388,10 @@ document.write(`
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#windowing">Windowing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#time-in-streams">Time in Streams</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#streams-vs-database">Streams vs Database</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#streams-design-patterns">Streams Design Patterns</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stream-frameworks">Stream Frameworks</a></li>
 </ul>
             </nav>
         </div>
@@ -395,10 +405,18 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="kafka-streams">
 <h1>Kafka Streams<a class="headerlink" href="#kafka-streams" title="Permalink to this headline">#</a></h1>
+<p>Streams are a <em>sequence of events</em>; real-time events. Example of events:</p>
+<ul class="simple">
+<li><p>Transactions</p></li>
+<li><p>Stock trades</p></li>
+<li><p>Deliveries</p></li>
+<li><p>Network events</p></li>
+<li><p>Moves in a game</p></li>
+</ul>
 <section id="stateless-and-stateful-transformations">
 <h2>Stateless and Stateful transformations<a class="headerlink" href="#stateless-and-stateful-transformations" title="Permalink to this headline">#</a></h2>
-<p>Tranformations that are <strong>stateless</strong> do not require a special data store.</p>
-<p>Transformation that are <strong>stateful</strong> require a special data store to store the current <strong>state</strong> for the stream.</p>
+<p>Tranformations that are <strong>stateless</strong> do not require a special data store. Transformation that are <strong>stateful</strong> require
+a special data store to store the current <strong>state</strong> for the stream.</p>
 <section id="stateless-transformations">
 <h3>Stateless transformations<a class="headerlink" href="#stateless-transformations" title="Permalink to this headline">#</a></h3>
 <p>Some stateless transformations inlcude:</p>
@@ -442,6 +460,50 @@ time buckets”, aggregating them bit by bit. Different window types exist:</p>
 <li><p><strong>Sliding</strong>: Used for joins. Defined by the length of time between timestamps of any two records. No gaps, but
 overlap.</p></li>
 <li><p><strong>Session</strong>: Dynamic windows formed around activity based on the timestamps. Will contain inactivity <em>gaps</em></p></li>
+</ul>
+</section>
+<section id="time-in-streams">
+<h2>Time in Streams<a class="headerlink" href="#time-in-streams" title="Permalink to this headline">#</a></h2>
+<p><em>Time</em> in the context of streams is used in operations such as <em>windowing</em>, and define time boundaries. These include:</p>
+<ul class="simple">
+<li><p><strong>Event time</strong>: Time when event was <em>created</em> at the source.</p></li>
+<li><p><strong>Ingestion time</strong>: Time when the event was <em>stored</em> in a topic partition by a Kafka broker.</p></li>
+<li><p><strong>Processing time</strong>/Wall-clock-time: Time when the event started to be <em>handled/processed</em> by the stream processing
+application.</p></li>
+</ul>
+<p>Processing time can happen days after the event actually happened. Time zones should be standardized.</p>
+</section>
+<section id="streams-vs-database">
+<h2>Streams vs Database<a class="headerlink" href="#streams-vs-database" title="Permalink to this headline">#</a></h2>
+<p>There are some notable differences, includingStreams:</p>
+<ul class="simple">
+<li><p>Streams keep a history of changes</p></li>
+<li><p>No delting a stream</p></li>
+<li><p>A table can be converted to a stream (or other way)</p></li>
+</ul>
+</section>
+<section id="streams-design-patterns">
+<h2>Streams Design Patterns<a class="headerlink" href="#streams-design-patterns" title="Permalink to this headline">#</a></h2>
+<p>Depending on the goal and purpose of the data, sevaral stream design patterns are available. Patterns:</p>
+<ul class="simple">
+<li><p><strong>Single event processing</strong>: Each event is handled independently. No state is needed.</p></li>
+<li><p><strong>Local state processing</strong>: May include storing min and max values; need to store some state. Suffers from increased
+memory usage.</p></li>
+<li><p><strong>Multiphase processing</strong>: Partially uses local state, but kicks over to a new partition for aggregating part of the
+incoming data.</p></li>
+<li><p><strong>External processing</strong>: When data is external to a stream and performs an external lookup. May cause latency issues.</p></li>
+<li><p><strong>Windowed join</strong>: Design where two event streams are matched within a <em>time window</em>.</p></li>
+<li><p><strong>Out of Sequence events</strong>: For handling events arriving at the wrong time.</p></li>
+</ul>
+</section>
+<section id="stream-frameworks">
+<h2>Stream Frameworks<a class="headerlink" href="#stream-frameworks" title="Permalink to this headline">#</a></h2>
+<p>What framework to use will depend on the type of application.</p>
+<ul class="simple">
+<li><p><strong>Ingest</strong>: Try Kafka Connect.</p></li>
+<li><p><strong>Low millisecond</strong>: Request/Response system.</p></li>
+<li><p><strong>Real-time data analytics</strong>:  Performing complex aggregations for insight.</p></li>
+<li><p><strong>Asyncronous Microservices</strong>:Rquires local state caching events.</p></li>
 </ul>
 </section>
 </section>
@@ -513,6 +575,10 @@ overlap.</p></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#windowing">Windowing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#time-in-streams">Time in Streams</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#streams-vs-database">Streams vs Database</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#streams-design-patterns">Streams Design Patterns</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stream-frameworks">Stream Frameworks</a></li>
 </ul>
   </nav></div>
 
@@ -545,7 +611,7 @@ By Henrik A. Kjeldsberg
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on Mar 13, 2024.
+  Last updated on Mar 19, 2024.
   <br/>
 </p>
   </div>

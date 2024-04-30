@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Tuning producers and consumers &#8212; Kafka Fundamentals Docs</title>
+    <title>Advanced Topics &#8212; Kafka Fundamentals Docs</title>
   
   
   
@@ -60,13 +60,10 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
-    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'tuning';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'adtopic';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Kafka Connect" href="connect.html" />
-    <link rel="prev" title="Metrics and Monitoring" href="metrics.html" />
+    <link rel="prev" title="Advanced Consumers" href="adcons.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="None"/>
   </head>
@@ -161,6 +158,8 @@ const thebe_selector_output = ".output, .cell_output"
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="commands.html">Kafka CLI commands</a></li>
 <li class="toctree-l1"><a class="reference internal" href="fundamentals.html">Kafka Basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="topics.html">Topics Fundamentals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="storage.html">Kafka Storage and Data Handling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="exam.html">Kafka Developed Exam Requirements</a></li>
 <li class="toctree-l1"><a class="reference internal" href="testing.html">Testing in Kafka</a></li>
 </ul>
@@ -170,10 +169,10 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1"><a class="reference internal" href="ksql.html">Confluent kSQL</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Producers and Consumers</span></p>
-<ul class="current nav bd-sidenav">
+<ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="procon.html">Working with Producers and Consumers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="metrics.html">Metrics and Monitoring</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Tuning producers and consumers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tuning.html">Tuning producers and consumers</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Connect and Schemas</span></p>
 <ul class="nav bd-sidenav">
@@ -183,7 +182,12 @@ const thebe_selector_output = ".output, .cell_output"
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Configuration and Auth</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="config.html">Kafka configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="auth.html">Security, Authentication and Authorization</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Advanced Kafka Configuration</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="adprod.html">Advanced Prodicers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adcons.html">Advanced Consumers</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Advanced Topics</a></li>
 </ul>
 
     </div>
@@ -255,7 +259,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="https://github.com/kvslab/OasisMove/issues/new?title=Issue%20on%20page%20%2Ftuning.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/kvslab/OasisMove/issues/new?title=Issue%20on%20page%20%2Fadtopic.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -285,7 +289,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="_sources/tuning.md" target="_blank"
+      <li><a href="_sources/adtopic.md" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -367,7 +371,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Tuning producers and consumers</h1>
+    <h1>Advanced Topics</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -377,8 +381,9 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tuning-producers">Tuning producers</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tuning-consumers">Tuning consumers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#topic-design">Topic Design</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#topic-options">Topic Options</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#topic-alterations">Topic Alterations</a></li>
 </ul>
             </nav>
         </div>
@@ -390,44 +395,67 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="tuning-producers-and-consumers">
-<h1>Tuning producers and consumers<a class="headerlink" href="#tuning-producers-and-consumers" title="Permalink to this headline">#</a></h1>
-<p>Tuning can be important to optimize and improve performance for you specific use case, and can be controller using a
-variety of configuration options.</p>
-<section id="tuning-producers">
-<h2>Tuning producers<a class="headerlink" href="#tuning-producers" title="Permalink to this headline">#</a></h2>
-<p>Common configuration options for producers include:</p>
+  <section class="tex2jax_ignore mathjax_ignore" id="advanced-topics">
+<h1>Advanced Topics<a class="headerlink" href="#advanced-topics" title="Permalink to this headline">#</a></h1>
+<section id="topic-design">
+<h2>Topic Design<a class="headerlink" href="#topic-design" title="Permalink to this headline">#</a></h2>
+<p>What do we need to consider when designing topics?</p>
 <ul class="simple">
-<li><p><strong>acks</strong>: Is a number/value <span class="math notranslate nohighlight">\(\in\)</span> [0,1, all / -1] determining when the borker will acknowledge the record</p>
+<li><p>Data accuracy</p>
 <ul>
-<li><p>0: Producer will not wait</p></li>
-<li><p>1: Record will be acknowledged when leader writes</p></li>
-<li><p>all/-1: Record will be acknowledged only when the leader and <em>all</em> replicas have written</p></li>
+<li><p>Making sure that events that must be ordered end up in same partition (and same topic)</p></li>
+<li><p>Using key’ed records needing to be ordered, patition setup will be essential</p></li>
+<li><p>In contrast, search events may not need to be ordered</p></li>
 </ul>
 </li>
-<li><p><strong>retries</strong>: Number of times to retry a record</p></li>
-<li><p><strong>batch.size</strong>: Maximum number of bytes in a batch (producers batch records sharing partition)</p></li>
+<li><p>Popularity of events</p>
+<ul>
+<li><p>E.g. searches for tickets &gt; Any other request</p></li>
+<li><p>Consumers time spent filtering out mass of events</p></li>
+</ul>
+</li>
+<li><p>Amount of data to process</p>
+<ul>
+<li><p>Will we need multiple consumers to prosess this data?</p></li>
+<li><p>Easy solution: Increase number of partitions, but this will require more resources</p></li>
+<li><p>Hint: Start with small partitions</p></li>
+</ul>
+</li>
 </ul>
 </section>
-<section id="tuning-consumers">
-<h2>Tuning consumers<a class="headerlink" href="#tuning-consumers" title="Permalink to this headline">#</a></h2>
-<p>Common configuration options for consumers include:</p>
+<section id="topic-options">
+<h2>Topic Options<a class="headerlink" href="#topic-options" title="Permalink to this headline">#</a></h2>
+<p>Topic options or parameters are additional parameters provided to the <code class="docutils literal notranslate"><span class="pre">kafka-topics</span></code> command. Only required parameter
+is <code class="docutils literal notranslate"><span class="pre">--bootstrap-server</span></code>, and an <em>action</em>, e.g.</p>
 <ul class="simple">
-<li><p><strong>fetch.min.bytes</strong>: The minimum amount of data to fetch in a request. If there is not enough data to satisfy this
-requirement, the request will wait for more data before responding. Set this higher to get better throughput in some
-situations at the cost of some latency.</p></li>
-<li><p><strong><a class="reference external" href="http://heartbeat.interval.ms">heartbeat.interval.ms</a></strong>: How often to send heartbeats to the consumer coordinator. Set this lower to allow a quicker
-rebalance response when a consumer joins or leaves the consumer group.</p></li>
-<li><p><strong>auto.offset.reset</strong>: What to do when the consumer has no initial offset</p>
-<ul>
-<li><p>latest: Start at the latest record.</p></li>
-<li><p>earliest: Start with the earliest record.</p></li>
-<li><p>none: Throw an exception when there is no existing offset data.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--list</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--create</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--describe</span></code></p></li>
 </ul>
-</li>
-<li><p><strong>enable.auto.commit</strong>: Periodically commit the current offset in the background. Use this to determine whether you
-want to handle offsets manually or automatically</p></li>
+<p>To make sure you do not create topics on accident, set <code class="docutils literal notranslate"><span class="pre">auto.create.topics.enable=false</span></code>.</p>
+<p>Altering the topics can be performed with the <code class="docutils literal notranslate"><span class="pre">--alter</span></code> flag, although this is only recommended for partitions without a
+key, or when there is no data. If the topics has a key, the partition logic or ordering of the messages will be
+affected.</p>
+<p>Adding and deleting configuration can be performed using <code class="docutils literal notranslate"><span class="pre">--add-config</span> <span class="pre">&lt;key&gt;=&lt;value&gt;</span></code> and <code class="docutils literal notranslate"><span class="pre">-delete-config</span> <span class="pre">&lt;key&gt;</span></code>
+options.</p>
+</section>
+<section id="topic-alterations">
+<h2>Topic Alterations<a class="headerlink" href="#topic-alterations" title="Permalink to this headline">#</a></h2>
+<p>Topic/Log compaction is different from retention; here the goal is to make sure that the latest value exists, and is
+controlled by the <code class="docutils literal notranslate"><span class="pre">--config</span> <span class="pre">cleanup.policy=compact</span></code> option. When a topic is marked for compaction, a single log can be
+observed in either a <em>clean</em> or <em>dirty</em> state.</p>
+<ul class="simple">
+<li><p><em>Clean state</em>: Messages that have been though compaction before (duplicates do not exist)</p></li>
+<li><p><em>Dirty state</em>: Messages that have <strong>not</strong> been though compaction before (duplicates exist)</p></li>
 </ul>
+<p>A partition is compacted when the ratio between dirty and total records is larger than <code class="docutils literal notranslate"><span class="pre">min.cleanable.dirty.ratio</span></code> and
+by either:</p>
+<ul class="simple">
+<li><p>AND <code class="docutils literal notranslate"><span class="pre">min.compaction.lag.ms</span></code> is reached</p></li>
+<li><p>OR <code class="docutils literal notranslate"><span class="pre">max.compaction.lag.ms</span></code> is reached</p></li>
+</ul>
+<p>When data is sparse, it is recommended to adjust the requency of log rotation. Using the option <code class="docutils literal notranslate"><span class="pre">log.roll.hours=24</span></code> will
+cause segments rotate about once a day (broker configuration).</p>
 </section>
 </section>
 
@@ -460,22 +488,13 @@ want to handle offsets manually or automatically</p></li>
                   <!-- Previous / next buttons -->
 <div class="prev-next-area">
     <a class="left-prev"
-       href="metrics.html"
+       href="adcons.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Metrics and Monitoring</p>
+        <p class="prev-next-title">Advanced Consumers</p>
       </div>
-    </a>
-    <a class="right-next"
-       href="connect.html"
-       title="next page">
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Kafka Connect</p>
-      </div>
-      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
                 </footer>
@@ -492,8 +511,9 @@ want to handle offsets manually or automatically</p></li>
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tuning-producers">Tuning producers</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tuning-consumers">Tuning consumers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#topic-design">Topic Design</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#topic-options">Topic Options</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#topic-alterations">Topic Alterations</a></li>
 </ul>
   </nav></div>
 
@@ -526,7 +546,7 @@ By Henrik A. Kjeldsberg
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on Mar 15, 2024.
+  Last updated on Mar 19, 2024.
   <br/>
 </p>
   </div>

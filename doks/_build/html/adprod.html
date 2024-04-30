@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Tuning producers and consumers &#8212; Kafka Fundamentals Docs</title>
+    <title>Advanced Prodicers &#8212; Kafka Fundamentals Docs</title>
   
   
   
@@ -60,13 +60,11 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
-    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'tuning';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'adprod';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Kafka Connect" href="connect.html" />
-    <link rel="prev" title="Metrics and Monitoring" href="metrics.html" />
+    <link rel="next" title="Advanced Consumers" href="adcons.html" />
+    <link rel="prev" title="Kafka configuration" href="config.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="None"/>
   </head>
@@ -161,6 +159,8 @@ const thebe_selector_output = ".output, .cell_output"
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="commands.html">Kafka CLI commands</a></li>
 <li class="toctree-l1"><a class="reference internal" href="fundamentals.html">Kafka Basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="topics.html">Topics Fundamentals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="storage.html">Kafka Storage and Data Handling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="exam.html">Kafka Developed Exam Requirements</a></li>
 <li class="toctree-l1"><a class="reference internal" href="testing.html">Testing in Kafka</a></li>
 </ul>
@@ -170,10 +170,10 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1"><a class="reference internal" href="ksql.html">Confluent kSQL</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Producers and Consumers</span></p>
-<ul class="current nav bd-sidenav">
+<ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="procon.html">Working with Producers and Consumers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="metrics.html">Metrics and Monitoring</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Tuning producers and consumers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tuning.html">Tuning producers and consumers</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Connect and Schemas</span></p>
 <ul class="nav bd-sidenav">
@@ -183,7 +183,12 @@ const thebe_selector_output = ".output, .cell_output"
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Configuration and Auth</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="config.html">Kafka configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="auth.html">Security, Authentication and Authorization</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Advanced Kafka Configuration</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Advanced Prodicers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adcons.html">Advanced Consumers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adtopic.html">Advanced Topics</a></li>
 </ul>
 
     </div>
@@ -255,7 +260,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="https://github.com/kvslab/OasisMove/issues/new?title=Issue%20on%20page%20%2Ftuning.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/kvslab/OasisMove/issues/new?title=Issue%20on%20page%20%2Fadprod.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -285,7 +290,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="_sources/tuning.md" target="_blank"
+      <li><a href="_sources/adprod.md" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -367,7 +372,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Tuning producers and consumers</h1>
+    <h1>Advanced Prodicers</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -377,8 +382,10 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tuning-producers">Tuning producers</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tuning-consumers">Tuning consumers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#idempotency">Idempotency</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#batch-compression">Batch Compression</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#serializers">Serializers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#producer-buffer-memory">Producer Buffer Memory</a></li>
 </ul>
             </nav>
         </div>
@@ -390,44 +397,64 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="tuning-producers-and-consumers">
-<h1>Tuning producers and consumers<a class="headerlink" href="#tuning-producers-and-consumers" title="Permalink to this headline">#</a></h1>
-<p>Tuning can be important to optimize and improve performance for you specific use case, and can be controller using a
-variety of configuration options.</p>
-<section id="tuning-producers">
-<h2>Tuning producers<a class="headerlink" href="#tuning-producers" title="Permalink to this headline">#</a></h2>
-<p>Common configuration options for producers include:</p>
-<ul class="simple">
-<li><p><strong>acks</strong>: Is a number/value <span class="math notranslate nohighlight">\(\in\)</span> [0,1, all / -1] determining when the borker will acknowledge the record</p>
-<ul>
-<li><p>0: Producer will not wait</p></li>
-<li><p>1: Record will be acknowledged when leader writes</p></li>
-<li><p>all/-1: Record will be acknowledged only when the leader and <em>all</em> replicas have written</p></li>
-</ul>
-</li>
-<li><p><strong>retries</strong>: Number of times to retry a record</p></li>
-<li><p><strong>batch.size</strong>: Maximum number of bytes in a batch (producers batch records sharing partition)</p></li>
-</ul>
+  <section class="tex2jax_ignore mathjax_ignore" id="advanced-prodicers">
+<h1>Advanced Prodicers<a class="headerlink" href="#advanced-prodicers" title="Permalink to this headline">#</a></h1>
+<section id="idempotency">
+<h2>Idempotency<a class="headerlink" href="#idempotency" title="Permalink to this headline">#</a></h2>
+<p>By setting certain properties, we can ensure that messages reach the Kafka cluster and Consumer from the producers. One
+of these properties is <strong>Idempotent Producers</strong>, controlled by the <strong>enable.idempotence</strong> property. By default, this is
+a <em>low</em> priority property. Enableing this will ensure we (1) do not lose messages, and (2) do not duplicate messages.
+Enabling idempotency attaches a <strong>produce-request-ID</strong> to the acknowledgement – which the broker can detect to avoid
+duplicates.</p>
+<p>To enable this in Java, add the following configuration:</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">properties</span><span class="p">.</span><span class="na">setProperty</span><span class="p">(</span><span class="n">ProducerConfig</span><span class="p">.</span><span class="na">ENABLE_IDEMPOTENCE_CONFIG</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;true&quot;</span><span class="p">);</span>
+
+<span class="c1">// Controllers how many partitions needs to recieve the message (all)</span>
+<span class="n">properties</span><span class="p">.</span><span class="na">setProperty</span><span class="p">(</span><span class="n">ProducerConfig</span><span class="p">.</span><span class="na">ACKS_CONFIG</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;all&quot;</span><span class="p">);</span>
+
+<span class="c1">// If error message never reaches producer – Retry sending messages from producer </span>
+<span class="n">properties</span><span class="p">.</span><span class="na">setProperty</span><span class="p">(</span><span class="n">ProducerConfig</span><span class="p">.</span><span class="na">RETRIES_CONFIG</span><span class="p">,</span><span class="w"> </span><span class="n">Integer</span><span class="p">.</span><span class="na">toString</span><span class="p">(</span><span class="n">Integer</span><span class="p">.</span><span class="na">MAX_VALUE</span><span class="p">));</span><span class="w"> </span>
+
+<span class="c1">// Controllers number of messages the producer will send without getting a response</span>
+<span class="n">properties</span><span class="p">.</span><span class="na">setProperty</span><span class="p">(</span><span class="n">ProducerConfig</span><span class="p">.</span><span class="na">MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;5&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
 </section>
-<section id="tuning-consumers">
-<h2>Tuning consumers<a class="headerlink" href="#tuning-consumers" title="Permalink to this headline">#</a></h2>
-<p>Common configuration options for consumers include:</p>
-<ul class="simple">
-<li><p><strong>fetch.min.bytes</strong>: The minimum amount of data to fetch in a request. If there is not enough data to satisfy this
-requirement, the request will wait for more data before responding. Set this higher to get better throughput in some
-situations at the cost of some latency.</p></li>
-<li><p><strong><a class="reference external" href="http://heartbeat.interval.ms">heartbeat.interval.ms</a></strong>: How often to send heartbeats to the consumer coordinator. Set this lower to allow a quicker
-rebalance response when a consumer joins or leaves the consumer group.</p></li>
-<li><p><strong>auto.offset.reset</strong>: What to do when the consumer has no initial offset</p>
-<ul>
-<li><p>latest: Start at the latest record.</p></li>
-<li><p>earliest: Start with the earliest record.</p></li>
-<li><p>none: Throw an exception when there is no existing offset data.</p></li>
-</ul>
-</li>
-<li><p><strong>enable.auto.commit</strong>: Periodically commit the current offset in the background. Use this to determine whether you
-want to handle offsets manually or automatically</p></li>
-</ul>
+<section id="batch-compression">
+<h2>Batch Compression<a class="headerlink" href="#batch-compression" title="Permalink to this headline">#</a></h2>
+<p>As an alternative to sending individual messages: sending from the producer in <strong>batch</strong>. Message compression will
+increase the throughput of the messages. Compression in configured on the <em>Producer</em> side. Disadvantage: requires more
+CPU power, but efficiency gained outweighs this.</p>
+<p>In the Producer the <strong>sender</strong> communicates with a <strong>RecordAccumulator</strong> on how to send the request over to a Kafka
+Cluster. The sender is only aware of the cluster’s metadata, which lets it find the broker to write to.</p>
+<p>The larger the batch, the better the compression. If it fails, we avoid duplication and loss with idempotency (see
+above).</p>
+<p>To add compression type and batch configuration in Java:</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="c1">// Set compression type (gzip, tar, snappy, lz4)</span>
+<span class="n">properties</span><span class="p">.</span><span class="na">setProperty</span><span class="p">(</span><span class="n">ProducerConfig</span><span class="p">.</span><span class="na">COMRPRESSION_TYPE_CONFIG</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;snappy&quot;</span><span class="p">);</span>
+
+<span class="c1">// Batch size</span>
+<span class="n">properties</span><span class="p">.</span><span class="na">setProperty</span><span class="p">(</span><span class="n">ProducerConfig</span><span class="p">.</span><span class="na">BATCH_SIZE_CONFIG</span><span class="p">,</span><span class="w"> </span><span class="n">Integer</span><span class="p">.</span><span class="na">toString</span><span class="p">(</span><span class="mi">32</span><span class="o">*</span><span class="mi">1024</span><span class="p">)));</span>
+
+<span class="c1">// Time to wait for additional messages before sending _NEXT_ batch</span>
+<span class="n">properties</span><span class="p">.</span><span class="na">setProperty</span><span class="p">(</span><span class="n">ProducerConfig</span><span class="p">.</span><span class="na">LINDER_MS_CONFIG</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;20&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="serializers">
+<h2>Serializers<a class="headerlink" href="#serializers" title="Permalink to this headline">#</a></h2>
+<p><strong>Serializers</strong> are used to control the format in which data is stored when sent from a producer to a cluster. Recall;
+each message has a time stamp to create a ordered group. A pre-built serializer is the <code class="docutils literal notranslate"><span class="pre">StringSeralizer</span></code>. Custom
+serialization can be used to translate data in a format that can be <em>stored, transmitted, and retrieved</em>. Alternative, a
+popular serializer is the <code class="docutils literal notranslate"><span class="pre">KafkaAvroSerializer</span></code>.</p>
+</section>
+<section id="producer-buffer-memory">
+<h2>Producer Buffer Memory<a class="headerlink" href="#producer-buffer-memory" title="Permalink to this headline">#</a></h2>
+<p>What happens when the producer is producing messages faster than the broker can handle? Or if there is some broker
+failure? Where do the messages go?</p>
+<p>Messages will in this case be sent to a <strong>buffer memory</strong> on the producer. Buffer size is by default 32MB, which will be
+tuned as the producer produces messages. A configuration <code class="docutils literal notranslate"><span class="pre">max.block.ms</span></code> controls the time before an exception is raised
+if the broker is not responding (default 60 seconds).</p>
 </section>
 </section>
 
@@ -460,20 +487,20 @@ want to handle offsets manually or automatically</p></li>
                   <!-- Previous / next buttons -->
 <div class="prev-next-area">
     <a class="left-prev"
-       href="metrics.html"
+       href="config.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Metrics and Monitoring</p>
+        <p class="prev-next-title">Kafka configuration</p>
       </div>
     </a>
     <a class="right-next"
-       href="connect.html"
+       href="adcons.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Kafka Connect</p>
+        <p class="prev-next-title">Advanced Consumers</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -492,8 +519,10 @@ want to handle offsets manually or automatically</p></li>
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tuning-producers">Tuning producers</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tuning-consumers">Tuning consumers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#idempotency">Idempotency</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#batch-compression">Batch Compression</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#serializers">Serializers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#producer-buffer-memory">Producer Buffer Memory</a></li>
 </ul>
   </nav></div>
 
@@ -526,7 +555,7 @@ By Henrik A. Kjeldsberg
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on Mar 15, 2024.
+  Last updated on Mar 19, 2024.
   <br/>
 </p>
   </div>

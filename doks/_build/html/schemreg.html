@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Confluent Schema Registry &#8212; Kafka Fundamentals Docs</title>
+    <title>Confluent Schema Registry and Data Types &#8212; Kafka Fundamentals Docs</title>
   
   
   
@@ -169,15 +169,14 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Producers and Consumers</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="producers.html">Working with Producers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="consumers.html">Working with Consumers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="procon.html">Working with Producers and Consumers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="metrics.html">Metrics and Monitoring</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tuning.html">Tuning producers and consumers</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Connect and Schemas</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="connect.html">Kafka Connect</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Confluent Schema Registry</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Confluent Schema Registry and Data Types</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Configuration and Auth</span></p>
 <ul class="nav bd-sidenav">
@@ -366,7 +365,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Confluent Schema Registry</h1>
+    <h1>Confluent Schema Registry and Data Types</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -389,8 +388,8 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="confluent-schema-registry">
-<h1>Confluent Schema Registry<a class="headerlink" href="#confluent-schema-registry" title="Permalink to this headline">#</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="confluent-schema-registry-and-data-types">
+<h1>Confluent Schema Registry and Data Types<a class="headerlink" href="#confluent-schema-registry-and-data-types" title="Permalink to this headline">#</a></h1>
 <p>The schema registry handles schemas, which contain information of the data structure of the log/record to be either read
 or written to Kafka. The schema consists of <strong>metadata</strong> that describes a complex data format, and expected <strong>fields</strong>
 and their data types; key-value format following a <code class="docutils literal notranslate"><span class="pre">JSON</span></code> format. One of these schemes is  <strong>Apache Avro</strong> or Avro, used
@@ -406,7 +405,8 @@ Similarly, <em>consumers</em> can download schemas and use it to deserialise the
 <span class="w">  </span><span class="nt">&quot;fields&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="p">{</span>
 <span class="w">      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;field name&gt;&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;field type&gt;&quot;</span>
+<span class="w">      </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;field type&gt;&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;some default value&gt;&quot;</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">]</span>
 <span class="p">}</span>
@@ -574,7 +574,7 @@ By Henrik A. Kjeldsberg
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on Mar 13, 2024.
+  Last updated on Mar 15, 2024.
   <br/>
 </p>
   </div>

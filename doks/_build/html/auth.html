@@ -63,6 +63,7 @@ const thebe_selector_output = ".output, .cell_output"
     <script>DOCUMENTATION_OPTIONS.pagename = 'auth';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Advanced Prodicers" href="adprod.html" />
     <link rel="prev" title="Kafka configuration" href="config.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="None"/>
@@ -158,6 +159,8 @@ const thebe_selector_output = ".output, .cell_output"
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="commands.html">Kafka CLI commands</a></li>
 <li class="toctree-l1"><a class="reference internal" href="fundamentals.html">Kafka Basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="topics.html">Topics Fundamentals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="storage.html">Kafka Storage and Data Handling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="exam.html">Kafka Developed Exam Requirements</a></li>
 <li class="toctree-l1"><a class="reference internal" href="testing.html">Testing in Kafka</a></li>
 </ul>
@@ -168,20 +171,25 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Producers and Consumers</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="producers.html">Working with Producers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="consumers.html">Working with Consumers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="procon.html">Working with Producers and Consumers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="metrics.html">Metrics and Monitoring</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tuning.html">Tuning producers and consumers</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Connect and Schemas</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="connect.html">Kafka Connect</a></li>
-<li class="toctree-l1"><a class="reference internal" href="schemreg.html">Confluent Schema Registry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="schemreg.html">Confluent Schema Registry and Data Types</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Configuration and Auth</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="config.html">Kafka configuration</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Security, Authentication and Authorization</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Advanced Kafka Configuration</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="adprod.html">Advanced Prodicers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adcons.html">Advanced Consumers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adtopic.html">Advanced Topics</a></li>
 </ul>
 
     </div>
@@ -375,7 +383,8 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#security">Security</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#security-in-kafka">Security in Kafka</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#configuring-tsl-encryption">Configuring TSL encryption</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#client-authentication">Client authentication</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#acl-authorization">ACL authorization</a></li>
 </ul>
@@ -391,8 +400,15 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="security-authentication-and-authorization">
 <h1>Security, Authentication and Authorization<a class="headerlink" href="#security-authentication-and-authorization" title="Permalink to this headline">#</a></h1>
-<section id="security">
-<h2>Security<a class="headerlink" href="#security" title="Permalink to this headline">#</a></h2>
+<section id="security-in-kafka">
+<h2>Security in Kafka<a class="headerlink" href="#security-in-kafka" title="Permalink to this headline">#</a></h2>
+<p>SSL and SASL authentication is supported between Clients (Producers and Consumers) and Brokers, between Brokers, and
+between Brokers and Tools. Different SASL methods are available (GSSAPI, PLAIN, SCRAM-SHA-(256/512), OAUTHBEARER with JWT).
+Authentication and authorization is supported, but is <strong>disabled</strong> by default. Creating a SSL key can be performed using
+the Java <em>keytool</em> utility, or similarly in other languages.</p>
+</section>
+<section id="configuring-tsl-encryption">
+<h2>Configuring TSL encryption<a class="headerlink" href="#configuring-tsl-encryption" title="Permalink to this headline">#</a></h2>
 <p>Using TLS encryption will allow encryption of traffic between clients and Kafka – as a method to defend against
 attacks (man-in-the-middle). This will require certificate authority and certificate files for the Kafka Brokers, which
 can be configured like this:</p>
@@ -472,6 +488,15 @@ need to add the following field in <code class="docutils literal notranslate"><s
         <p class="prev-next-title">Kafka configuration</p>
       </div>
     </a>
+    <a class="right-next"
+       href="adprod.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Advanced Prodicers</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
 </div>
                 </footer>
               
@@ -487,7 +512,8 @@ need to add the following field in <code class="docutils literal notranslate"><s
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#security">Security</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#security-in-kafka">Security in Kafka</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#configuring-tsl-encryption">Configuring TSL encryption</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#client-authentication">Client authentication</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#acl-authorization">ACL authorization</a></li>
 </ul>
@@ -522,7 +548,7 @@ By Henrik A. Kjeldsberg
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on Mar 13, 2024.
+  Last updated on Mar 19, 2024.
   <br/>
 </p>
   </div>

@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Working with Consumers &#8212; Kafka Fundamentals Docs</title>
+    <title>Advanced Consumers &#8212; Kafka Fundamentals Docs</title>
   
   
   
@@ -60,13 +60,11 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
-    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'consumers';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'adcons';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Metrics and Monitoring" href="metrics.html" />
-    <link rel="prev" title="Working with Producers" href="producers.html" />
+    <link rel="next" title="Advanced Topics" href="adtopic.html" />
+    <link rel="prev" title="Advanced Prodicers" href="adprod.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="None"/>
   </head>
@@ -161,6 +159,8 @@ const thebe_selector_output = ".output, .cell_output"
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="commands.html">Kafka CLI commands</a></li>
 <li class="toctree-l1"><a class="reference internal" href="fundamentals.html">Kafka Basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="topics.html">Topics Fundamentals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="storage.html">Kafka Storage and Data Handling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="exam.html">Kafka Developed Exam Requirements</a></li>
 <li class="toctree-l1"><a class="reference internal" href="testing.html">Testing in Kafka</a></li>
 </ul>
@@ -170,21 +170,25 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1"><a class="reference internal" href="ksql.html">Confluent kSQL</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Producers and Consumers</span></p>
-<ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="producers.html">Working with Producers</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Working with Consumers</a></li>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="procon.html">Working with Producers and Consumers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="metrics.html">Metrics and Monitoring</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tuning.html">Tuning producers and consumers</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Connect and Schemas</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="connect.html">Kafka Connect</a></li>
-<li class="toctree-l1"><a class="reference internal" href="schemreg.html">Confluent Schema Registry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="schemreg.html">Confluent Schema Registry and Data Types</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Configuration and Auth</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="config.html">Kafka configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="auth.html">Security, Authentication and Authorization</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Advanced Kafka Configuration</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="adprod.html">Advanced Prodicers</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Advanced Consumers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adtopic.html">Advanced Topics</a></li>
 </ul>
 
     </div>
@@ -256,7 +260,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="https://github.com/kvslab/OasisMove/issues/new?title=Issue%20on%20page%20%2Fconsumers.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/kvslab/OasisMove/issues/new?title=Issue%20on%20page%20%2Fadcons.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -286,7 +290,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="_sources/consumers.md" target="_blank"
+      <li><a href="_sources/adcons.md" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -368,7 +372,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Working with Consumers</h1>
+    <h1>Advanced Consumers</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -378,8 +382,10 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#building-a-consumer-in-java">Building a Consumer in Java</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#consumer-groups">Consumer groups</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reading-duplicate-messages">Reading Duplicate Messages</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tracking-offsets">Tracking Offsets</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#partition-assignment-and-re-balancing">Partition Assignment and Re-balancing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#consumer-group-coordinater">Consumer Group Coordinater</a></li>
 </ul>
             </nav>
         </div>
@@ -391,44 +397,96 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="working-with-consumers">
-<h1>Working with Consumers<a class="headerlink" href="#working-with-consumers" title="Permalink to this headline">#</a></h1>
-<p>A consumer pull messages from 1, …, <span class="math notranslate nohighlight">\(n\)</span> topics. The consumer offset is also stored in memory, and is stored in a
-special topic: <em>consumer offset</em> which keeps track of the consumers “position”. Consumers can also belong to a consumer
-group.</p>
-<p>For the consumder (here in <code class="docutils literal notranslate"><span class="pre">C#</span></code>), start the consumer file with some configuration. Then initialize some event-handlers,
-which handles messages and potential errors. The consumer is initialized using the <code class="docutils literal notranslate"><span class="pre">Consumer</span></code> class, with a
-function <code class="docutils literal notranslate"><span class="pre">Subscribe</span></code> where the <code class="docutils literal notranslate"><span class="pre">topic</span></code> of interest needs to be specified (multiple topics can be subscribed to).
-A <code class="docutils literal notranslate"><span class="pre">while</span> <span class="pre">(true)</span></code>-loop is then initiated to <code class="docutils literal notranslate"><span class="pre">Poll</span></code> (pull, consume) the date from the Kafka cluster. See figure below.</p>
-<figure class="align-default" id="consumer">
-<img alt="_images/consumer-c.png" src="_images/consumer-c.png" />
-<figcaption>
-<p><span class="caption-number">Fig. 3 </span><span class="caption-text">A representative consumer in C#.</span><a class="headerlink" href="#consumer" title="Permalink to this image">#</a></p>
-</figcaption>
-</figure>
-<section id="building-a-consumer-in-java">
-<h2>Building a Consumer in Java<a class="headerlink" href="#building-a-consumer-in-java" title="Permalink to this headline">#</a></h2>
-<p>A consumer can be built though the Java <strong>Consumer API</strong>. The <code class="docutils literal notranslate"><span class="pre">KafkaConsumer</span></code> class will handle interaction between the
-Java code and Kafka:</p>
-<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">KafkaConsumer</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">consumer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">KafkaConsumer</span><span class="o">&lt;&gt;</span><span class="p">(</span><span class="n">props</span><span class="p">);</span>
-
-<span class="c1">// Subscribe to topic(s)</span>
-<span class="n">consumer</span><span class="p">.</span><span class="na">subscribe</span><span class="p">(</span><span class="n">Arrays</span><span class="p">.</span><span class="na">asList</span><span class="p">(</span><span class="s">&quot;test_topic1&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;test_topic2&quot;</span><span class="p">));</span>
-
-<span class="c1">// Fetch records:</span>
-<span class="n">ConsumerRecords</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">records</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">consumer</span><span class="p">.</span><span class="na">poll</span><span class="p">(</span><span class="n">Duration</span><span class="p">.</span><span class="na">ofMillis</span><span class="p">(</span><span class="mi">100</span><span class="p">));</span>
-<span class="c1">// Perform some operations on records..</span>
-
-<span class="n">consumer</span><span class="p">.</span><span class="na">commitSync</span><span class="p">();</span>
+  <section class="tex2jax_ignore mathjax_ignore" id="advanced-consumers">
+<h1>Advanced Consumers<a class="headerlink" href="#advanced-consumers" title="Permalink to this headline">#</a></h1>
+<section id="reading-duplicate-messages">
+<h2>Reading Duplicate Messages<a class="headerlink" href="#reading-duplicate-messages" title="Permalink to this headline">#</a></h2>
+<p>The consumer controlls the throughput by pulling messages from the broker. With this control, the consumer may controll
+several variables:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">fetch.min.bytes</span></code> and<code class="docutils literal notranslate"><span class="pre">fetch.max.bytes</span></code>: Min and max batch size of the request from the consumer</p>
+<ul>
+<li><p>Defaults: 1 byte and 50 MB.</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">max.poll.records</span></code>: Max number of messages recieved by the consimer</p>
+<ul>
+<li><p>Default: 500</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">max.partition.fetch.bytes</span></code>: Max amount of data the broker will return to the consumer</p>
+<ul>
+<li><p>Defaukt: 1 MB</p></li>
+</ul>
+</li>
+</ul>
+<p>In addition, pulling is controller by the <code class="docutils literal notranslate"><span class="pre">enable.auto.commit</span></code> variable. If set to <code class="docutils literal notranslate"><span class="pre">true</span></code> (default), it will sync
+message batches automatically. If <code class="docutils literal notranslate"><span class="pre">false</span></code>, you will need to manually commit the offsets, giving more control to the
+user.</p>
+</section>
+<section id="tracking-offsets">
+<h2>Tracking Offsets<a class="headerlink" href="#tracking-offsets" title="Permalink to this headline">#</a></h2>
+<p>Offset are message <em>indecies</em> in Kafka. Consumers use Kafka track positions via offsets. The action of updating the
+current position in the current partition is called a <strong>commit</strong>. Hence, a consumer produces a message to
+the <code class="docutils literal notranslate"><span class="pre">__consumer_offsets</span></code> topic (working as a producer) to keep track of the offset. This offset-topic will be used if a
+consumer traches and triggers a re-balance. In theory, the offset value can grow infinetley and is of type <strong>long</strong> data
+type (minimal risk of overflow).</p>
+<p>Consumers read from the leder partition, with each their offsets (which may be the same). A group coordinater lets the
+consumer know how to tell them apart.</p>
+<p>Using a consumer group is recommended, and is controller by a <code class="docutils literal notranslate"><span class="pre">groupId</span></code>. Additional consumer groups would have consumers
+with no consumer offsets. In Java this is configured as follows:</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">properties</span><span class="p">.</span><span class="na">setProperty</span><span class="p">(</span><span class="n">ConsumerConfig</span><span class="p">.</span><span class="na">GROUP_ID_config</span><span class="p">,</span><span class="w"> </span><span class="n">groupID</span><span class="p">);</span>
 </pre></div>
 </div>
 </section>
-<section id="consumer-groups">
-<h2>Consumer groups<a class="headerlink" href="#consumer-groups" title="Permalink to this headline">#</a></h2>
-<p>Consider two producers, producing two unique topics. Then two consumers can consume both topics. How is this assigned
-when the consumers have the same <strong>group ID</strong>? The consumers are doing its best at allocating the partitions. What if we
-scale the consumer? Then the partition reassigns partitions automaticalyl. If something failes, a new rebalance happens
-automatically. However, the consumer API does <em>not</em> consider <strong>state</strong>.</p>
+<section id="partition-assignment-and-re-balancing">
+<h2>Partition Assignment and Re-balancing<a class="headerlink" href="#partition-assignment-and-re-balancing" title="Permalink to this headline">#</a></h2>
+<p>What happens when a new consumer is added? Consumers of the same consumer group start pulling from partitions already
+consumer from. Re-assignment happens also when topics are modified.</p>
+<p>As soon as a consumer has ownership of a partition, it will send out <strong>heartbeats</strong>. Either when it <em>pulls</em> messages or
+when it commits records it has consumed. If no heartbeat is registered it will be considered dead, and the group
+coordinated will trigger a <em>re-balance</em>.</p>
+<p>The first consumer joining the consumer group becomes the <em>group leader</em>, before assigning remaining consumers to
+partitions. The group leader then sends a list of assignments to the group coordinater sending info to all consumers.
+This repeats for each re-balance, and is automatic. Alternatively, it can be performed manually.</p>
+<p>Typee of re-balancing include <strong>round-robin</strong> (random, equally distributed, unordered) and <strong>range</strong> (equally
+distributed and ordered).</p>
+<p>After a consumer is initiated, it needs to be <strong>subscribed</strong> to a topic. Alternativeely, it can be <strong>assigned</strong> to one
+or multiple partitions, see the following Java code.</p>
+<div class="highlight-Java notranslate"><div class="highlight"><pre><span></span><span class="c1">// Subscribe</span>
+<span class="n">consumer</span><span class="p">.</span><span class="na">subscribe</span><span class="p">(</span><span class="n">Array</span><span class="p">.</span><span class="na">asList</span><span class="p">(</span><span class="n">topic</span><span class="p">));</span>
+
+<span class="c1">//  Assign</span>
+<span class="n">consumer</span><span class="p">.</span><span class="na">assign</span><span class="p">(</span><span class="n">Array</span><span class="p">.</span><span class="na">asList</span><span class="p">(</span><span class="n">partition0</span><span class="p">,</span><span class="w"> </span><span class="n">partition1</span><span class="p">));</span>
+</pre></div>
+</div>
+</section>
+<section id="consumer-group-coordinater">
+<h2>Consumer Group Coordinater<a class="headerlink" href="#consumer-group-coordinater" title="Permalink to this headline">#</a></h2>
+<p>One of the broker becomes the consumer group coordinater. The coodinater has the following tasks:</p>
+<ul class="simple">
+<li><p>Reach out to all consumers in a consumer group to assess for a heartbeat</p></li>
+<li><p>Assign appropriate partitions when a new consumer is added</p></li>
+<li><p>Keeps track of offsets and offset commits</p></li>
+</ul>
+<p>An example of the workflow is shown in the diagram below.</p>
+<figure class="align-default" id="coord">
+<img alt="_images/coordinator.png" src="_images/coordinator.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 8 </span><span class="caption-text">The first consumer consumes from partitions on broker 1 and 3, while the second consumer consumes from partitions on broker 2. This is coordinated by broker 3 which works as the group coordinator.</span><a class="headerlink" href="#coord" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<p>Reasons for <em>not</em> adding too many consumers:</p>
+<ul class="simple">
+<li><p>Excess consumers will be idle = Wasted resources</p></li>
+<li><p>Whole consumer group will be down during the re-balancing period</p></li>
+</ul>
+<p>To figure out when a consumer is down or dead, assess the following metrics:</p>
+<ul class="simple">
+<li><p>Heartbeat interval (<code class="docutils literal notranslate"><span class="pre">heartbeat.interval.ms</span></code>)</p></li>
+<li><p>Amount of time consumer is out of contact with coordinator (default: 3 seconds)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">session.timout.ms</span></code> is how long a consumer can go without sending a heartbeat</p></li>
+</ul>
 </section>
 </section>
 
@@ -461,20 +519,20 @@ automatically. However, the consumer API does <em>not</em> consider <strong>stat
                   <!-- Previous / next buttons -->
 <div class="prev-next-area">
     <a class="left-prev"
-       href="producers.html"
+       href="adprod.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Working with Producers</p>
+        <p class="prev-next-title">Advanced Prodicers</p>
       </div>
     </a>
     <a class="right-next"
-       href="metrics.html"
+       href="adtopic.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Metrics and Monitoring</p>
+        <p class="prev-next-title">Advanced Topics</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -493,8 +551,10 @@ automatically. However, the consumer API does <em>not</em> consider <strong>stat
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#building-a-consumer-in-java">Building a Consumer in Java</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#consumer-groups">Consumer groups</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reading-duplicate-messages">Reading Duplicate Messages</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tracking-offsets">Tracking Offsets</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#partition-assignment-and-re-balancing">Partition Assignment and Re-balancing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#consumer-group-coordinater">Consumer Group Coordinater</a></li>
 </ul>
   </nav></div>
 
@@ -527,7 +587,7 @@ By Henrik A. Kjeldsberg
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on Mar 13, 2024.
+  Last updated on Mar 19, 2024.
   <br/>
 </p>
   </div>

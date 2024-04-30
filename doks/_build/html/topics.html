@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Working with Producers &#8212; Kafka Fundamentals Docs</title>
+    <title>Topics Fundamentals &#8212; Kafka Fundamentals Docs</title>
   
   
   
@@ -60,11 +60,11 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'producers';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'topics';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Working with Consumers" href="consumers.html" />
-    <link rel="prev" title="Confluent kSQL" href="ksql.html" />
+    <link rel="next" title="Kafka Storage and Data Handling" href="storage.html" />
+    <link rel="prev" title="Kafka Basics" href="fundamentals.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="None"/>
   </head>
@@ -156,9 +156,11 @@ const thebe_selector_output = ".output, .cell_output"
             </li>
         </ul>
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Fundamentals</span></p>
-<ul class="nav bd-sidenav">
+<ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="commands.html">Kafka CLI commands</a></li>
 <li class="toctree-l1"><a class="reference internal" href="fundamentals.html">Kafka Basics</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Topics Fundamentals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="storage.html">Kafka Storage and Data Handling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="exam.html">Kafka Developed Exam Requirements</a></li>
 <li class="toctree-l1"><a class="reference internal" href="testing.html">Testing in Kafka</a></li>
 </ul>
@@ -168,21 +170,25 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1"><a class="reference internal" href="ksql.html">Confluent kSQL</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Producers and Consumers</span></p>
-<ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Working with Producers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="consumers.html">Working with Consumers</a></li>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="procon.html">Working with Producers and Consumers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="metrics.html">Metrics and Monitoring</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tuning.html">Tuning producers and consumers</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Connect and Schemas</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="connect.html">Kafka Connect</a></li>
-<li class="toctree-l1"><a class="reference internal" href="schemreg.html">Confluent Schema Registry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="schemreg.html">Confluent Schema Registry and Data Types</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Configuration and Auth</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="config.html">Kafka configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="auth.html">Security, Authentication and Authorization</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Advanced Kafka Configuration</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="adprod.html">Advanced Prodicers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adcons.html">Advanced Consumers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adtopic.html">Advanced Topics</a></li>
 </ul>
 
     </div>
@@ -254,7 +260,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="https://github.com/kvslab/OasisMove/issues/new?title=Issue%20on%20page%20%2Fproducers.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/kvslab/OasisMove/issues/new?title=Issue%20on%20page%20%2Ftopics.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -284,7 +290,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="_sources/producers.md" target="_blank"
+      <li><a href="_sources/topics.md" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -366,7 +372,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Working with Producers</h1>
+    <h1>Topics Fundamentals</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -376,8 +382,9 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#building-a-producer-in-java">Building a Producer in Java</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#producer-design">Producer design</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#topic-tools">Topic Tools</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#topic-configuration">Topic Configuration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#message-behaviour">Message behaviour</a></li>
 </ul>
             </nav>
         </div>
@@ -389,55 +396,52 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="working-with-producers">
-<h1>Working with Producers<a class="headerlink" href="#working-with-producers" title="Permalink to this headline">#</a></h1>
-<p>Written in any language or can be initiated throught the command line. With no key for partitioning stratergy the
-producer will use a <em>round-robing</em> strategy. Alternative the default strategy is <code class="docutils literal notranslate"><span class="pre">hash(key)</span> <span class="pre">%</span> <span class="pre">number_of_partitions</span></code>.
-Messages of the same key land in order.</p>
-<p>The standard producer (in <code class="docutils literal notranslate"><span class="pre">Java</span></code>) contains of several fundamental blocks. This includes the <strong>configuration</strong> with
-information about the cluster. Then you create the producer using the <code class="docutils literal notranslate"><span class="pre">KafkaProducer</span></code> passing the configuration. Then a
-part which produces data and sends it to the <code class="docutils literal notranslate"><span class="pre">producer</span></code>, using the class <code class="docutils literal notranslate"><span class="pre">ProducerRecord</span></code> with the topic of interest.
-See figure below.</p>
-<figure class="align-default" id="producer">
-<img alt="_images/producer-java.png" src="_images/producer-java.png" />
-<figcaption>
-<p><span class="caption-number">Fig. 2 </span><span class="caption-text">A representative producer in Java.</span><a class="headerlink" href="#producer" title="Permalink to this image">#</a></p>
-</figcaption>
-</figure>
-<section id="building-a-producer-in-java">
-<h2>Building a Producer in Java<a class="headerlink" href="#building-a-producer-in-java" title="Permalink to this headline">#</a></h2>
-<p>Data can be published to data though Kafka’s Java <strong>Producer API</strong>. A producer is created using the <code class="docutils literal notranslate"><span class="pre">KafkaProducer</span></code>
-class:</p>
-<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">Producer</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">producer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">KafkaProducer</span><span class="o">&lt;&gt;</span><span class="p">(</span><span class="n">props</span><span class="p">);</span>
-
-<span class="c1">// Send one record/log</span>
-<span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="n">ProducerRecord</span><span class="w"> </span><span class="n">record</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ProducerRecord</span><span class="o">&lt;&gt;</span><span class="p">(</span><span class="s">&quot;test_count&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">partition</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;count&quot;</span><span class="p">,</span><span class="n">Integer</span><span class="p">.</span><span class="na">toString</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
-<span class="n">producer</span><span class="p">.</span><span class="na">send</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
-<span class="n">producer</span><span class="p">.</span><span class="na">close</span><span class="p">()</span>
+  <section class="tex2jax_ignore mathjax_ignore" id="topics-fundamentals">
+<h1>Topics Fundamentals<a class="headerlink" href="#topics-fundamentals" title="Permalink to this headline">#</a></h1>
+<p>A <strong>topic</strong> is a collection of related messages or events – a log or sequence of events. In theory, you can have an
+unlimited number of topics. Within a topic, we find one or several <strong>partitions</strong> corresponding to a log, which are
+allocated to different brokers in the cluster. You can think of partitions as a log; strictly ordered with each message
+recieving an incremental ID called <strong>offset</strong>. Within a partitions, we have individual <strong>segments</strong>, existing on the
+disk. Kafka performs distributions of the topics to brokers, but the user needs to set resource limitations and
+requests.</p>
+<section id="topic-tools">
+<h2>Topic Tools<a class="headerlink" href="#topic-tools" title="Permalink to this headline">#</a></h2>
+<p>Topics are created in the following way with a given <code class="docutils literal notranslate"><span class="pre">--replication-factor</span></code> and number of <code class="docutils literal notranslate"><span class="pre">--partitions</span></code>:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">kafka-topics --bootstrap-server kafka:9092 --create  --topic &lt;topic-name&gt;  --partitions $PART  --replication-factor $REP</span>
 </pre></div>
 </div>
-</section>
-<section id="producer-design">
-<h2>Producer design<a class="headerlink" href="#producer-design" title="Permalink to this headline">#</a></h2>
-<p>What happends when you call <code class="docutils literal notranslate"><span class="pre">Send()</span></code>? First, it goes through <strong>serialization</strong>, turning it into the bytes. This is
-passed to the <strong>partitioner</strong> checking for a key, alternatively hashing it and deciding which patition it will be
-written to.</p>
-<p>What happens in the broker? If <code class="docutils literal notranslate"><span class="pre">NONE</span></code> (Acks 0) sends it, we have no info what happened in the broker. If the <code class="docutils literal notranslate"><span class="pre">LEADER</span></code> (
-Acks 1) sends the data, and waits for acknowlegement. Finally, <code class="docutils literal notranslate"><span class="pre">ALL</span></code> (Acks -1) means the leader and all its replicas
-have sent data. Safest but produces more latency.</p>
-<p>Three processes can happen: “At most once” (may lose data), “At least once” (everythig goes through, may be doubled),
-and “Exactly once” (one to one).</p>
+<p>To (1) avoid overwriting an existing topic and (2) create a topic that does not exsist, pass the <code class="docutils literal notranslate"><span class="pre">--if-not-exists</span></code> flag.</p>
+<p>Number of partitions can be altered using the <code class="docutils literal notranslate"><span class="pre">--alter</span></code> flag:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">kafka-topics --bootstrap-server kafka:9092 --alter  --topic &lt;topic-name&gt;  --partitions $NEW_NUMBER_OF_PARTITIONS</span>
+</pre></div>
+</div>
+<p>where <code class="docutils literal notranslate"><span class="pre">&lt;topic-name&gt;</span></code> is an existing topic. You can only <strong>increase</strong> the number of partitions.</p>
+<p>Other topic commands include:</p>
 <ul class="simple">
-<li><p><strong>At least once</strong> (Default): Does not result in data loss, processes one or more times, and may result in duplicates</p></li>
-<li><p><strong>At most once</strong>: Can result in data loss, processes once (or never), but has <em>no</em> duplicates. Useful for checking traffic.</p></li>
-<li><p><strong>Exactly once</strong>: Does not result in data loss, processes exactly once, and does <em>not</em> produce duplicates</p>
-<ul>
-<li><p>This semantic prevents duplication, Handles failures gracefully, and is a strong transactional guarantees for
-Kafka.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--topics-with-overrides</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--under-replicated-partitions</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--unavailable-partitions</span></code></p></li>
 </ul>
-</li>
-</ul>
+</section>
+<section id="topic-configuration">
+<h2>Topic Configuration<a class="headerlink" href="#topic-configuration" title="Permalink to this headline">#</a></h2>
+<p>To get configuration for a particuler entity type (here topics) may be listed by describing the <code class="docutils literal notranslate"><span class="pre">--entity-type</span></code>
+to <code class="docutils literal notranslate"><span class="pre">kafka-configs</span></code>:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">kafka-configs --bootstrap-server kafka:9092 --describe --entity-type topics</span>
+</pre></div>
+</div>
+<p>and add configuration by using the <code class="docutils literal notranslate"><span class="pre">--add-config</span> <span class="pre">KEY=VALUE</span></code> flag (also need to specify <code class="docutils literal notranslate"><span class="pre">--entity-name</span></code>).</p>
+<p>Another approach to configure topics is through <em>consumer groups</em> accessible through <code class="docutils literal notranslate"><span class="pre">kafka-consumer-groups.sh</span></code>.
+Deleting a group with <code class="docutils literal notranslate"><span class="pre">--delete</span> <span class="pre">--group</span> <span class="pre">&lt;group-name&gt;</span></code> can only be performed for consumer groups with no
+members (<code class="docutils literal notranslate"><span class="pre">-member</span></code>). To reset the offset for an existing consumer group, use <code class="docutils literal notranslate"><span class="pre">--to-latest</span></code>. When listing topics, the
+topic <code class="docutils literal notranslate"><span class="pre">__consumer_offset</span></code> topic will be listed with information of the offset. This is created when <em>consumer groups</em>
+are enabled.</p>
+</section>
+<section id="message-behaviour">
+<h2>Message behaviour<a class="headerlink" href="#message-behaviour" title="Permalink to this headline">#</a></h2>
+<p>By default, messages are read one per line. This can be controlled by a class extending the <code class="docutils literal notranslate"><span class="pre">kafka.common.MessageReader</span></code>
+class. Given an extended class <code class="docutils literal notranslate"><span class="pre">MyMessageReader</span></code>, this can be supplemented to the Kafka console through the
+argument <code class="docutils literal notranslate"><span class="pre">--line-reader</span> <span class="pre">org.example.MyMessageReader</span></code>.</p>
 </section>
 </section>
 
@@ -470,20 +474,20 @@ Kafka.</p></li>
                   <!-- Previous / next buttons -->
 <div class="prev-next-area">
     <a class="left-prev"
-       href="ksql.html"
+       href="fundamentals.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Confluent kSQL</p>
+        <p class="prev-next-title">Kafka Basics</p>
       </div>
     </a>
     <a class="right-next"
-       href="consumers.html"
+       href="storage.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Working with Consumers</p>
+        <p class="prev-next-title">Kafka Storage and Data Handling</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -502,8 +506,9 @@ Kafka.</p></li>
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#building-a-producer-in-java">Building a Producer in Java</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#producer-design">Producer design</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#topic-tools">Topic Tools</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#topic-configuration">Topic Configuration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#message-behaviour">Message behaviour</a></li>
 </ul>
   </nav></div>
 
@@ -536,7 +541,7 @@ By Henrik A. Kjeldsberg
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on Mar 13, 2024.
+  Last updated on Mar 19, 2024.
   <br/>
 </p>
   </div>

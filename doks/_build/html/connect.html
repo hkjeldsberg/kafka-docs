@@ -63,7 +63,7 @@ const thebe_selector_output = ".output, .cell_output"
     <script>DOCUMENTATION_OPTIONS.pagename = 'connect';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Confluent Schema Registry" href="schemreg.html" />
+    <link rel="next" title="Confluent Schema Registry and Data Types" href="schemreg.html" />
     <link rel="prev" title="Tuning producers and consumers" href="tuning.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="None"/>
@@ -159,6 +159,8 @@ const thebe_selector_output = ".output, .cell_output"
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="commands.html">Kafka CLI commands</a></li>
 <li class="toctree-l1"><a class="reference internal" href="fundamentals.html">Kafka Basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="topics.html">Topics Fundamentals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="storage.html">Kafka Storage and Data Handling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="exam.html">Kafka Developed Exam Requirements</a></li>
 <li class="toctree-l1"><a class="reference internal" href="testing.html">Testing in Kafka</a></li>
 </ul>
@@ -169,20 +171,24 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Producers and Consumers</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="producers.html">Working with Producers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="consumers.html">Working with Consumers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="procon.html">Working with Producers and Consumers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="metrics.html">Metrics and Monitoring</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tuning.html">Tuning producers and consumers</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Connect and Schemas</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Kafka Connect</a></li>
-<li class="toctree-l1"><a class="reference internal" href="schemreg.html">Confluent Schema Registry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="schemreg.html">Confluent Schema Registry and Data Types</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Configuration and Auth</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="config.html">Kafka configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="auth.html">Security, Authentication and Authorization</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Advanced Kafka Configuration</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="adprod.html">Advanced Prodicers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adcons.html">Advanced Consumers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adtopic.html">Advanced Topics</a></li>
 </ul>
 
     </div>
@@ -404,8 +410,8 @@ document.write(`
 which can perform lightweight transformations on data. The system is fully de-coupled from the Kafka system.</p>
 <section id="sources-and-sinks">
 <h2>Sources and Sinks<a class="headerlink" href="#sources-and-sinks" title="Permalink to this headline">#</a></h2>
-<p>A source connector <strong>imports</strong> data from an external system <em>into</em> Kafka, while a sink connector <strong>exports</strong> from Kafka
-to an external system.</p>
+<p>Kafka Connects contains several <strong>connectors</strong>. A source connector <strong>imports</strong> data from an external system <em>into</em>
+Kafka, while a sink connector <strong>exports</strong> from Kafka to an external system.</p>
 </section>
 <section id="kafka-connect-components">
 <h2>Kafka Connect Components<a class="headerlink" href="#kafka-connect-components" title="Permalink to this headline">#</a></h2>
@@ -452,7 +458,7 @@ or more), where the workers are responsbible for separate <em>tasks</em>. See fi
 <figure class="align-default" id="worker-dist">
 <img alt="_images/worker_dist.png" src="_images/worker_dist.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 4 </span><span class="caption-text">Multiple workers on multiple clusters in a Kafka Connect Cluster.</span><a class="headerlink" href="#worker-dist" title="Permalink to this image">#</a></p>
+<p><span class="caption-number">Fig. 5 </span><span class="caption-text">Multiple workers on multiple clusters in a Kafka Connect Cluster.</span><a class="headerlink" href="#worker-dist" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
 </section>
@@ -464,7 +470,7 @@ also be performed using a distributed methodology.</p>
 <figure class="align-default" id="worker-alone">
 <img alt="_images/worker_alone.png" src="_images/worker_alone.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 5 </span><span class="caption-text">Multiple tasks on a standalong worker  in Kafka Connect.</span><a class="headerlink" href="#worker-alone" title="Permalink to this image">#</a></p>
+<p><span class="caption-number">Fig. 6 </span><span class="caption-text">Multiple tasks on a standalong worker  in Kafka Connect.</span><a class="headerlink" href="#worker-alone" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
 </section>
@@ -508,7 +514,7 @@ different. See figure.</p>
 <figure class="align-default" id="dlq">
 <img alt="_images/dlq.png" src="_images/dlq.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 6 </span><span class="caption-text">Dead letter queue way of handling errors when serialization fails.</span><a class="headerlink" href="#dlq" title="Permalink to this image">#</a></p>
+<p><span class="caption-number">Fig. 7 </span><span class="caption-text">Dead letter queue way of handling errors when serialization fails.</span><a class="headerlink" href="#dlq" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
 <p>DLQ is not default because it requires setup. What should happen to the DLQ messages; this needs to be predefined.</p>
@@ -557,7 +563,7 @@ different. See figure.</p>
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Confluent Schema Registry</p>
+        <p class="prev-next-title">Confluent Schema Registry and Data Types</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -619,7 +625,7 @@ By Henrik A. Kjeldsberg
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on Mar 13, 2024.
+  Last updated on Mar 19, 2024.
   <br/>
 </p>
   </div>

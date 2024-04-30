@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Tuning producers and consumers &#8212; Kafka Fundamentals Docs</title>
+    <title>Kafka Storage and Data Handling &#8212; Kafka Fundamentals Docs</title>
   
   
   
@@ -60,13 +60,11 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
-    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'tuning';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'storage';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Kafka Connect" href="connect.html" />
-    <link rel="prev" title="Metrics and Monitoring" href="metrics.html" />
+    <link rel="next" title="Kafka Developed Exam Requirements" href="exam.html" />
+    <link rel="prev" title="Topics Fundamentals" href="topics.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="None"/>
   </head>
@@ -158,9 +156,11 @@ const thebe_selector_output = ".output, .cell_output"
             </li>
         </ul>
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Fundamentals</span></p>
-<ul class="nav bd-sidenav">
+<ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="commands.html">Kafka CLI commands</a></li>
 <li class="toctree-l1"><a class="reference internal" href="fundamentals.html">Kafka Basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="topics.html">Topics Fundamentals</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Kafka Storage and Data Handling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="exam.html">Kafka Developed Exam Requirements</a></li>
 <li class="toctree-l1"><a class="reference internal" href="testing.html">Testing in Kafka</a></li>
 </ul>
@@ -170,10 +170,10 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1"><a class="reference internal" href="ksql.html">Confluent kSQL</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Producers and Consumers</span></p>
-<ul class="current nav bd-sidenav">
+<ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="procon.html">Working with Producers and Consumers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="metrics.html">Metrics and Monitoring</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Tuning producers and consumers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tuning.html">Tuning producers and consumers</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Connect and Schemas</span></p>
 <ul class="nav bd-sidenav">
@@ -183,7 +183,12 @@ const thebe_selector_output = ".output, .cell_output"
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Configuration and Auth</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="config.html">Kafka configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="auth.html">Security, Authentication and Authorization</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Advanced Kafka Configuration</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="adprod.html">Advanced Prodicers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adcons.html">Advanced Consumers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adtopic.html">Advanced Topics</a></li>
 </ul>
 
     </div>
@@ -255,7 +260,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="https://github.com/kvslab/OasisMove/issues/new?title=Issue%20on%20page%20%2Ftuning.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/kvslab/OasisMove/issues/new?title=Issue%20on%20page%20%2Fstorage.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -285,7 +290,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="_sources/tuning.md" target="_blank"
+      <li><a href="_sources/storage.md" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -367,7 +372,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Tuning producers and consumers</h1>
+    <h1>Kafka Storage and Data Handling</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -377,8 +382,11 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tuning-producers">Tuning producers</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tuning-consumers">Tuning consumers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#file-formats-and-indexes">File formats and Indexes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#file-storage-administration">File/Storage Administration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#storage-structures">Storage Structures</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-cluster-architectures">Multi-cluster architectures</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-mirrowmaker">Example: MirrowMaker</a></li>
 </ul>
             </nav>
         </div>
@@ -390,44 +398,81 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="tuning-producers-and-consumers">
-<h1>Tuning producers and consumers<a class="headerlink" href="#tuning-producers-and-consumers" title="Permalink to this headline">#</a></h1>
-<p>Tuning can be important to optimize and improve performance for you specific use case, and can be controller using a
-variety of configuration options.</p>
-<section id="tuning-producers">
-<h2>Tuning producers<a class="headerlink" href="#tuning-producers" title="Permalink to this headline">#</a></h2>
-<p>Common configuration options for producers include:</p>
+  <section class="tex2jax_ignore mathjax_ignore" id="kafka-storage-and-data-handling">
+<h1>Kafka Storage and Data Handling<a class="headerlink" href="#kafka-storage-and-data-handling" title="Permalink to this headline">#</a></h1>
+<section id="file-formats-and-indexes">
+<h2>File formats and Indexes<a class="headerlink" href="#file-formats-and-indexes" title="Permalink to this headline">#</a></h2>
+<p>Data is formated in a seleceted directory, determined by the <code class="docutils literal notranslate"><span class="pre">log.dirs</span></code> configuration in <code class="docutils literal notranslate"><span class="pre">server.properties</span></code>. As more
+messages are produces, this directory will increase, and files (log segments) will duplicate over time. For instance, a
+partition folder named <code class="docutils literal notranslate"><span class="pre">test-0</span></code> will typically contain:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>ls<span class="w"> </span>/tmp/kafka-logs-0/test-0<span class="w"> </span>
+<span class="go">-rw-r--r--@  1 wheel    10M Mar 15 12:02 00000000000000000000.index</span>
+<span class="go">-rw-r--r--@  1 wheel   557B Mar 15 14:20 00000000000000000000.log</span>
+<span class="go">-rw-r--r--@  1 wheel    10M Mar 15 12:02 00000000000000000000.timeindex</span>
+<span class="go">-rw-r--r--@  1 wheel    56B Mar 15 12:02 00000000000000000004.snapshot</span>
+<span class="go">-rw-r--r--   1 wheel    16B Mar 15 14:19 leader-epoch-checkpoint</span>
+<span class="go">-rw-r--r--@  1 wheel    43B Mar 13 15:49 partition.metadata</span>
+</pre></div>
+</div>
+<p>In order to enable <em>log compaction</em>, pass an additional configuration flag when creating a
+topic: <code class="docutils literal notranslate"><span class="pre">--config</span> <span class="pre">cleanup.policy=compacy</span></code>, with parameters <code class="docutils literal notranslate"><span class="pre">--config</span> <span class="pre">min.cleanable.dirt.ratio</span></code> and <code class="docutils literal notranslate"><span class="pre">--config</span> <span class="pre">segment.ms</span></code>
+determining how often compaction is performed (frequency and segment creation time).</p>
+</section>
+<section id="file-storage-administration">
+<h2>File/Storage Administration<a class="headerlink" href="#file-storage-administration" title="Permalink to this headline">#</a></h2>
+<p>Default retention period is one week, and default retention size is 1Gb for each partition. As more messages are
+produced, segments accumulate and contain individual offsets. Thus, only one segment will be active, known as the **
+active segment**. An active segment is never deleted. In addition, partitions are distributed to brokers through a **
+round-robin** distribution. Example:</p>
 <ul class="simple">
-<li><p><strong>acks</strong>: Is a number/value <span class="math notranslate nohighlight">\(\in\)</span> [0,1, all / -1] determining when the borker will acknowledge the record</p>
-<ul>
-<li><p>0: Producer will not wait</p></li>
-<li><p>1: Record will be acknowledged when leader writes</p></li>
-<li><p>all/-1: Record will be acknowledged only when the leader and <em>all</em> replicas have written</p></li>
-</ul>
-</li>
-<li><p><strong>retries</strong>: Number of times to retry a record</p></li>
-<li><p><strong>batch.size</strong>: Maximum number of bytes in a batch (producers batch records sharing partition)</p></li>
+<li><p>Partition 0 -&gt; Broker 1</p></li>
+<li><p>Partition 1 -&gt; Broker 2</p></li>
+<li><p>Partition 2 -&gt; Broker 3</p></li>
 </ul>
 </section>
-<section id="tuning-consumers">
-<h2>Tuning consumers<a class="headerlink" href="#tuning-consumers" title="Permalink to this headline">#</a></h2>
-<p>Common configuration options for consumers include:</p>
+<section id="storage-structures">
+<h2>Storage Structures<a class="headerlink" href="#storage-structures" title="Permalink to this headline">#</a></h2>
+<p>Kafka supports several storage structures, including</p>
 <ul class="simple">
-<li><p><strong>fetch.min.bytes</strong>: The minimum amount of data to fetch in a request. If there is not enough data to satisfy this
-requirement, the request will wait for more data before responding. Set this higher to get better throughput in some
-situations at the cost of some latency.</p></li>
-<li><p><strong><a class="reference external" href="http://heartbeat.interval.ms">heartbeat.interval.ms</a></strong>: How often to send heartbeats to the consumer coordinator. Set this lower to allow a quicker
-rebalance response when a consumer joins or leaves the consumer group.</p></li>
-<li><p><strong>auto.offset.reset</strong>: What to do when the consumer has no initial offset</p>
+<li><p>Lambda architecture: Batch processing and Operational workloads – Real-time <em>and</em> historical view</p></li>
+<li><p>Kappa architecture: V1 and V2 in parallel – Helps with migration or transitinon to continuous jobs</p></li>
+<li><p>Multiple consumption: Multi-cluster – Replicates clusters for scale or ingesting from different Kafka clusters</p></li>
+</ul>
+</section>
+<section id="multi-cluster-architectures">
+<h2>Multi-cluster architectures<a class="headerlink" href="#multi-cluster-architectures" title="Permalink to this headline">#</a></h2>
+<p>Several architectures regarding multiple clusters exist. N.B.: Brokers of the same cluster must be in <em>same</em> region!</p>
+<ul class="simple">
+<li><p>Multiple clusters may be located in different <strong>geographical</strong> location, connecting to a central Kafka clutser (*
+Hub-and-Spoke*) (Many to one) Relevant for apps that need data from multiple sources/locations.</p>
 <ul>
-<li><p>latest: Start at the latest record.</p></li>
-<li><p>earliest: Start with the earliest record.</p></li>
-<li><p>none: Throw an exception when there is no existing offset data.</p></li>
+<li><p>Data that can be completely separated should be kept locally</p></li>
 </ul>
 </li>
-<li><p><strong>enable.auto.commit</strong>: Periodically commit the current offset in the background. Use this to determine whether you
-want to handle offsets manually or automatically</p></li>
+<li><p>Multiple Kafka clusters may be communicating with each other (<em>Active-active</em>).</p>
+<ul>
+<li><p>Produce and consume events accross multiple clusters</p></li>
+<li><p>Most scalable and cost-efficient architecture.</p></li>
+<li><p>May result in a loop, going back and forth endlessly</p></li>
 </ul>
+</li>
+<li><p>A backup architecture; (<em>Active-Standby</em>) with a “main” <strong>production</strong>  cluster, and one (or multiple) <strong>failover</strong>
+cluster.</p>
+<ul>
+<li><p>Inactive copy is a <em>cold copy</em>.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="example-mirrowmaker">
+<h2>Example: MirrowMaker<a class="headerlink" href="#example-mirrowmaker" title="Permalink to this headline">#</a></h2>
+<p>A framework for replicating data between two datacenters/clusters. The MirrorMaker uses a shared producer to send all
+its events to a target cluster, but has several consumers depending on the source cluster (3 topics -&gt; 3 consumers).</p>
+<p>To perform the process:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">kafka-mirror-maker --consumer.config config/consumer.properties --producer.config config/producer.properties --new.consumer --num.streams=2 --whitelist &quot;.*&quot;</span>
+</pre></div>
+</div>
+<p>MirrorMaker can also be run as a Docker container, and needs to be run in the <em>source</em> cluster.</p>
 </section>
 </section>
 
@@ -460,20 +505,20 @@ want to handle offsets manually or automatically</p></li>
                   <!-- Previous / next buttons -->
 <div class="prev-next-area">
     <a class="left-prev"
-       href="metrics.html"
+       href="topics.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Metrics and Monitoring</p>
+        <p class="prev-next-title">Topics Fundamentals</p>
       </div>
     </a>
     <a class="right-next"
-       href="connect.html"
+       href="exam.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Kafka Connect</p>
+        <p class="prev-next-title">Kafka Developed Exam Requirements</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -492,8 +537,11 @@ want to handle offsets manually or automatically</p></li>
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tuning-producers">Tuning producers</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tuning-consumers">Tuning consumers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#file-formats-and-indexes">File formats and Indexes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#file-storage-administration">File/Storage Administration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#storage-structures">Storage Structures</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-cluster-architectures">Multi-cluster architectures</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-mirrowmaker">Example: MirrowMaker</a></li>
 </ul>
   </nav></div>
 
@@ -526,7 +574,7 @@ By Henrik A. Kjeldsberg
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on Mar 15, 2024.
+  Last updated on Mar 19, 2024.
   <br/>
 </p>
   </div>

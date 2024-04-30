@@ -1,0 +1,644 @@
+
+
+<!DOCTYPE html>
+
+
+<html >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Working with Producers and Consumers &#8212; Kafka Fundamentals Docs</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=12da95d707ffb74b382d" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=12da95d707ffb74b382d" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=12da95d707ffb74b382d" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=12da95d707ffb74b382d" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=12da95d707ffb74b382d" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=12da95d707ffb74b382d" />
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'procon';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Metrics and Monitoring" href="metrics.html" />
+    <link rel="prev" title="Confluent kSQL" href="ksql.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="None"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/logo.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="_static/logo.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="index.html">
+                    Kafka Documentations
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Fundamentals</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="commands.html">Kafka CLI commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fundamentals.html">Kafka Basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="exam.html">Kafka Developed Exam Requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testing.html">Testing in Kafka</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Streams and KSQL</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="streams.html">Kafka Streams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ksql.html">Confluent kSQL</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Producers and Consumers</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Working with Producers and Consumers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="metrics.html">Metrics and Monitoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tuning.html">Tuning producers and consumers</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Connect and Schemas</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="connect.html">Kafka Connect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="schemreg.html">Confluent Schema Registry and Data Types</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Configuration and Auth</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="config.html">Kafka configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="auth.html">Security, Authentication and Authorization</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/kvslab/OasisMove" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/kvslab/OasisMove/issues/new?title=Issue%20on%20page%20%2Fprocon.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/procon.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Working with Producers and Consumers</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#working-with-producers">Working with Producers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#building-a-producer-in-java">Building a Producer in Java</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#producer-design-and-reliability">Producer design and reliability</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#working-with-consumers">Working with Consumers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#building-a-consumer-in-java">Building a Consumer in Java</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#consumer-groups">Consumer groups</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#integrity">Integrity</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="working-with-producers-and-consumers">
+<h1>Working with Producers and Consumers<a class="headerlink" href="#working-with-producers-and-consumers" title="Permalink to this headline">#</a></h1>
+<section id="working-with-producers">
+<h2>Working with Producers<a class="headerlink" href="#working-with-producers" title="Permalink to this headline">#</a></h2>
+<p>Written in any language or can be initiated throught the command line. With no key for partitioning stratergy the
+producer will use a <em>round-robing</em> strategy. Alternative the default strategy is <code class="docutils literal notranslate"><span class="pre">hash(key)</span> <span class="pre">%</span> <span class="pre">number_of_partitions</span></code>.
+Messages of the same key land in order.</p>
+<p>The standard producer (in <code class="docutils literal notranslate"><span class="pre">Java</span></code>) contains of several fundamental blocks. This includes the <strong>configuration</strong> with
+information about the cluster. Then you create the producer using the <code class="docutils literal notranslate"><span class="pre">KafkaProducer</span></code> passing the configuration. Then a
+part which produces data and sends it to the <code class="docutils literal notranslate"><span class="pre">producer</span></code>, using the class <code class="docutils literal notranslate"><span class="pre">ProducerRecord</span></code> with the topic of interest.
+See figure below.</p>
+<figure class="align-default" id="producer">
+<img alt="_images/producer-java.png" src="_images/producer-java.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 2 </span><span class="caption-text">A representative producer in Java.</span><a class="headerlink" href="#producer" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+</section>
+<section id="building-a-producer-in-java">
+<h2>Building a Producer in Java<a class="headerlink" href="#building-a-producer-in-java" title="Permalink to this headline">#</a></h2>
+<p>Data can be published to data though Kafka’s Java <strong>Producer API</strong>. A producer is created using the <code class="docutils literal notranslate"><span class="pre">KafkaProducer</span></code>
+class:</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">Producer</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">producer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">KafkaProducer</span><span class="o">&lt;&gt;</span><span class="p">(</span><span class="n">props</span><span class="p">);</span>
+
+<span class="c1">// Send one record/log</span>
+<span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="n">ProducerRecord</span><span class="w"> </span><span class="n">record</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ProducerRecord</span><span class="o">&lt;&gt;</span><span class="p">(</span><span class="s">&quot;test_count&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">partition</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;count&quot;</span><span class="p">,</span><span class="n">Integer</span><span class="p">.</span><span class="na">toString</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
+<span class="n">producer</span><span class="p">.</span><span class="na">send</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
+<span class="n">producer</span><span class="p">.</span><span class="na">close</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="producer-design-and-reliability">
+<h2>Producer design and reliability<a class="headerlink" href="#producer-design-and-reliability" title="Permalink to this headline">#</a></h2>
+<p>What happends when you call <code class="docutils literal notranslate"><span class="pre">Send()</span></code>? First, it goes through <strong>serialization</strong>, turning it into the bytes. This is
+passed to the <strong>partitioner</strong> checking for a key, alternatively hashing it and deciding which patition it will be
+written to.</p>
+<p>What happens in the broker?</p>
+<ul class="simple">
+<li><p>If <code class="docutils literal notranslate"><span class="pre">NONE</span></code> (Acks 0) sends it, we have no info what happened in the broker. Lowest latency.</p></li>
+<li><p>If <code class="docutils literal notranslate"><span class="pre">LEADER</span></code> (Acks 1) sends the data, and waits for acknowlegement from broker. Does not wait for replication.</p></li>
+<li><p>If<code class="docutils literal notranslate"><span class="pre">ALL</span></code> (Acks -1) means the leader and all its replicas have sent data. Safest but produces more latency.</p></li>
+</ul>
+<p>Three processes can happen: “At most once” (may lose data), “At least once” (everythig goes through, may be doubled),
+and “Exactly once” (one to one).</p>
+<ul class="simple">
+<li><p><strong>At least once</strong> (Default): Does not result in data loss, processes one or more times, and may result in duplicates</p></li>
+<li><p><strong>At most once</strong>: Can result in data loss, processes once (or never), but has <em>no</em> duplicates. Useful for checking
+traffic.</p></li>
+<li><p><strong>Exactly once</strong>: Does not result in data loss, processes exactly once, and does <em>not</em> produce duplicates</p>
+<ul>
+<li><p>This semantic prevents duplication, Handles failures gracefully, and is a strong transactional guarantees for
+Kafka.</p></li>
+</ul>
+</li>
+</ul>
+<figure class="align-default" id="acks">
+<img alt="_images/acks.png" src="_images/acks.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 3 </span><span class="caption-text">Different types of Acknowledgements in Kafka (acks).</span><a class="headerlink" href="#acks" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+</section>
+<section id="working-with-consumers">
+<h2>Working with Consumers<a class="headerlink" href="#working-with-consumers" title="Permalink to this headline">#</a></h2>
+<p>A consumer pull messages from 1, …, <span class="math notranslate nohighlight">\(n\)</span> topics. The consumer offset is also stored in memory, and is stored in a
+special topic: <em>consumer offset</em> which keeps track of the consumers “position”. Consumers can also belong to a consumer
+group.</p>
+<p>For the consumder (here in <code class="docutils literal notranslate"><span class="pre">C#</span></code>), start the consumer file with some configuration. Then initialize some event-handlers,
+which handles messages and potential errors. The consumer is initialized using the <code class="docutils literal notranslate"><span class="pre">Consumer</span></code> class, with a
+function <code class="docutils literal notranslate"><span class="pre">Subscribe</span></code> where the <code class="docutils literal notranslate"><span class="pre">topic</span></code> of interest needs to be specified (multiple topics can be subscribed to).
+A <code class="docutils literal notranslate"><span class="pre">while</span> <span class="pre">(true)</span></code>-loop is then initiated to <code class="docutils literal notranslate"><span class="pre">Poll</span></code> (pull, consume) the date from the Kafka cluster. See figure below.</p>
+<figure class="align-default" id="consumer">
+<img alt="_images/consumer-c.png" src="_images/consumer-c.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 4 </span><span class="caption-text">A representative consumer in C#.</span><a class="headerlink" href="#consumer" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+</section>
+<section id="building-a-consumer-in-java">
+<h2>Building a Consumer in Java<a class="headerlink" href="#building-a-consumer-in-java" title="Permalink to this headline">#</a></h2>
+<p>A consumer can be built though the Java <strong>Consumer API</strong>. The <code class="docutils literal notranslate"><span class="pre">KafkaConsumer</span></code> class will handle interaction between the
+Java code and Kafka:</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">KafkaConsumer</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">consumer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">KafkaConsumer</span><span class="o">&lt;&gt;</span><span class="p">(</span><span class="n">props</span><span class="p">);</span>
+
+<span class="c1">// Subscribe to topic(s)</span>
+<span class="n">consumer</span><span class="p">.</span><span class="na">subscribe</span><span class="p">(</span><span class="n">Arrays</span><span class="p">.</span><span class="na">asList</span><span class="p">(</span><span class="s">&quot;test_topic1&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;test_topic2&quot;</span><span class="p">));</span>
+
+<span class="c1">// Fetch records:</span>
+<span class="n">ConsumerRecords</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">records</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">consumer</span><span class="p">.</span><span class="na">poll</span><span class="p">(</span><span class="n">Duration</span><span class="p">.</span><span class="na">ofMillis</span><span class="p">(</span><span class="mi">100</span><span class="p">));</span>
+<span class="c1">// Perform some operations on records..</span>
+
+<span class="n">consumer</span><span class="p">.</span><span class="na">commitSync</span><span class="p">();</span>
+</pre></div>
+</div>
+</section>
+<section id="consumer-groups">
+<h2>Consumer groups<a class="headerlink" href="#consumer-groups" title="Permalink to this headline">#</a></h2>
+<p>Consider two producers, producing two unique topics. Then two consumers can consume both topics. How is this assigned
+when the consumers have the same <strong>group ID</strong>? The consumers are doing its best at allocating the partitions. What if we
+scale the consumer? Then the partition reassigns partitions automaticalyl. If something failes, a new rebalance happens
+automatically. However, the consumer API does <em>not</em> consider <strong>state</strong>.</p>
+</section>
+<section id="integrity">
+<h2>Integrity<a class="headerlink" href="#integrity" title="Permalink to this headline">#</a></h2>
+<p>The consumer goes to the broker through a <strong>polling</strong> event. When consumer is reading data and there are too many
+threads – results in a <em>concurrent modification excetion</em>. Insted it is recommended with <strong>one</strong> consumer per thread.
+Through polling, the consumer sends/commits an <em>offset</em>. This will give information to the consumer about where to pick
+up, based on the last used offset, either form itself or other consumers consuming. In contrast, a <strong>committed message</strong>
+is an acknowledgement sent by the leader replica, confirming that the message has been committed.</p>
+<p>A consumer can read an offset, but never finish – this is an incomplete message, and is considered a <em>lost message</em>. If
+offset expires <em>or</em> does not exist, the consumer’s action may be controlled by the <code class="docutils literal notranslate"><span class="pre">auto.offset.reset</span></code> configuration
+variable – set to <code class="docutils literal notranslate"><span class="pre">earliest</span></code>, <code class="docutils literal notranslate"><span class="pre">lastest</span></code>, <code class="docutils literal notranslate"><span class="pre">none</span></code> or <code class="docutils literal notranslate"><span class="pre">anything</span></code>; resetting the offset or throwing an exception.</p>
+<p>Other consumer settings:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">enable.auto.commit</span></code> – letting the consumer chose when to commit offsets or alternatively manually in the code.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">auto.commit.interval.ms</span></code> – Tied to variable above. If automatic, this determines how frequent the commit is.
+Default: <code class="docutils literal notranslate"><span class="pre">5ms</span></code></p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+                <footer class="bd-footer-article">
+                  <!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="ksql.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Confluent kSQL</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="metrics.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Metrics and Monitoring</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#working-with-producers">Working with Producers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#building-a-producer-in-java">Building a Producer in Java</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#producer-design-and-reliability">Producer design and reliability</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#working-with-consumers">Working with Consumers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#building-a-consumer-in-java">Building a Consumer in Java</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#consumer-groups">Consumer groups</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#integrity">Integrity</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            <div class="bd-footer-content__inner">
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Henrik A. Kjeldsberg
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    <p class="last-updated">
+  Last updated on Mar 15, 2024.
+  <br/>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div></div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=12da95d707ffb74b382d"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=12da95d707ffb74b382d"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

@@ -171,15 +171,14 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Producers and Consumers</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="producers.html">Working with Producers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="consumers.html">Working with Consumers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="procon.html">Working with Producers and Consumers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="metrics.html">Metrics and Monitoring</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tuning.html">Tuning producers and consumers</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Connect and Schemas</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="connect.html">Kafka Connect</a></li>
-<li class="toctree-l1"><a class="reference internal" href="schemreg.html">Confluent Schema Registry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="schemreg.html">Confluent Schema Registry and Data Types</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Configuration and Auth</span></p>
 <ul class="nav bd-sidenav">
@@ -381,6 +380,9 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kafka-fundamentals">Kafka Fundamentals</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#brokers-and-clusters">Brokers and Clusters</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#leadership-and-replication-within-a-partition">Leadership and Replication within a Partition</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#replicas-in-kafka">Replicas in Kafka</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#handling-requests">Handling Requests</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#partitions-in-kafka">Partitions in Kafka</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tough-concepts-of-kafka">Tough concepts of Kafka</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-kafka-and-log-system">Why Kafka and log system?</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-retention">Data retention</a></li>
@@ -453,6 +455,38 @@ data, known as <strong>leader election</strong>.</p>
 <p>In this case, only replicas that are in sync with the leader can be chosen as leaders; they are <strong>in-sync replicas</strong> (
 ISR). If no ISR is available, producers will <strong>pause</strong> producing. Alternative, a configuration settings known as **
 unclean leader election** can be set, which elects a new leder even if no ISR is available.</p>
+</section>
+<section id="replicas-in-kafka">
+<h2>Replicas in Kafka<a class="headerlink" href="#replicas-in-kafka" title="Permalink to this headline">#</a></h2>
+<p>Each topic may have multiple <strong>replicas</strong>. Replicas are distributed between brokers and provide guarantees for the
+availability of data. The amount of replicas is controller by the <strong>replication factor</strong>, set by the
+flag <code class="docutils literal notranslate"><span class="pre">--replication-factor</span> <span class="pre">N</span></code>. Give a replication factor of <code class="docutils literal notranslate"><span class="pre">3</span></code>, there will be 3 copies of each partition spread accross
+the brokers.Main goals of replicas:</p>
+<ul class="simple">
+<li><p>Spread evenly amoung brokers</p></li>
+<li><p>Each partition is on a different broker</p></li>
+<li><p>Put replicas on different “racks” – where a broker can be located</p></li>
+</ul>
+<p>A default replication factor is controlled by the variable <code class="docutils literal notranslate"><span class="pre">default.replication.factor=N</span></code> in <code class="docutils literal notranslate"><span class="pre">server.properties</span></code>.</p>
+</section>
+<section id="handling-requests">
+<h2>Handling Requests<a class="headerlink" href="#handling-requests" title="Permalink to this headline">#</a></h2>
+<p>Between the Producer/Consumer and the Broker there is a request workflow. This includes an <em>acceptor thread</em>, <em>processor
+thread</em>, <em>IO thread</em>, <em>request queue</em>, and <em>response queue</em>. A request queue, is a request waiting to be processesd.
+Similarly, a repsonse queue is all requests waiting for being “picked up” by the processor thread/network thread. The IO
+thread is also known as the <em>request handler thread</em>. A <strong>produce request</strong> happens from Producer side, and <strong>fetch
+request</strong> happens from Replicas and Consumer side. Both requests go through the leader of the replicas; and requires a
+leader to be present. Each broker has a metadata list; a cache with all paritions and replicas allowing the client to
+figure out where the <em>leader</em> is.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">acks=all</span></code>; request is stored in buffer known as <em>purgatory</em> – until data is written to <em>all</em> replicas. This is a *
+zero copy* method, no duplication. A minumum number of messages can also be set to avoid small batches.</p>
+</section>
+<section id="partitions-in-kafka">
+<h2>Partitions in Kafka<a class="headerlink" href="#partitions-in-kafka" title="Permalink to this headline">#</a></h2>
+<p>Partitions within a topic are split between brokers, but partitions will never split up. Messages are appended to a
+partition, <strong>never</strong> removed. Partitions are stored under <code class="docutils literal notranslate"><span class="pre">log.dirs</span></code>. Within a partition in <code class="docutils literal notranslate"><span class="pre">log.dirs</span></code>, additional files
+exist; <code class="docutils literal notranslate"><span class="pre">.log</span></code> – the message, <code class="docutils literal notranslate"><span class="pre">.checkpoint</span></code> – to handle (leader) failures, <code class="docutils literal notranslate"><span class="pre">.snapshot</span></code> – internal Kafka snapshots.
+Remaining files are mappings between <em>message offset</em> and  <em>physical location</em>.</p>
 </section>
 <section id="tough-concepts-of-kafka">
 <h2>Tough concepts of Kafka<a class="headerlink" href="#tough-concepts-of-kafka" title="Permalink to this headline">#</a></h2>
@@ -603,6 +637,9 @@ for all types of data.</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kafka-fundamentals">Kafka Fundamentals</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#brokers-and-clusters">Brokers and Clusters</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#leadership-and-replication-within-a-partition">Leadership and Replication within a Partition</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#replicas-in-kafka">Replicas in Kafka</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#handling-requests">Handling Requests</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#partitions-in-kafka">Partitions in Kafka</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tough-concepts-of-kafka">Tough concepts of Kafka</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-kafka-and-log-system">Why Kafka and log system?</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-retention">Data retention</a></li>
@@ -645,7 +682,7 @@ By Henrik A. Kjeldsberg
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on Mar 13, 2024.
+  Last updated on Mar 15, 2024.
   <br/>
 </p>
   </div>

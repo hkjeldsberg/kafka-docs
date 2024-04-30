@@ -55,6 +55,39 @@ In this case, only replicas that are in sync with the leader can be chosen as le
 ISR). If no ISR is available, producers will **pause** producing. Alternative, a configuration settings known as **
 unclean leader election** can be set, which elects a new leder even if no ISR is available.
 
+## Replicas in Kafka
+
+Each topic may have multiple **replicas**. Replicas are distributed between brokers and provide guarantees for the
+availability of data. The amount of replicas is controller by the **replication factor**, set by the
+flag `--replication-factor N`. Give a replication factor of `3`, there will be 3 copies of each partition spread accross
+the brokers.Main goals of replicas:
+
+- Spread evenly amoung brokers
+- Each partition is on a different broker
+- Put replicas on different "racks" – where a broker can be located
+
+A default replication factor is controlled by the variable `default.replication.factor=N` in `server.properties`.
+
+## Handling Requests
+
+Between the Producer/Consumer and the Broker there is a request workflow. This includes an *acceptor thread*, *processor
+thread*, *IO thread*, *request queue*, and *response queue*. A request queue, is a request waiting to be processesd.
+Similarly, a repsonse queue is all requests waiting for being "picked up" by the processor thread/network thread. The IO
+thread is also known as the *request handler thread*. A **produce request** happens from Producer side, and **fetch
+request** happens from Replicas and Consumer side. Both requests go through the leader of the replicas; and requires a
+leader to be present. Each broker has a metadata list; a cache with all paritions and replicas allowing the client to
+figure out where the *leader* is.
+
+If `acks=all`; request is stored in buffer known as *purgatory* – until data is written to *all* replicas. This is a *
+zero copy* method, no duplication. A minumum number of messages can also be set to avoid small batches.
+
+## Partitions in Kafka
+
+Partitions within a topic are split between brokers, but partitions will never split up. Messages are appended to a
+partition, **never** removed. Partitions are stored under `log.dirs`. Within a partition in `log.dirs`, additional files
+exist; `.log` – the message, `.checkpoint` – to handle (leader) failures, `.snapshot` – internal Kafka snapshots.
+Remaining files are mappings between *message offset* and  *physical location*.
+
 ## Tough concepts of Kafka
 
 Main misconception: "Kafka is a queue". Instead, **Kafka is a log**. Second: event streams are **immutable**. If
