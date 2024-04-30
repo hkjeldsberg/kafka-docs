@@ -65,7 +65,7 @@ const thebe_selector_output = ".output, .cell_output"
     <script>DOCUMENTATION_OPTIONS.pagename = 'fundamentals';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Kafka Developed Exam Requirements" href="exam.html" />
+    <link rel="next" title="Topics Fundamentals" href="topics.html" />
     <link rel="prev" title="Kafka CLI commands" href="commands.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="None"/>
@@ -161,6 +161,8 @@ const thebe_selector_output = ".output, .cell_output"
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="commands.html">Kafka CLI commands</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Kafka Basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="topics.html">Topics Fundamentals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="storage.html">Kafka Storage and Data Handling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="exam.html">Kafka Developed Exam Requirements</a></li>
 <li class="toctree-l1"><a class="reference internal" href="testing.html">Testing in Kafka</a></li>
 </ul>
@@ -184,6 +186,12 @@ const thebe_selector_output = ".output, .cell_output"
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="config.html">Kafka configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="auth.html">Security, Authentication and Authorization</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Advanced Kafka Configuration</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="adprod.html">Advanced Producers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adcons.html">Advanced Consumers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adtopic.html">Advanced Topics</a></li>
 </ul>
 
     </div>
@@ -408,7 +416,7 @@ document.write(`
 <h1>Kafka Basics<a class="headerlink" href="#kafka-basics" title="Permalink to this headline">#</a></h1>
 <p>Data is described by logs or <strong>topics</strong>. An alternative way to store data as opposed to databased.
 <strong>Events</strong> are stored in the topics. Currently, the trend is to create smaller applications that can communicate through
-the Kafka topic. This enables <em>real-time</em> analysis of data stored in topics, instaed of batch processing. Writing data
+the Kafka topic. This enables <em>real-time</em> analysis of data stored in topics, instead of batch processing. Writing data
 from a database into a topic can be done with <strong>Kafka connect</strong>. This framework is also used to input data from topics
 to other services.
 <strong>Kafka streams API</strong> handles framework and infrastructure to connect/join topics. For database queries Kafka
@@ -496,7 +504,7 @@ by the other. Third: materialized view of database query – using <strong>kSQLd
 </section>
 <section id="why-kafka-and-log-system">
 <h2>Why Kafka and log system?<a class="headerlink" href="#why-kafka-and-log-system" title="Permalink to this headline">#</a></h2>
-<p>Fist, consider the existing techonology:
+<p>Fist, consider the existing technology (not stream based):
 Pros:</p>
 <ul class="simple">
 <li><p>Suitable for heavy, complex data transformations and aggregations.</p></li>
@@ -611,11 +619,11 @@ for all types of data.</p>
       </div>
     </a>
     <a class="right-next"
-       href="exam.html"
+       href="topics.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Kafka Developed Exam Requirements</p>
+        <p class="prev-next-title">Topics Fundamentals</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -682,7 +690,7 @@ By Henrik A. Kjeldsberg
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on Mar 15, 2024.
+  Last updated on Apr 30, 2024.
   <br/>
 </p>
   </div>

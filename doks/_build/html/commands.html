@@ -183,10 +183,11 @@ const thebe_selector_output = ".output, .cell_output"
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Configuration and Auth</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="config.html">Kafka configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="auth.html">Security, Authentication and Authorization</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Advanced Kafka Configuration</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="adprod.html">Advanced Prodicers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adprod.html">Advanced Producers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="adcons.html">Advanced Consumers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="adtopic.html">Advanced Topics</a></li>
 </ul>
@@ -382,7 +383,12 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#creating-topics-producers-and-consumers-command-line">Creating topics, producers and consumers (Command-line)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#starting-zookeeper-and-kafka">Starting Zookeeper and Kafka</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#topics">Topics</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#producers">Producers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#consumers-and-consumer-groups">Consumers and Consumer Groups</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kafka-acl-access-control-list">Kafka ACL (Access Control List)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kafka-connect">Kafka Connect</a></li>
 </ul>
             </nav>
         </div>
@@ -396,8 +402,19 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="kafka-cli-commands">
 <span id="cmd-imp"></span><h1>Kafka CLI commands<a class="headerlink" href="#kafka-cli-commands" title="Permalink to this headline">#</a></h1>
-<section id="creating-topics-producers-and-consumers-command-line">
-<h2>Creating topics, producers and consumers (Command-line)<a class="headerlink" href="#creating-topics-producers-and-consumers-command-line" title="Permalink to this headline">#</a></h2>
+<section id="starting-zookeeper-and-kafka">
+<h2>Starting Zookeeper and Kafka<a class="headerlink" href="#starting-zookeeper-and-kafka" title="Permalink to this headline">#</a></h2>
+<p>To start a Zookeeper instance with config <code class="docutils literal notranslate"><span class="pre">zookeeper.properties</span></code>:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">zookeeper-server-start config/zookeeper.properties</span>
+</pre></div>
+</div>
+<p>To start a Kafka server with config <code class="docutils literal notranslate"><span class="pre">server.properties</span></code>:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">kafka-server-start config/server.properties</span>
+</pre></div>
+</div>
+</section>
+<section id="topics">
+<h2>Topics<a class="headerlink" href="#topics" title="Permalink to this headline">#</a></h2>
 <p>Connect to a Kafka server and create a topic using:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">kafka-topics --bootstrap-server kafka:9092 --create  --topic &lt;topic-name&gt;  --partitions $PART  --replication-factor $REP</span>
 </pre></div>
@@ -406,11 +423,17 @@ document.write(`
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">kafka-topics --bootstrap-server kafka:9092 --list</span>
 </pre></div>
 </div>
-<p>Then to produce data use the <code class="docutils literal notranslate"><span class="pre">kafka-console-producer</span></code> command to add data (optionally with a key):</p>
+</section>
+<section id="producers">
+<h2>Producers<a class="headerlink" href="#producers" title="Permalink to this headline">#</a></h2>
+<p>To produce data use the <code class="docutils literal notranslate"><span class="pre">kafka-console-producer</span></code> command to add data (optionally with a key):</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">kafka-console-producer --broker-list kafka:9092  --topic sample-topic --property parse.key=true  --property key.separator=,</span>
 </pre></div>
 </div>
-<p>And view the produced data using the <code class="docutils literal notranslate"><span class="pre">kafka-console-consumer</span></code> command:</p>
+</section>
+<section id="consumers-and-consumer-groups">
+<h2>Consumers and Consumer Groups<a class="headerlink" href="#consumers-and-consumer-groups" title="Permalink to this headline">#</a></h2>
+<p>View the produced data using the <code class="docutils literal notranslate"><span class="pre">kafka-console-consumer</span></code> command:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>kafka-console-consumer<span class="w"> </span>--bootstrap-server<span class="w"> </span>kafka:9092<span class="w"> </span>--topic<span class="w"> </span>sample-topic<span class="w"> </span>--from-beginning<span class="w"> </span>--property<span class="w"> </span>print.key<span class="o">=</span><span class="nb">true</span>
 </pre></div>
 </div>
@@ -422,10 +445,16 @@ document.write(`
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">watch kafka-consumer-groups --bootstrap-server kafka:9092 --group vp-consumer --describe</span>
 </pre></div>
 </div>
+</section>
+<section id="kafka-acl-access-control-list">
+<h2>Kafka ACL (Access Control List)<a class="headerlink" href="#kafka-acl-access-control-list" title="Permalink to this headline">#</a></h2>
 <p>Add an ACL to existing user <code class="docutils literal notranslate"><span class="pre">myuser</span></code>:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">kafka-acls --authorizer-properties zookeeper.connect=localhost:2181 --add --allow-principal User:myuser --operation write --topic acl-test</span>
 </pre></div>
 </div>
+</section>
+<section id="kafka-connect">
+<h2>Kafka Connect<a class="headerlink" href="#kafka-connect" title="Permalink to this headline">#</a></h2>
 <p>To start a connector (standalone source):</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">./bin/connect-standalone.sh config/connect-standalone.properties config/connect-file-source.properties</span>
 </pre></div>
@@ -494,7 +523,12 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#creating-topics-producers-and-consumers-command-line">Creating topics, producers and consumers (Command-line)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#starting-zookeeper-and-kafka">Starting Zookeeper and Kafka</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#topics">Topics</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#producers">Producers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#consumers-and-consumer-groups">Consumers and Consumer Groups</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kafka-acl-access-control-list">Kafka ACL (Access Control List)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kafka-connect">Kafka Connect</a></li>
 </ul>
   </nav></div>
 
@@ -527,7 +561,7 @@ By Henrik A. Kjeldsberg
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on Mar 19, 2024.
+  Last updated on Apr 30, 2024.
   <br/>
 </p>
   </div>
