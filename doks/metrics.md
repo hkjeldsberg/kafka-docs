@@ -1,7 +1,7 @@
 # Metrics and Monitoring
 
-Kafka metrics are accessed using `JMX`, accessable by passing a `JMX`-option via the `KAFKA_JMX_OPTS` env variable. This
-can report to logging systems such as Grafana or Splunk.
+Kafka metrics are accessed using `JMX` (built-in Java technology), accessible by passing a `JMX`-option via
+the `KAFKA_JMX_OPTS` env variable. This can report to logging systems such as Grafana or Splunk.
 
 ```console
 KAFKA_JMX_OPTS="-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.local.only=false -
@@ -30,8 +30,6 @@ In Java, the main monitoring metrics are related to *garbage collection* (GC). T
 
 - **CollectionCount**: # of GC cycles
 - **CollectionTime**: Time spent in GC cycle
-
-
 
 ## Common Producer Metrics
 

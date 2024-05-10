@@ -3,9 +3,24 @@
 A **topic** is a collection of related messages or events – a log or sequence of events. In theory, you can have an
 unlimited number of topics. Within a topic, we find one or several **partitions** corresponding to a log, which are
 allocated to different brokers in the cluster. You can think of partitions as a log; strictly ordered with each message
-recieving an incremental ID called **offset**. Within a partitions, we have individual **segments**, existing on the
+receiving an incremental ID called **offset**. Within a partitions, we have individual **segments**, existing on the
 disk. Kafka performs distributions of the topics to brokers, but the user needs to set resource limitations and
 requests.
+
+## Topic Design
+
+The two main considerations when creating topics is **partitions** and **replication factor**.
+This is controlled by:
+
+- Number of brokers, which limits number of replicas
+- High replication factor implies greater fault tolerance
+
+Regarding consumers: how many consumers are needed per consumer group?
+At least as any partitions as number of consumers on a single group is required.
+
+Regarding memory: how much memory is available on each broker?
+Required memory can be adjusted with configuration `replica.fetch.max.bytes`, which defaults to 1 MB for each partitions
+on a broker.
 
 ## Topic Tools
 
@@ -33,7 +48,7 @@ Other topic commands include:
 
 ## Topic Configuration
 
-To get configuration for a particuler entity type (here topics) may be listed by describing the `--entity-type`
+To get configuration for a particular entity type (here topics) may be listed by describing the `--entity-type`
 to `kafka-configs`:
 
 ```console

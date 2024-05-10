@@ -7,9 +7,11 @@ to define and use schemas. To store and access these schemas, a separate registr
 Registry** is used.
 
 To create schemas, *producers* can register schemas with the registry and then use the schemas to serialize data.
-Similarly, *consumers* can download schemas and use it to deserialise the data.
+Similarly, *consumers* can download schemas and use it to deserialize the data.
 
-A sample Avro schema using `JSON`:
+
+## Creating an Avro schema
+A sample Avro schema is represented in `JSON`:
 
 ```json
 {
@@ -25,6 +27,45 @@ A sample Avro schema using `JSON`:
   ]
 }
 ```
+
+An example schema could be: 
+
+```json
+{
+  "namespace": "com.example.project",
+  "type": "record",
+  "name": "Person",
+  "fields": [
+    {
+      "name": "id",
+      "type": "int"
+    },
+    {
+      "name": "first_name",
+      "type": "string"
+    },
+    {
+      "name": "email",
+      "type": "string",
+      "default": "" 
+    }
+  ]
+}
+```
+The `default` value needs to be set if field is considered **optional**, which is relevant when making changes to the schema. 
+
+## Using Avro schema in Java
+In properties add the `KafkaAvroSerialiser`:
+
+```java
+import java.util.Properties;
+
+Properties props = new Properties();
+props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer.class);
+props.put(AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, "http//localhost:8081");
+// Person will now be a generated POJO through Avro/Kafka
+```
+
 
 ## Managing Schema Evolution
 
