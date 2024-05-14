@@ -1,5 +1,6 @@
 # Kafka Streams
 
+Kafka Streams is an API where both the input and output is stored in Kafka topics.
 Streams are a *sequence of events*; real-time events. Example of events:
 
 - Transactions
@@ -43,16 +44,65 @@ used, including:
 - `.leftJoin`, joining "left" stream and matching records from the "right" stream
 - `.outerJoin`, combining two streams with all records from both streams. (union)
 
+## Note on Co-Partitioning
+
+When joining streams, the data must be co-partitioned:
+
+- Same number of partitions for input topics.
+- Same partitioning strategies for producers.
+
+## Join operations
+
+The following join operations are available in Kafka streams:
+
+- Inner join
+- Left join
+- Outer join
+
+Join operations are performed between two streams from two topics:
+
+```kotlin
+val left = builder.stream(topicLeft)
+val right = builder.stream(topicRight)
+
+val innerJoined = left
+    .join(
+        right,
+        { leftVal, rightVal -> "left=" + leftVal + ", right=" + rightVal },
+        JoinWindows.of(Duration.ofMinutes(5))
+    ) // Windowing
+    .to(topicJoined) // Output topic
+```
+
+Similarly, a `.leftJoin` and `.outerJoin` can be defined. The values will join on the topics keys.
+
 ## Windowing
 
 One way to perform operations sequentially is by using **windowing**. This operation allows subdivision of groups into "
 time buckets", aggregating them bit by bit. Different window types exist:
 
 - **Tumbling**: No overlap, no gap
-- **Hopping**: Overlap and/or gaps
-- **Sliding**: Used for joins. Defined by the length of time between timestamps of any two records. No gaps, but
+- **Hopping**: Time-based, but can have overlap *and/or* gaps
+- **Sliding**: Dynamically based, only used for *joins*. Defined by the length of time between timestamps of any two
+  records. No gaps, but
   overlap.
-- **Session**: Dynamic windows formed around activity based on the timestamps. Will contain inactivity *gaps*
+- **Session**: Dynamic windows formed around activity based on the timestamps. Will contain *gaps* due to inactivity /
+  idle time.
+
+Late-Arriving Records is records that fall into a time window received after the end of that window's grace period.
+These records can be processed by adjusting the **retention period** for a window.
+Any records arriving after this period will not be processed.
+
+Setting a tumbling and hopping windowing can be controlled by the `.advanceBy(Duration.)`:
+
+```kotlin
+import java.time.Duration
+
+// New window will be started after 12 seconds => Hopping time window
+val windowedStream = stream
+    .groupByKey()
+    .windowedBy(TimeWindows.of(Duration.ofSeconds(10)).advanceBy(Duration.ofSeconds(12))) 
+```
 
 ## Time in Streams
 
@@ -65,17 +115,19 @@ time buckets", aggregating them bit by bit. Different window types exist:
 
 Processing time can happen days after the event actually happened. Time zones should be standardized.
 
-## Streams vs Database
+## Streams vs Database/Tables
 
-There are some notable differences, includingStreams:
+There are some notable differences, including:
 
 - Streams keep a history of changes
-- No delting a stream
+- No deleting a stream
 - A table can be converted to a stream (or other way)
+- Streams are preferred for transactions or real-time events / logs
+
 
 ## Streams Design Patterns
 
-Depending on the goal and purpose of the data, sevaral stream design patterns are available. Patterns:
+Depending on the goal and purpose of the data, several stream design patterns are available. Patterns:
 
 - **Single event processing**: Each event is handled independently. No state is needed.
 - **Local state processing**: May include storing min and max values; need to store some state. Suffers from increased
@@ -93,4 +145,4 @@ What framework to use will depend on the type of application.
 - **Ingest**: Try Kafka Connect.
 - **Low millisecond**: Request/Response system.
 - **Real-time data analytics**:  Performing complex aggregations for insight.
-- **Asyncronous Microservices**:Rquires local state caching events.
+- **Asynchronous Microservices**: Requires local state caching events.

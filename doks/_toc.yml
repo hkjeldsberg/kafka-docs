@@ -33,7 +33,7 @@ parts:
   - caption: Kafka Configuration and Auth
     chapters:
       - file: config
-      - file: auth
+      - file: security
 
   - caption: Advanced Kafka Configuration
     chapters:

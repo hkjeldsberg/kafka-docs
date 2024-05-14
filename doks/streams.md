@@ -100,7 +100,7 @@ import java.time.Duration
 
 // New window will be started after 12 seconds => Hopping time window
 val windowedStream = stream
-    .groupByKdey()
+    .groupByKey()
     .windowedBy(TimeWindows.of(Duration.ofSeconds(10)).advanceBy(Duration.ofSeconds(12))) 
 ```
 
@@ -127,7 +127,7 @@ There are some notable differences, including:
 
 ## Streams Design Patterns
 
-Depending on the goal and purpose of the data, sevaral stream design patterns are available. Patterns:
+Depending on the goal and purpose of the data, several stream design patterns are available. Patterns:
 
 - **Single event processing**: Each event is handled independently. No state is needed.
 - **Local state processing**: May include storing min and max values; need to store some state. Suffers from increased
@@ -145,4 +145,4 @@ What framework to use will depend on the type of application.
 - **Ingest**: Try Kafka Connect.
 - **Low millisecond**: Request/Response system.
 - **Real-time data analytics**:  Performing complex aggregations for insight.
-- **Asyncronous Microservices**:Rquires local state caching events.
+- **Asynchronous Microservices**: Requires local state caching events.

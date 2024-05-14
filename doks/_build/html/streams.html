@@ -183,7 +183,7 @@ const thebe_selector_output = ".output, .cell_output"
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Configuration and Auth</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="config.html">Kafka configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="auth.html">Security, Authentication and Authorization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="security.html">Security, Authentication and Authorization</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Advanced Kafka Configuration</span></p>
 <ul class="nav bd-sidenav">
@@ -388,9 +388,11 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stateful-transformations">Stateful transformations</a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#note-on-co-partitioning">Note on Co-Partitioning</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#join-operations">Join operations</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#windowing">Windowing</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#time-in-streams">Time in Streams</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#streams-vs-database">Streams vs Database</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#streams-vs-database-tables">Streams vs Database/Tables</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#streams-design-patterns">Streams Design Patterns</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stream-frameworks">Stream Frameworks</a></li>
 </ul>
@@ -406,7 +408,8 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="kafka-streams">
 <h1>Kafka Streams<a class="headerlink" href="#kafka-streams" title="Permalink to this headline">#</a></h1>
-<p>Streams are a <em>sequence of events</em>; real-time events. Example of events:</p>
+<p>Kafka Streams is an API where both the input and output is stored in Kafka topics.
+Streams are a <em>sequence of events</em>; real-time events. Example of events:</p>
 <ul class="simple">
 <li><p>Transactions</p></li>
 <li><p>Stock trades</p></li>
@@ -451,17 +454,62 @@ used, including:</p>
 </ul>
 </section>
 </section>
+<section id="note-on-co-partitioning">
+<h2>Note on Co-Partitioning<a class="headerlink" href="#note-on-co-partitioning" title="Permalink to this headline">#</a></h2>
+<p>When joining streams, the data must be co-partitioned:</p>
+<ul class="simple">
+<li><p>Same number of partitions for input topics.</p></li>
+<li><p>Same partitioning strategies for producers.</p></li>
+</ul>
+</section>
+<section id="join-operations">
+<h2>Join operations<a class="headerlink" href="#join-operations" title="Permalink to this headline">#</a></h2>
+<p>The following join operations are available in Kafka streams:</p>
+<ul class="simple">
+<li><p>Inner join</p></li>
+<li><p>Left join</p></li>
+<li><p>Outer join</p></li>
+</ul>
+<p>Join operations are performed between two streams from two topics:</p>
+<div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="kd">val</span><span class="w"> </span><span class="nv">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">builder</span><span class="p">.</span><span class="na">stream</span><span class="p">(</span><span class="n">topicLeft</span><span class="p">)</span>
+<span class="kd">val</span><span class="w"> </span><span class="nv">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">builder</span><span class="p">.</span><span class="na">stream</span><span class="p">(</span><span class="n">topicRight</span><span class="p">)</span>
+
+<span class="kd">val</span><span class="w"> </span><span class="nv">innerJoined</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">left</span>
+<span class="w">    </span><span class="p">.</span><span class="na">join</span><span class="p">(</span>
+<span class="w">        </span><span class="n">right</span><span class="p">,</span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="n">leftVal</span><span class="p">,</span><span class="w"> </span><span class="n">rightVal</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;left=&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">leftVal</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;, right=&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">rightVal</span><span class="w"> </span><span class="p">},</span>
+<span class="w">        </span><span class="n">JoinWindows</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="n">Duration</span><span class="p">.</span><span class="na">ofMinutes</span><span class="p">(</span><span class="m">5</span><span class="p">))</span>
+<span class="w">    </span><span class="p">)</span><span class="w"> </span><span class="c1">// Windowing</span>
+<span class="w">    </span><span class="p">.</span><span class="na">to</span><span class="p">(</span><span class="n">topicJoined</span><span class="p">)</span><span class="w"> </span><span class="c1">// Output topic</span>
+</pre></div>
+</div>
+<p>Similarly, a <code class="docutils literal notranslate"><span class="pre">.leftJoin</span></code> and <code class="docutils literal notranslate"><span class="pre">.outerJoin</span></code> can be defined. The values will join on the topics keys.</p>
+</section>
 <section id="windowing">
 <h2>Windowing<a class="headerlink" href="#windowing" title="Permalink to this headline">#</a></h2>
 <p>One way to perform operations sequentially is by using <strong>windowing</strong>. This operation allows subdivision of groups into “
 time buckets”, aggregating them bit by bit. Different window types exist:</p>
 <ul class="simple">
 <li><p><strong>Tumbling</strong>: No overlap, no gap</p></li>
-<li><p><strong>Hopping</strong>: Overlap and/or gaps</p></li>
-<li><p><strong>Sliding</strong>: Used for joins. Defined by the length of time between timestamps of any two records. No gaps, but
+<li><p><strong>Hopping</strong>: Time-based, but can have overlap <em>and/or</em> gaps</p></li>
+<li><p><strong>Sliding</strong>: Dynamically based, only used for <em>joins</em>. Defined by the length of time between timestamps of any two
+records. No gaps, but
 overlap.</p></li>
-<li><p><strong>Session</strong>: Dynamic windows formed around activity based on the timestamps. Will contain inactivity <em>gaps</em></p></li>
+<li><p><strong>Session</strong>: Dynamic windows formed around activity based on the timestamps. Will contain <em>gaps</em> due to inactivity /
+idle time.</p></li>
 </ul>
+<p>Late-Arriving Records is records that fall into a time window received after the end of that window’s grace period.
+These records can be processed by adjusting the <strong>retention period</strong> for a window.
+Any records arriving after this period will not be processed.</p>
+<p>Setting a tumbling and hopping windowing can be controlled by the <code class="docutils literal notranslate"><span class="pre">.advanceBy(Duration.)</span></code>:</p>
+<div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="k">import</span><span class="w"> </span><span class="nn">java.time.Duration</span>
+
+<span class="c1">// New window will be started after 12 seconds =&gt; Hopping time window</span>
+<span class="kd">val</span><span class="w"> </span><span class="nv">windowedStream</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stream</span>
+<span class="w">    </span><span class="p">.</span><span class="na">groupByKey</span><span class="p">()</span>
+<span class="w">    </span><span class="p">.</span><span class="na">windowedBy</span><span class="p">(</span><span class="n">TimeWindows</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="n">Duration</span><span class="p">.</span><span class="na">ofSeconds</span><span class="p">(</span><span class="m">10</span><span class="p">)).</span><span class="na">advanceBy</span><span class="p">(</span><span class="n">Duration</span><span class="p">.</span><span class="na">ofSeconds</span><span class="p">(</span><span class="m">12</span><span class="p">)))</span><span class="w"> </span>
+</pre></div>
+</div>
 </section>
 <section id="time-in-streams">
 <h2>Time in Streams<a class="headerlink" href="#time-in-streams" title="Permalink to this headline">#</a></h2>
@@ -474,18 +522,19 @@ application.</p></li>
 </ul>
 <p>Processing time can happen days after the event actually happened. Time zones should be standardized.</p>
 </section>
-<section id="streams-vs-database">
-<h2>Streams vs Database<a class="headerlink" href="#streams-vs-database" title="Permalink to this headline">#</a></h2>
-<p>There are some notable differences, includingStreams:</p>
+<section id="streams-vs-database-tables">
+<h2>Streams vs Database/Tables<a class="headerlink" href="#streams-vs-database-tables" title="Permalink to this headline">#</a></h2>
+<p>There are some notable differences, including:</p>
 <ul class="simple">
 <li><p>Streams keep a history of changes</p></li>
-<li><p>No delting a stream</p></li>
+<li><p>No deleting a stream</p></li>
 <li><p>A table can be converted to a stream (or other way)</p></li>
+<li><p>Streams are preferred for transactions or real-time events / logs</p></li>
 </ul>
 </section>
 <section id="streams-design-patterns">
 <h2>Streams Design Patterns<a class="headerlink" href="#streams-design-patterns" title="Permalink to this headline">#</a></h2>
-<p>Depending on the goal and purpose of the data, sevaral stream design patterns are available. Patterns:</p>
+<p>Depending on the goal and purpose of the data, several stream design patterns are available. Patterns:</p>
 <ul class="simple">
 <li><p><strong>Single event processing</strong>: Each event is handled independently. No state is needed.</p></li>
 <li><p><strong>Local state processing</strong>: May include storing min and max values; need to store some state. Suffers from increased
@@ -504,7 +553,7 @@ incoming data.</p></li>
 <li><p><strong>Ingest</strong>: Try Kafka Connect.</p></li>
 <li><p><strong>Low millisecond</strong>: Request/Response system.</p></li>
 <li><p><strong>Real-time data analytics</strong>:  Performing complex aggregations for insight.</p></li>
-<li><p><strong>Asyncronous Microservices</strong>:Rquires local state caching events.</p></li>
+<li><p><strong>Asynchronous Microservices</strong>: Requires local state caching events.</p></li>
 </ul>
 </section>
 </section>
@@ -575,9 +624,11 @@ incoming data.</p></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stateful-transformations">Stateful transformations</a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#note-on-co-partitioning">Note on Co-Partitioning</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#join-operations">Join operations</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#windowing">Windowing</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#time-in-streams">Time in Streams</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#streams-vs-database">Streams vs Database</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#streams-vs-database-tables">Streams vs Database/Tables</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#streams-design-patterns">Streams Design Patterns</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stream-frameworks">Stream Frameworks</a></li>
 </ul>
@@ -612,7 +663,7 @@ By Henrik A. Kjeldsberg
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on Apr 30, 2024.
+  Last updated on May 14, 2024.
   <br/>
 </p>
   </div>

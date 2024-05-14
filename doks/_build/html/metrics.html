@@ -183,7 +183,7 @@ const thebe_selector_output = ".output, .cell_output"
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Configuration and Auth</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="config.html">Kafka configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="auth.html">Security, Authentication and Authorization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="security.html">Security, Authentication and Authorization</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Advanced Kafka Configuration</span></p>
 <ul class="nav bd-sidenav">
@@ -401,8 +401,8 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="metrics-and-monitoring">
 <h1>Metrics and Monitoring<a class="headerlink" href="#metrics-and-monitoring" title="Permalink to this headline">#</a></h1>
-<p>Kafka metrics are accessed using <code class="docutils literal notranslate"><span class="pre">JMX</span></code>, accessable by passing a <code class="docutils literal notranslate"><span class="pre">JMX</span></code>-option via the <code class="docutils literal notranslate"><span class="pre">KAFKA_JMX_OPTS</span></code> env variable. This
-can report to logging systems such as Grafana or Splunk.</p>
+<p>Kafka metrics are accessed using <code class="docutils literal notranslate"><span class="pre">JMX</span></code> (built-in Java technology), accessible by passing a <code class="docutils literal notranslate"><span class="pre">JMX</span></code>-option via
+the <code class="docutils literal notranslate"><span class="pre">KAFKA_JMX_OPTS</span></code> env variable. This can report to logging systems such as Grafana or Splunk.</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">KAFKA_JMX_OPTS=&quot;-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.local.only=false -</span>
 <span class="go">Djava.rmi.server.hostname=localhost&quot;</span>
 </pre></div>
@@ -418,7 +418,7 @@ can report to logging systems such as Grafana or Splunk.</p>
 <li><p><strong>ALL TOPICS BYTES OUT</strong>: High consumer traffic?</p></li>
 <li><p><strong>ALL TOPICS MESSAGES IN</strong>: Messages per second?</p></li>
 <li><p><strong>PARTITION COUNT</strong>: Many partitions assigned to a broker?</p></li>
-<li><p><strong>LEADER COUNT</strong>: How many pertitions is this broker a leader for?</p></li>
+<li><p><strong>LEADER COUNT</strong>: How many partitions is this broker a leader for?</p></li>
 <li><p><strong>OFFLINE PARTITIONS</strong>: Any brokers without leader?</p></li>
 <li><p><strong>REQUEST METRICS</strong>: Number of requests to broker?</p></li>
 </ul>
@@ -449,7 +449,7 @@ High wait times might mean your producers are producing more data than the clust
 </section>
 <section id="common-consumer-metrics">
 <h2>Common Consumer Metrics<a class="headerlink" href="#common-consumer-metrics" title="Permalink to this headline">#</a></h2>
-<p>Some importent consumer metrics include:</p>
+<p>Some important consumer metrics include:</p>
 <ul class="simple">
 <li><p><strong>records-lag-max</strong>: Maximum record lag. How far the consumer is behind producers. In a situation where real-time
 processing is important, high lag might mean you need more consumers.</p></li>
@@ -461,7 +461,7 @@ with the consumer.</p></li>
 </section>
 <section id="diagnosis">
 <h2>Diagnosis<a class="headerlink" href="#diagnosis" title="Permalink to this headline">#</a></h2>
-<p>To diagnosis a unbalanced load / under-replicated parititons, consider the following metrics:</p>
+<p>To diagnosis a unbalanced load / under-replicated partitions, consider the following metrics:</p>
 <ul class="simple">
 <li><p><strong>Partition and leader partition count</strong></p></li>
 <li><p>For all topics:</p>
@@ -472,7 +472,7 @@ with the consumer.</p></li>
 </ul>
 </li>
 </ul>
-<p>The numbers will be even accross all brokers. If not, you will need to <strong>move partiitons</strong>, by using
+<p>The numbers will be even across all brokers. If not, you will need to <strong>move partiitons</strong>, by using
 the <code class="docutils literal notranslate"><span class="pre">kafka-reassign-partitions.sh</span></code> command.</p>
 <p>Other problems with your brokers can include hardware failures; a broker’s ability to serve requests. Metrics to
 investigate is:</p>
@@ -584,7 +584,7 @@ By Henrik A. Kjeldsberg
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on Apr 30, 2024.
+  Last updated on May 14, 2024.
   <br/>
 </p>
   </div>

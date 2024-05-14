@@ -20,7 +20,7 @@ Common broker metrics include:
 - **ALL TOPICS BYTES OUT**: High consumer traffic?
 - **ALL TOPICS MESSAGES IN**: Messages per second?
 - **PARTITION COUNT**: Many partitions assigned to a broker?
-- **LEADER COUNT**: How many pertitions is this broker a leader for?
+- **LEADER COUNT**: How many partitions is this broker a leader for?
 - **OFFLINE PARTITIONS**: Any brokers without leader?
 - **REQUEST METRICS**: Number of requests to broker?
 
@@ -48,7 +48,7 @@ Common producer metrics include:
 
 ## Common Consumer Metrics
 
-Some importent consumer metrics include:
+Some important consumer metrics include:
 
 - **records-lag-max**: Maximum record lag. How far the consumer is behind producers. In a situation where real-time
   processing is important, high lag might mean you need more consumers.
@@ -59,7 +59,7 @@ Some importent consumer metrics include:
 
 ## Diagnosis
 
-To diagnosis a unbalanced load / under-replicated parititons, consider the following metrics:
+To diagnosis a unbalanced load / under-replicated partitions, consider the following metrics:
 
 - **Partition and leader partition count**
 - For all topics:
@@ -67,7 +67,7 @@ To diagnosis a unbalanced load / under-replicated parititons, consider the follo
     - Bytes **in** rate
     - Bytes **out** rate
 
-The numbers will be even accross all brokers. If not, you will need to **move partiitons**, by using
+The numbers will be even across all brokers. If not, you will need to **move partiitons**, by using
 the `kafka-reassign-partitions.sh` command.
 
 Other problems with your brokers can include hardware failures; a broker's ability to serve requests. Metrics to

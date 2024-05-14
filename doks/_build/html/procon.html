@@ -185,7 +185,7 @@ const thebe_selector_output = ".output, .cell_output"
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Configuration and Auth</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="config.html">Kafka configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="auth.html">Security, Authentication and Authorization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="security.html">Security, Authentication and Authorization</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Advanced Kafka Configuration</span></p>
 <ul class="nav bd-sidenav">
@@ -429,9 +429,9 @@ class:</p>
 
 <span class="c1">// Send one record/log</span>
 <span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="n">ProducerRecord</span><span class="w"> </span><span class="n">record</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ProducerRecord</span><span class="o">&lt;&gt;</span><span class="p">(</span><span class="s">&quot;test_count&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">partition</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;count&quot;</span><span class="p">,</span><span class="n">Integer</span><span class="p">.</span><span class="na">toString</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
-<span class="n">producer</span><span class="p">.</span><span class="na">send</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
-<span class="n">producer</span><span class="p">.</span><span class="na">close</span><span class="p">()</span>
+<span class="n">ProducerRecord</span><span class="w"> </span><span class="n">producer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ProducerRecord</span><span class="o">&lt;&gt;</span><span class="p">(</span><span class="s">&quot;test_count&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">partition</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;count&quot;</span><span class="p">,</span><span class="n">Integer</span><span class="p">.</span><span class="na">toString</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
+<span class="n">producer</span><span class="p">.</span><span class="na">send</span><span class="p">(</span><span class="n">record</span><span class="p">);</span>
+<span class="n">producer</span><span class="p">.</span><span class="na">close</span><span class="p">();</span>
 </pre></div>
 </div>
 </section>
@@ -443,10 +443,10 @@ written to.</p>
 <p>What happens in the broker?</p>
 <ul class="simple">
 <li><p>If <code class="docutils literal notranslate"><span class="pre">NONE</span></code> (Acks 0) sends it, we have no info what happened in the broker. Lowest latency.</p></li>
-<li><p>If <code class="docutils literal notranslate"><span class="pre">LEADER</span></code> (Acks 1) sends the data, and waits for acknowlegement from broker. Does not wait for replication.</p></li>
+<li><p>If <code class="docutils literal notranslate"><span class="pre">LEADER</span></code> (Acks 1) sends the data, and waits for acknowledgement from broker. Does not wait for replication.</p></li>
 <li><p>If<code class="docutils literal notranslate"><span class="pre">ALL</span></code> (Acks -1) means the leader and all its replicas have sent data. Safest but produces more latency.</p></li>
 </ul>
-<p>Three processes can happen: “At most once” (may lose data), “At least once” (everythig goes through, may be doubled),
+<p>Three processes can happen: “At most once” (may lose data), “At least once” (everything goes through, may be doubled),
 and “Exactly once” (one to one).</p>
 <ul class="simple">
 <li><p><strong>At least once</strong> (Default): Does not result in data loss, processes one or more times, and may result in duplicates</p></li>
@@ -625,7 +625,7 @@ By Henrik A. Kjeldsberg
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on Apr 30, 2024.
+  Last updated on May 14, 2024.
   <br/>
 </p>
   </div>

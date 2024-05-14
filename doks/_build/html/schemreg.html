@@ -183,7 +183,7 @@ const thebe_selector_output = ".output, .cell_output"
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Configuration and Auth</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="config.html">Kafka configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="auth.html">Security, Authentication and Authorization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="security.html">Security, Authentication and Authorization</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Advanced Kafka Configuration</span></p>
 <ul class="nav bd-sidenav">
@@ -383,6 +383,8 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#creating-an-avro-schema">Creating an Avro schema</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#using-avro-schema-in-java">Using Avro schema in Java</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#managing-schema-evolution">Managing Schema Evolution</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#adding-avro-schemas">Adding Avro Schemas</a></li>
 </ul>
@@ -404,8 +406,10 @@ and their data types; key-value format following a <code class="docutils literal
 to define and use schemas. To store and access these schemas, a separate registry known as the <strong>Confluent Schema
 Registry</strong> is used.</p>
 <p>To create schemas, <em>producers</em> can register schemas with the registry and then use the schemas to serialize data.
-Similarly, <em>consumers</em> can download schemas and use it to deserialise the data.</p>
-<p>A sample Avro schema using <code class="docutils literal notranslate"><span class="pre">JSON</span></code>:</p>
+Similarly, <em>consumers</em> can download schemas and use it to deserialize the data.</p>
+<section id="creating-an-avro-schema">
+<h2>Creating an Avro schema<a class="headerlink" href="#creating-an-avro-schema" title="Permalink to this headline">#</a></h2>
+<p>A sample Avro schema is represented in <code class="docutils literal notranslate"><span class="pre">JSON</span></code>:</p>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;namespace&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;namespace&gt;&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;record&quot;</span><span class="p">,</span>
@@ -420,6 +424,43 @@ Similarly, <em>consumers</em> can download schemas and use it to deserialise the
 <span class="p">}</span>
 </pre></div>
 </div>
+<p>An example schema could be:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;namespace&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;com.example.project&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;record&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Person&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;fields&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;id&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;int&quot;</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;first_name&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;email&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="w"> </span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">default</span></code> value needs to be set if field is considered <strong>optional</strong>, which is relevant when making changes to the schema.</p>
+</section>
+<section id="using-avro-schema-in-java">
+<h2>Using Avro schema in Java<a class="headerlink" href="#using-avro-schema-in-java" title="Permalink to this headline">#</a></h2>
+<p>In properties add the <code class="docutils literal notranslate"><span class="pre">KafkaAvroSerialiser</span></code>:</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">java.util.Properties</span><span class="p">;</span>
+
+<span class="n">Properties</span><span class="w"> </span><span class="n">props</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Properties</span><span class="p">();</span>
+<span class="n">props</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">ProducerConfig</span><span class="p">.</span><span class="na">VALUE_SERIALIZER_CLASS_CONFIG</span><span class="p">,</span><span class="w"> </span><span class="n">KafkaAvroSerializer</span><span class="p">.</span><span class="na">class</span><span class="p">);</span>
+<span class="n">props</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">AbstractKafkaAvroSerDeConfig</span><span class="p">.</span><span class="na">SCHEMA_REGISTRY_URL_CONFIG</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;http//localhost:8081&quot;</span><span class="p">);</span>
+<span class="c1">// Person will now be a generated POJO through Avro/Kafka</span>
+</pre></div>
+</div>
+</section>
 <section id="managing-schema-evolution">
 <h2>Managing Schema Evolution<a class="headerlink" href="#managing-schema-evolution" title="Permalink to this headline">#</a></h2>
 <p>The registry has a <em>schema compatibility checking feature</em>, which determines which changes can or cannot be made to a
@@ -548,6 +589,8 @@ it. Then, as a producer, the schema can be loaded and records can be produced to
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#creating-an-avro-schema">Creating an Avro schema</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#using-avro-schema-in-java">Using Avro schema in Java</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#managing-schema-evolution">Managing Schema Evolution</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#adding-avro-schemas">Adding Avro Schemas</a></li>
 </ul>
@@ -582,7 +625,7 @@ By Henrik A. Kjeldsberg
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on Apr 30, 2024.
+  Last updated on May 14, 2024.
   <br/>
 </p>
   </div>

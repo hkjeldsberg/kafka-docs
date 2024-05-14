@@ -63,7 +63,7 @@ const thebe_selector_output = ".output, .cell_output"
     <script>DOCUMENTATION_OPTIONS.pagename = 'config';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Security, Authentication and Authorization" href="auth.html" />
+    <link rel="next" title="Security, Authentication and Authorization" href="security.html" />
     <link rel="prev" title="Confluent Schema Registry and Data Types" href="schemreg.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="None"/>
@@ -183,7 +183,7 @@ const thebe_selector_output = ".output, .cell_output"
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Configuration and Auth</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Kafka configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="auth.html">Security, Authentication and Authorization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="security.html">Security, Authentication and Authorization</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Advanced Kafka Configuration</span></p>
 <ul class="nav bd-sidenav">
@@ -383,8 +383,9 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cli-configuration">CLI configuration</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#programmatic-configuration">Programmatic configuration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#broker-configuration">Broker configuration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#topic-configuration">Topic configuration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#client-configuration">Client configuration</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#things-to-consider-when-configuring-topics">Things to consider when configuring Topics</a></li>
 </ul>
             </nav>
@@ -399,18 +400,27 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="kafka-configuration">
 <h1>Kafka configuration<a class="headerlink" href="#kafka-configuration" title="Permalink to this headline">#</a></h1>
-<section id="cli-configuration">
-<h2>CLI configuration<a class="headerlink" href="#cli-configuration" title="Permalink to this headline">#</a></h2>
-<p>Modifying broker configuration can be performed by editing <code class="docutils literal notranslate"><span class="pre">server.properties</span></code> or by using <code class="docutils literal notranslate"><span class="pre">kafka-configs</span></code>. Given a
-current configuration for a broker (1):</p>
+<section id="broker-configuration">
+<h2>Broker configuration<a class="headerlink" href="#broker-configuration" title="Permalink to this headline">#</a></h2>
+<p>Modifying broker configuration can be performed by editing <code class="docutils literal notranslate"><span class="pre">server.properties</span></code> or by using <code class="docutils literal notranslate"><span class="pre">kafka-configs</span></code>.
+Some values can be edited dynamically (without a broker restarting), while others require broker restart:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">read-only</span></code>: Configs requiring restart</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">per-broker</span></code>: Can be dynamically updated for individual brokers</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cluster-wide</span></code>: Can be updated individually OR cluster-wide dynamically</p></li>
+</ul>
+<p>To list existing configuration values for a broker (1) run:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">kafka-configs --bootstrap-server localhost:9092 --entity-type brokers --entity-name 1 --describe</span>
 </pre></div>
 </div>
 <p>We can modify this configuration by passing the <code class="docutils literal notranslate"><span class="pre">--alter</span></code> command:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">kafka-configs --bootstrap-server localhost:9092 --entity-type brokers --entity-name 1 --alter --addconfig log.cleaner.threads=2</span>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">kafka-configs --bootstrap-server localhost:9092 --entity-type brokers --entity-name 1 --alter --add-config log.cleaner.threads=2</span>
 </pre></div>
 </div>
-<p>Configurations can also be specified when creating a new topic with <code class="docutils literal notranslate"><span class="pre">kafka-topics</span></code>:</p>
+</section>
+<section id="topic-configuration">
+<h2>Topic configuration<a class="headerlink" href="#topic-configuration" title="Permalink to this headline">#</a></h2>
+<p>Configurations can also be specified for topics when creating a topic with <code class="docutils literal notranslate"><span class="pre">kafka-topics</span></code>:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">kafka-topics .... --config max.message.bytes=64000</span>
 </pre></div>
 </div>
@@ -424,13 +434,16 @@ current configuration for a broker (1):</p>
 </pre></div>
 </div>
 </section>
-<section id="programmatic-configuration">
-<h2>Programmatic configuration<a class="headerlink" href="#programmatic-configuration" title="Permalink to this headline">#</a></h2>
-<p>Clients can be confuigured programmatically in Java using a <code class="docutils literal notranslate"><span class="pre">Properties</span></code> object:</p>
-<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">Properties</span><span class="w"> </span><span class="n">props</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Properties</span><span class="p">();</span>
-<span class="n">props</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&quot;bootstrap.servers&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;localhost:9092&quot;</span><span class="p">);</span>
-<span class="n">props</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&quot;key.serializer&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;org.apache.kafka.common.serialization.StringSerializer&quot;</span><span class="p">);</span>
-<span class="n">props</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&quot;value.serializer&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;org.apache.kafka.common.serialization.StringSerializer&quot;</span><span class="p">);</span>
+<section id="client-configuration">
+<h2>Client configuration<a class="headerlink" href="#client-configuration" title="Permalink to this headline">#</a></h2>
+<p>Clients can be configured programmatically in Java using a <code class="docutils literal notranslate"><span class="pre">Properties</span></code> object:</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">java.util.Properties</span><span class="p">;</span>
+
+<span class="n">Properties</span><span class="w"> </span><span class="n">props</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Properties</span><span class="p">();</span>
+<span class="n">props</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&quot;bootstrap.servers&quot;</span><span class="p">,</span><span class="s">&quot;localhost:9092&quot;</span><span class="p">);</span>
+<span class="n">props</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&quot;key.serializer&quot;</span><span class="p">,</span><span class="s">&quot;org.apache.kafka.common.serialization.StringSerializer&quot;</span><span class="p">);</span>
+<span class="n">props</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&quot;value.serializer&quot;</span><span class="p">,</span><span class="s">&quot;org.apache.kafka.common.serialization.StringSerializer&quot;</span><span class="p">);</span>
+
 <span class="n">Producer</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">producer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">KafkaProducer</span><span class="o">&lt;&gt;</span><span class="p">(</span><span class="n">props</span><span class="p">);</span>
 </pre></div>
 </div>
@@ -485,7 +498,7 @@ current configuration for a broker (1):</p>
       </div>
     </a>
     <a class="right-next"
-       href="auth.html"
+       href="security.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
@@ -508,8 +521,9 @@ current configuration for a broker (1):</p>
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cli-configuration">CLI configuration</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#programmatic-configuration">Programmatic configuration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#broker-configuration">Broker configuration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#topic-configuration">Topic configuration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#client-configuration">Client configuration</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#things-to-consider-when-configuring-topics">Things to consider when configuring Topics</a></li>
 </ul>
   </nav></div>
@@ -543,7 +557,7 @@ By Henrik A. Kjeldsberg
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on Apr 30, 2024.
+  Last updated on May 14, 2024.
   <br/>
 </p>
   </div>

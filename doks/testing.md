@@ -34,8 +34,8 @@ public class MyProducerTest {
 
 ## Testing Streams
 
-Kafka provides a separate library for testing streams: `kafka-streams-test-utils` contining test fixtures for Kafka
-Streams applicaitons. This includes
+Kafka provides a separate library for testing streams: `kafka-streams-test-utils` containing test fixtures for Kafka
+Streams applications. This includes
 
 - **TopologyTestDriver**: For feeding records, simulating the topology, and returning (altered) records
 - **ConsumerRecordFactory**: Converts consumer record data into byte arrays

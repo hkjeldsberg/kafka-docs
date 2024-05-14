@@ -38,7 +38,7 @@ A log consists of several **events** which contitutes a **stream**. Each Kafka m
 
 ## Brokers and Clusters
 
-A Kafka cluster consists of one or several brokers, wher one broker is the selected **controller**. Basic function:
+A Kafka cluster consists of one or several brokers, where one broker is the selected **controller**. Basic function:
 manage partitions locally. Takes input from producers and places them in partitions. Recieves requests from consumers
 and let them read from partitions. Each partition has replicas (controller by replication factor), such that partitions
 are replicated on separate brokers working as a backup. Also in charge of electing a leader. Partitions are distributed

@@ -183,7 +183,7 @@ const thebe_selector_output = ".output, .cell_output"
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Configuration and Auth</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="config.html">Kafka configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="auth.html">Security, Authentication and Authorization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="security.html">Security, Authentication and Authorization</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Advanced Kafka Configuration</span></p>
 <ul class="nav bd-sidenav">
@@ -383,6 +383,7 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#topic-design">Topic Design</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#topic-tools">Topic Tools</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#topic-configuration">Topic Configuration</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#message-behaviour">Message behaviour</a></li>
@@ -402,9 +403,23 @@ document.write(`
 <p>A <strong>topic</strong> is a collection of related messages or events – a log or sequence of events. In theory, you can have an
 unlimited number of topics. Within a topic, we find one or several <strong>partitions</strong> corresponding to a log, which are
 allocated to different brokers in the cluster. You can think of partitions as a log; strictly ordered with each message
-recieving an incremental ID called <strong>offset</strong>. Within a partitions, we have individual <strong>segments</strong>, existing on the
+receiving an incremental ID called <strong>offset</strong>. Within a partitions, we have individual <strong>segments</strong>, existing on the
 disk. Kafka performs distributions of the topics to brokers, but the user needs to set resource limitations and
 requests.</p>
+<section id="topic-design">
+<h2>Topic Design<a class="headerlink" href="#topic-design" title="Permalink to this headline">#</a></h2>
+<p>The two main considerations when creating topics is <strong>partitions</strong> and <strong>replication factor</strong>.
+This is controlled by:</p>
+<ul class="simple">
+<li><p>Number of brokers, which limits number of replicas</p></li>
+<li><p>High replication factor implies greater fault tolerance</p></li>
+</ul>
+<p>Regarding consumers: how many consumers are needed per consumer group?
+At least as any partitions as number of consumers on a single group is required.</p>
+<p>Regarding memory: how much memory is available on each broker?
+Required memory can be adjusted with configuration <code class="docutils literal notranslate"><span class="pre">replica.fetch.max.bytes</span></code>, which defaults to 1 MB for each partitions
+on a broker.</p>
+</section>
 <section id="topic-tools">
 <h2>Topic Tools<a class="headerlink" href="#topic-tools" title="Permalink to this headline">#</a></h2>
 <p>Topics are created in the following way with a given <code class="docutils literal notranslate"><span class="pre">--replication-factor</span></code> and number of <code class="docutils literal notranslate"><span class="pre">--partitions</span></code>:</p>
@@ -426,7 +441,7 @@ requests.</p>
 </section>
 <section id="topic-configuration">
 <h2>Topic Configuration<a class="headerlink" href="#topic-configuration" title="Permalink to this headline">#</a></h2>
-<p>To get configuration for a particuler entity type (here topics) may be listed by describing the <code class="docutils literal notranslate"><span class="pre">--entity-type</span></code>
+<p>To get configuration for a particular entity type (here topics) may be listed by describing the <code class="docutils literal notranslate"><span class="pre">--entity-type</span></code>
 to <code class="docutils literal notranslate"><span class="pre">kafka-configs</span></code>:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">kafka-configs --bootstrap-server kafka:9092 --describe --entity-type topics</span>
 </pre></div>
@@ -507,6 +522,7 @@ argument <code class="docutils literal notranslate"><span class="pre">--line-rea
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#topic-design">Topic Design</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#topic-tools">Topic Tools</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#topic-configuration">Topic Configuration</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#message-behaviour">Message behaviour</a></li>
@@ -542,7 +558,7 @@ By Henrik A. Kjeldsberg
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on Apr 30, 2024.
+  Last updated on May 14, 2024.
   <br/>
 </p>
   </div>
