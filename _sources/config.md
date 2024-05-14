@@ -1,9 +1,15 @@
 # Kafka configuration
 
-## CLI configuration
+## Broker configuration
 
-Modifying broker configuration can be performed by editing `server.properties` or by using `kafka-configs`. Given a
-current configuration for a broker (1):
+Modifying broker configuration can be performed by editing `server.properties` or by using `kafka-configs`.
+Some values can be edited dynamically (without a broker restarting), while others require broker restart:
+
+- `read-only`: Configs requiring restart
+- `per-broker`: Can be dynamically updated for individual brokers
+- `cluster-wide`: Can be updated individually OR cluster-wide dynamically
+
+To list existing configuration values for a broker (1) run:
 
 ```console
 kafka-configs --bootstrap-server localhost:9092 --entity-type brokers --entity-name 1 --describe
@@ -12,10 +18,12 @@ kafka-configs --bootstrap-server localhost:9092 --entity-type brokers --entity-n
 We can modify this configuration by passing the `--alter` command:
 
 ```console
-kafka-configs --bootstrap-server localhost:9092 --entity-type brokers --entity-name 1 --alter --addconfig log.cleaner.threads=2
+kafka-configs --bootstrap-server localhost:9092 --entity-type brokers --entity-name 1 --alter --add-config log.cleaner.threads=2
 ```
 
-Configurations can also be specified when creating a new topic with `kafka-topics`:
+## Topic configuration
+
+Configurations can also be specified for topics when creating a topic with `kafka-topics`:
 
 ```console
 kafka-topics .... --config max.message.bytes=64000
@@ -34,15 +42,18 @@ Furthermore, a **broker-wide** default topic configuration may be applied using 
 kafka-configs --bootstrap-server localhost:9092 --entity-type brokers --entity-name 1 --alter --addconfig message.max.bytes=66000
 ```
 
-## Programmatic configuration
+## Client configuration
 
-Clients can be confuigured programmatically in Java using a `Properties` object:
+Clients can be configured programmatically in Java using a `Properties` object:
 
 ```java
+import java.util.Properties;
+
 Properties props = new Properties();
-props.put("bootstrap.servers", "localhost:9092");
-props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+props.put("bootstrap.servers","localhost:9092");
+props.put("key.serializer","org.apache.kafka.common.serialization.StringSerializer");
+props.put("value.serializer","org.apache.kafka.common.serialization.StringSerializer");
+
 Producer<String, String> producer = new KafkaProducer<>(props);
 ```
 

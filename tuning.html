@@ -68,7 +68,7 @@
     <link rel="prev" title="Metrics and Monitoring" href="metrics.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="May 07, 2024"/>
+    <meta name="docbuild:last-update" content="May 14, 2024"/>
   </head>
   
   
@@ -209,7 +209,7 @@
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Configuration and Auth</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="config.html">Kafka configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="auth.html">Security, Authentication and Authorization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="security.html">Security, Authentication and Authorization</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Advanced Kafka Configuration</span></p>
 <ul class="nav bd-sidenav">
@@ -411,8 +411,8 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tuning-producers">Tuning producers</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tuning-consumers">Tuning consumers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#producer-tuning">Producer tuning</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#consumer-tuning">Consumer tuning</a></li>
 </ul>
             </nav>
         </div>
@@ -428,30 +428,39 @@ document.write(`
 <h1>Tuning producers and consumers<a class="headerlink" href="#tuning-producers-and-consumers" title="Permalink to this heading">#</a></h1>
 <p>Tuning can be important to optimize and improve performance for you specific use case, and can be controller using a
 variety of configuration options.</p>
-<section id="tuning-producers">
-<h2>Tuning producers<a class="headerlink" href="#tuning-producers" title="Permalink to this heading">#</a></h2>
+<section id="producer-tuning">
+<h2>Producer tuning<a class="headerlink" href="#producer-tuning" title="Permalink to this heading">#</a></h2>
 <p>Common configuration options for producers include:</p>
 <ul class="simple">
-<li><p><strong>acks</strong>: Is a number/value <span class="math notranslate nohighlight">\(\in\)</span> [0,1, all / -1] determining when the borker will acknowledge the record</p>
+<li><p><strong>acks</strong>: Is a number/value <span class="math notranslate nohighlight">\(\in\)</span> [0,1, all / -1] determining when the broker will acknowledge the record</p>
 <ul>
 <li><p>0: Producer will not wait</p></li>
 <li><p>1: Record will be acknowledged when leader writes</p></li>
 <li><p>all/-1: Record will be acknowledged only when the leader and <em>all</em> replicas have written</p></li>
 </ul>
 </li>
-<li><p><strong>retries</strong>: Number of times to retry a record</p></li>
+<li><p><strong>retries</strong>: Number of times to retry a record</p>
+<ul>
+<li><p>If <code class="docutils literal notranslate"><span class="pre">max.in.flight.requests.per.connection</span></code> is not 1, retries can lead to records being persisted in different
+order</p></li>
+</ul>
+</li>
 <li><p><strong>batch.size</strong>: Maximum number of bytes in a batch (producers batch records sharing partition)</p></li>
 </ul>
 </section>
-<section id="tuning-consumers">
-<h2>Tuning consumers<a class="headerlink" href="#tuning-consumers" title="Permalink to this heading">#</a></h2>
+<section id="consumer-tuning">
+<h2>Consumer tuning<a class="headerlink" href="#consumer-tuning" title="Permalink to this heading">#</a></h2>
 <p>Common configuration options for consumers include:</p>
 <ul class="simple">
 <li><p><strong>fetch.min.bytes</strong>: The minimum amount of data to fetch in a request. If there is not enough data to satisfy this
 requirement, the request will wait for more data before responding. Set this higher to get better throughput in some
-situations at the cost of some latency.</p></li>
+situations at the cost of some latency.</p>
+<ul>
+<li><p>After a certain time period it will fetch request regardless of size (!)</p></li>
+</ul>
+</li>
 <li><p><strong><a class="reference external" href="http://heartbeat.interval.ms">heartbeat.interval.ms</a></strong>: How often to send heartbeats to the consumer coordinator. Set this lower to allow a quicker
-rebalance response when a consumer joins or leaves the consumer group.</p></li>
+re-balance response when a consumer joins or leaves the consumer group.</p></li>
 <li><p><strong>auto.offset.reset</strong>: What to do when the consumer has no initial offset</p>
 <ul>
 <li><p>latest: Start at the latest record.</p></li>
@@ -529,8 +538,8 @@ want to handle offsets manually or automatically</p></li>
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tuning-producers">Tuning producers</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tuning-consumers">Tuning consumers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#producer-tuning">Producer tuning</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#consumer-tuning">Consumer tuning</a></li>
 </ul>
   </nav></div>
 
@@ -564,7 +573,7 @@ By Henrik A. Kjeldsberg
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on May 07, 2024.
+  Last updated on May 14, 2024.
   <br/>
 </p>
   </div>

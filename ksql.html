@@ -66,7 +66,7 @@
     <link rel="prev" title="Kafka Streams" href="streams.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="May 07, 2024"/>
+    <meta name="docbuild:last-update" content="May 14, 2024"/>
   </head>
   
   
@@ -207,7 +207,7 @@
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Configuration and Auth</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="config.html">Kafka configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="auth.html">Security, Authentication and Authorization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="security.html">Security, Authentication and Authorization</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Advanced Kafka Configuration</span></p>
 <ul class="nav bd-sidenav">
@@ -386,7 +386,9 @@ document.write(`
   </button>
 `);
 </script>
-
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
 </div></div>
       
     </div>
@@ -402,6 +404,16 @@ document.write(`
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ksql-configuration">kSQL Configuration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#connecting-to-ksql-server">Connecting to kSQL server</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#using-ksql-commands">Using kSQL – Commands</a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -413,7 +425,8 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="confluent-ksql">
 <h1>Confluent kSQL<a class="headerlink" href="#confluent-ksql" title="Permalink to this heading">#</a></h1>
-<p>kSQL/ksqlDB/KSQL is a database project ment to help create stream processing applications together with Kafka, providing
+<p>kSQL/ksqlDB/KSQL is a database project meant to help create stream processing applications together with Kafka,
+providing
 SQL-like interface on top of Kafka Streams. Hence, many Streams operations can be performed using kSQL, including</p>
 <ul class="simple">
 <li><p>Data transformations</p></li>
@@ -422,23 +435,53 @@ SQL-like interface on top of Kafka Streams. Hence, many Streams operations can b
 <li><p>Windowing</p></li>
 <li><p>Modeling data with streams and tables</p></li>
 </ul>
-<p>In contrast to SQL, kSQL queries run continously until stopped, streaming data in real time.</p>
-<p>Some common commands include listing topics:</p>
+<p>In contrast to SQL, kSQL queries run continuously until stopped, streaming data in real time.</p>
+<section id="ksql-configuration">
+<h2>kSQL Configuration<a class="headerlink" href="#ksql-configuration" title="Permalink to this heading">#</a></h2>
+<p>Similar to <code class="docutils literal notranslate"><span class="pre">server.properties</span></code>, ad <code class="docutils literal notranslate"><span class="pre">ksql.properties</span></code> may contain the following properties:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">bootstrap.servers=zoo1:9092</span>
+<span class="go">ksql.streams.state.dir=/tmp/kafka-streams</span>
+</pre></div>
+</div>
+</section>
+<section id="connecting-to-ksql-server">
+<h2>Connecting to kSQL server<a class="headerlink" href="#connecting-to-ksql-server" title="Permalink to this heading">#</a></h2>
+<p>Connect to kSQL server using:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp gp-VirtualEnv">(sudo)</span> <span class="go">ksql</span>
+</pre></div>
+</div>
+</section>
+<section id="using-ksql-commands">
+<h2>Using kSQL – Commands<a class="headerlink" href="#using-ksql-commands" title="Permalink to this heading">#</a></h2>
+<p>Commands are similar to SQL, but they query data from Kafka streams and tables.</p>
+<p>Set configuration:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">SET &#39;auto.offset.reset&#39; = &#39;earliest&#39;;</span>
+</pre></div>
+</div>
+<p>List topics:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">SHOW</span> <span class="n">TOPICS</span><span class="p">;</span>
 </pre></div>
 </div>
-<p>Print records in a topic:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">PRINT</span> <span class="s1">&#39;&lt;topic-name&gt;&#39;</span><span class="p">;</span>
+<p>Print records in a topic (from beginning):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">PRINT</span> <span class="s1">&#39;&lt;topic-name&gt;&#39;</span> <span class="n">FROM</span> <span class="n">BEGINNING</span><span class="p">;</span>
 </pre></div>
 </div>
-<p>Create a stream from a topic</p>
+<p>Create a stream from a topic:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CREATE</span> <span class="n">STREAM</span> <span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span> <span class="p">(</span><span class="o">&lt;</span><span class="n">fields</span><span class="o">&gt;</span><span class="p">)</span> <span class="n">WITH</span> <span class="p">(</span><span class="n">kafka_topic</span><span class="o">=</span><span class="s1">&#39;&lt;topic&gt;&#39;</span><span class="p">,</span> <span class="n">value_format</span><span class="o">=</span><span class="s1">&#39;&lt;format&gt;&#39;</span><span class="p">);</span>
 </pre></div>
 </div>
+<p>Here, <code class="docutils literal notranslate"><span class="pre">value_format</span></code> is commonly <code class="docutils literal notranslate"><span class="pre">DELIMITED</span></code>, while fields could be <code class="docutils literal notranslate"><span class="pre">(employee_id</span> <span class="pre">INTEGER,</span> <span class="pre">name</span> <span class="pre">VARCHAR)</span></code>.
+Similarly, a table can be created with <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">TABLE</span></code>, which requires setting an ID using e.g. <code class="docutils literal notranslate"><span class="pre">key='employee_id'</span></code>.</p>
 <p>Aggregate data:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">SELECT</span> <span class="nb">sum</span><span class="p">(</span><span class="o">&lt;</span><span class="n">field</span><span class="o">&gt;</span><span class="p">)</span> <span class="n">FROM</span> <span class="o">&lt;</span><span class="n">table</span> <span class="ow">or</span> <span class="n">stream</span><span class="o">&gt;</span> <span class="n">GROUP</span> <span class="n">BY</span> <span class="o">&lt;</span><span class="n">field</span><span class="o">&gt;</span><span class="p">;</span>
 </pre></div>
 </div>
+<p>for example:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">SELECT sum(vacation_days) FROM my_test_stream GROUP BY employee_id;</span>
+</pre></div>
+</div>
+<p>Note that aggregations must have a <code class="docutils literal notranslate"><span class="pre">GROUP</span> <span class="pre">BY</span></code> statement.</p>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -496,7 +539,22 @@ SQL-like interface on top of Kafka Streams. Hence, many Streams operations can b
             
             
               
-                <div class="bd-sidebar-secondary bd-toc"></div>
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ksql-configuration">kSQL Configuration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#connecting-to-ksql-server">Connecting to kSQL server</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#using-ksql-commands">Using kSQL – Commands</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>
@@ -526,7 +584,7 @@ By Henrik A. Kjeldsberg
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on May 07, 2024.
+  Last updated on May 14, 2024.
   <br/>
 </p>
   </div>

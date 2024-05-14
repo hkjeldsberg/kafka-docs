@@ -93,14 +93,15 @@ Late-Arriving Records is records that fall into a time window received after the
 These records can be processed by adjusting the **retention period** for a window.
 Any records arriving after this period will not be processed.
 
-Setting a tumbling and hopping windowing can be controlled by the `.advanceBy(Duration.)`: 
+Setting a tumbling and hopping windowing can be controlled by the `.advanceBy(Duration.)`:
+
 ```kotlin
 import java.time.Duration
 
 // New window will be started after 12 seconds => Hopping time window
 val windowedStream = stream
-        .groupByKey()
-        .windowedBy(TimeWindows.of(Duration.ofSeconds(10)).advanceBy(Duration.ofSeconds(12))) 
+    .groupByKey()
+    .windowedBy(TimeWindows.of(Duration.ofSeconds(10)).advanceBy(Duration.ofSeconds(12))) 
 ```
 
 ## Time in Streams
@@ -114,17 +115,19 @@ val windowedStream = stream
 
 Processing time can happen days after the event actually happened. Time zones should be standardized.
 
-## Streams vs Database
+## Streams vs Database/Tables
 
-There are some notable differences, includingStreams:
+There are some notable differences, including:
 
 - Streams keep a history of changes
 - No deleting a stream
 - A table can be converted to a stream (or other way)
+- Streams are preferred for transactions or real-time events / logs
+
 
 ## Streams Design Patterns
 
-Depending on the goal and purpose of the data, sevaral stream design patterns are available. Patterns:
+Depending on the goal and purpose of the data, several stream design patterns are available. Patterns:
 
 - **Single event processing**: Each event is handled independently. No state is needed.
 - **Local state processing**: May include storing min and max values; need to store some state. Suffers from increased
@@ -142,4 +145,4 @@ What framework to use will depend on the type of application.
 - **Ingest**: Try Kafka Connect.
 - **Low millisecond**: Request/Response system.
 - **Real-time data analytics**:  Performing complex aggregations for insight.
-- **Asyncronous Microservices**:Rquires local state caching events.
+- **Asynchronous Microservices**: Requires local state caching events.

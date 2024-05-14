@@ -59,14 +59,14 @@
     <script src="_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'auth';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'security';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Advanced Producers" href="adprod.html" />
     <link rel="prev" title="Kafka configuration" href="config.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="May 07, 2024"/>
+    <meta name="docbuild:last-update" content="May 14, 2024"/>
   </head>
   
   
@@ -285,7 +285,7 @@
       
       
       
-      <li><a href="https://github.com/kvslab/OasisMove/issues/new?title=Issue%20on%20page%20%2Fauth.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/kvslab/OasisMove/issues/new?title=Issue%20on%20page%20%2Fsecurity.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -315,7 +315,7 @@
       
       
       
-      <li><a href="_sources/auth.md" target="_blank"
+      <li><a href="_sources/security.md" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -411,8 +411,14 @@ document.write(`
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#security-in-kafka">Security in Kafka</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#configuring-tsl-encryption">Configuring TSL encryption</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#client-authentication">Client authentication</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#acl-authorization">ACL authorization</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#client-authentication">Client authentication</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#authentication-with-mutual-tls">Authentication with Mutual TLS</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#acl-authorization">ACL authorization</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#creating-an-acl">Creating an ACL</a></li>
+</ul>
+</li>
 </ul>
             </nav>
         </div>
@@ -429,7 +435,8 @@ document.write(`
 <section id="security-in-kafka">
 <h2>Security in Kafka<a class="headerlink" href="#security-in-kafka" title="Permalink to this heading">#</a></h2>
 <p>SSL and SASL authentication is supported between Clients (Producers and Consumers) and Brokers, between Brokers, and
-between Brokers and Tools. Different SASL methods are available (GSSAPI, PLAIN, SCRAM-SHA-(256/512), OAUTHBEARER with JWT).
+between Brokers and Tools. Different SASL methods are available (GSSAPI, PLAIN, SCRAM-SHA-(256/512), OAUTHBEARER with
+JWT).
 Authentication and authorization is supported, but is <strong>disabled</strong> by default. Creating a SSL key can be performed using
 the Java <em>keytool</em> utility, or similarly in other languages.</p>
 </section>
@@ -437,7 +444,7 @@ the Java <em>keytool</em> utility, or similarly in other languages.</p>
 <h2>Configuring TSL encryption<a class="headerlink" href="#configuring-tsl-encryption" title="Permalink to this heading">#</a></h2>
 <p>Using TLS encryption will allow encryption of traffic between clients and Kafka – as a method to defend against
 attacks (man-in-the-middle). This will require certificate authority and certificate files for the Kafka Brokers, which
-can be configured like this:</p>
+can be configured like this in <code class="docutils literal notranslate"><span class="pre">server.properties</span></code>:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">listeners=PLAINTEXT://&lt;hostname&gt;:9092,SSL://&lt;hostname&gt;:9093</span>
 
 <span class="go">ssl.keystore.location=/var/private/ssl/server.keystore.jks</span>
@@ -445,35 +452,66 @@ can be configured like this:</p>
 <span class="go">ssl.key.password=&lt;broker key password&gt;</span>
 <span class="go">ssl.truststore.location=/var/private/ssl/server.truststore.jks</span>
 <span class="go">ssl.truststore.password=&lt;trust store password&gt;</span>
-<span class="go">ssl.client.auth=none</span>
+<span class="go">ssl.client.auth=none // Client auth off</span>
+</pre></div>
+</div>
+<p>For the producer and consumer, settings related to SSL can be placed in a <code class="docutils literal notranslate"><span class="pre">client-ssl.properties</span></code> file and passed as a
+console argument when running the consumer/producer:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">kafka-console-consumer [args] --consumer.config client-ssl.properties</span>
 </pre></div>
 </div>
 </section>
 <section id="client-authentication">
 <h2>Client authentication<a class="headerlink" href="#client-authentication" title="Permalink to this heading">#</a></h2>
-<p>To handle client authentication, we can use client certificates or other approaches. With client cerificiates, we will
-need to add the following field in <code class="docutils literal notranslate"><span class="pre">server.properties</span></code>:</p>
+<p>In the TLS/SSL configuration above, client authentication was turned off. To handle client authentication, we can use
+client certificates or other approaches. With client certificates, we will
+need to change the <code class="docutils literal notranslate"><span class="pre">ssl.client.auth</span></code> field in <code class="docutils literal notranslate"><span class="pre">server.properties</span></code> to:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ssl.client.auth=required</span>
 </pre></div>
 </div>
+<section id="authentication-with-mutual-tls">
+<h3>Authentication with Mutual TLS<a class="headerlink" href="#authentication-with-mutual-tls" title="Permalink to this heading">#</a></h3>
+<p>For additional security we may perform authentication with mutual TLS with client certificates. This involves:</p>
+<ul class="simple">
+<li><p>Generating a client certificate</p></li>
+<li><p>Sign in with Certificate Authority</p></li>
+<li><p>Enable SSL client authentication</p></li>
+<li><p>Configure a client to use the client certificate</p></li>
+</ul>
+<p>To the <code class="docutils literal notranslate"><span class="pre">ssl.client.auth</span></code> add the following fields:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ssl.keystore.location=/PATH</span>
+<span class="go">ssl.keystore.password=&lt;client keystore pass&gt;</span>
+<span class="go">ssl.key.password=&lt;client key pass&gt;</span>
+</pre></div>
+</div>
+</section>
 </section>
 <section id="acl-authorization">
 <h2>ACL authorization<a class="headerlink" href="#acl-authorization" title="Permalink to this heading">#</a></h2>
 <p>Authorization is controlled by <em>access control lists</em> (ACL) in Kafka, consisting of the following components:</p>
 <ul class="simple">
-<li><p>Principal, the user</p></li>
-<li><p>Operation, actions the user can perform</p></li>
-<li><p>Host, IP address(es) of hosts connecting to the cluster</p></li>
-<li><p>Resource pattern, matching one or more resources (topics, partitions, brokers, ect. )</p></li>
+<li><p>Principal – the user</p></li>
+<li><p>Allow/Deny</p></li>
+<li><p>Operation – actions the user can perform</p></li>
+<li><p>Host – IP address(es) of hosts connecting to the cluster</p></li>
+<li><p>Resource Pattern – matching one or more resources (topics, partitions, brokers, ect. )</p></li>
 </ul>
 <p>To enable ACL auth, use the following template of <code class="docutils literal notranslate"><span class="pre">server.properties</span></code>:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">authorizer.class.name=kafka.security.auth.SimpleAclAuthorizer</span>
-<span class="go">super.users=User:admin</span>
+<span class="go">super.users=User:admin // TYPE:NAME</span>
 <span class="go">allow.everyone.if.no.acl.found=true</span>
-<span class="gp">ssl.principal.mapping.rules=RULE:^CN=(.*?),OU=.*$/$</span><span class="m">1</span>/,DEFAULT
+<span class="gp">ssl.principal.mapping.rules=RULE:^CN=(.*?),OU=.*$/$</span><span class="m">1</span>/,DEFAULT<span class="w"> </span>//<span class="w"> </span>Parses<span class="w"> </span>username<span class="w"> </span>from<span class="w"> </span>client<span class="w"> </span>certificate
 </pre></div>
 </div>
-<p>Authorization can be managed using the <code class="docutils literal notranslate"><span class="pre">kafka-acls</span></code> command line tool.</p>
+<section id="creating-an-acl">
+<h3>Creating an ACL<a class="headerlink" href="#creating-an-acl" title="Permalink to this heading">#</a></h3>
+<p>Authorization can be managed using the <code class="docutils literal notranslate"><span class="pre">kafka-acls</span></code> command line tool. To configure authorization with specified
+principal allowed to perform action:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">kafka-acls --authorizer-properties zookeeper.connect=localhost:2181 --add --allow-principal User:[USERNAME] --operation all --topic [TOPIC_NAME]</span>
+</pre></div>
+</div>
+<p>The operation <code class="docutils literal notranslate"><span class="pre">--operatiomn</span> <span class="pre">all</span></code> gives full access.</p>
+</section>
 </section>
 </section>
 
@@ -543,8 +581,14 @@ need to add the following field in <code class="docutils literal notranslate"><s
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#security-in-kafka">Security in Kafka</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#configuring-tsl-encryption">Configuring TSL encryption</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#client-authentication">Client authentication</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#acl-authorization">ACL authorization</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#client-authentication">Client authentication</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#authentication-with-mutual-tls">Authentication with Mutual TLS</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#acl-authorization">ACL authorization</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#creating-an-acl">Creating an ACL</a></li>
+</ul>
+</li>
 </ul>
   </nav></div>
 
@@ -578,7 +622,7 @@ By Henrik A. Kjeldsberg
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on May 07, 2024.
+  Last updated on May 14, 2024.
   <br/>
 </p>
   </div>

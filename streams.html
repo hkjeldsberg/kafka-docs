@@ -66,7 +66,7 @@
     <link rel="prev" title="Testing in Kafka" href="testing.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="May 07, 2024"/>
+    <meta name="docbuild:last-update" content="May 14, 2024"/>
   </head>
   
   
@@ -207,7 +207,7 @@
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Kafka Configuration and Auth</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="config.html">Kafka configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="auth.html">Security, Authentication and Authorization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="security.html">Security, Authentication and Authorization</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Advanced Kafka Configuration</span></p>
 <ul class="nav bd-sidenav">
@@ -418,7 +418,7 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#join-operations">Join operations</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#windowing">Windowing</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#time-in-streams">Time in Streams</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#streams-vs-database">Streams vs Database</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#streams-vs-database-tables">Streams vs Database/Tables</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#streams-design-patterns">Streams Design Patterns</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stream-frameworks">Stream Frameworks</a></li>
 </ul>
@@ -532,8 +532,8 @@ Any records arriving after this period will not be processed.</p>
 
 <span class="c1">// New window will be started after 12 seconds =&gt; Hopping time window</span>
 <span class="kd">val</span><span class="w"> </span><span class="nv">windowedStream</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stream</span>
-<span class="w">        </span><span class="p">.</span><span class="na">groupByKey</span><span class="p">()</span>
-<span class="w">        </span><span class="p">.</span><span class="na">windowedBy</span><span class="p">(</span><span class="n">TimeWindows</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="n">Duration</span><span class="p">.</span><span class="na">ofSeconds</span><span class="p">(</span><span class="m">10</span><span class="p">)).</span><span class="na">advanceBy</span><span class="p">(</span><span class="n">Duration</span><span class="p">.</span><span class="na">ofSeconds</span><span class="p">(</span><span class="m">12</span><span class="p">)))</span><span class="w"> </span>
+<span class="w">    </span><span class="p">.</span><span class="na">groupByKey</span><span class="p">()</span>
+<span class="w">    </span><span class="p">.</span><span class="na">windowedBy</span><span class="p">(</span><span class="n">TimeWindows</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="n">Duration</span><span class="p">.</span><span class="na">ofSeconds</span><span class="p">(</span><span class="m">10</span><span class="p">)).</span><span class="na">advanceBy</span><span class="p">(</span><span class="n">Duration</span><span class="p">.</span><span class="na">ofSeconds</span><span class="p">(</span><span class="m">12</span><span class="p">)))</span><span class="w"> </span>
 </pre></div>
 </div>
 </section>
@@ -548,18 +548,19 @@ application.</p></li>
 </ul>
 <p>Processing time can happen days after the event actually happened. Time zones should be standardized.</p>
 </section>
-<section id="streams-vs-database">
-<h2>Streams vs Database<a class="headerlink" href="#streams-vs-database" title="Permalink to this heading">#</a></h2>
-<p>There are some notable differences, includingStreams:</p>
+<section id="streams-vs-database-tables">
+<h2>Streams vs Database/Tables<a class="headerlink" href="#streams-vs-database-tables" title="Permalink to this heading">#</a></h2>
+<p>There are some notable differences, including:</p>
 <ul class="simple">
 <li><p>Streams keep a history of changes</p></li>
 <li><p>No deleting a stream</p></li>
 <li><p>A table can be converted to a stream (or other way)</p></li>
+<li><p>Streams are preferred for transactions or real-time events / logs</p></li>
 </ul>
 </section>
 <section id="streams-design-patterns">
 <h2>Streams Design Patterns<a class="headerlink" href="#streams-design-patterns" title="Permalink to this heading">#</a></h2>
-<p>Depending on the goal and purpose of the data, sevaral stream design patterns are available. Patterns:</p>
+<p>Depending on the goal and purpose of the data, several stream design patterns are available. Patterns:</p>
 <ul class="simple">
 <li><p><strong>Single event processing</strong>: Each event is handled independently. No state is needed.</p></li>
 <li><p><strong>Local state processing</strong>: May include storing min and max values; need to store some state. Suffers from increased
@@ -578,7 +579,7 @@ incoming data.</p></li>
 <li><p><strong>Ingest</strong>: Try Kafka Connect.</p></li>
 <li><p><strong>Low millisecond</strong>: Request/Response system.</p></li>
 <li><p><strong>Real-time data analytics</strong>:  Performing complex aggregations for insight.</p></li>
-<li><p><strong>Asyncronous Microservices</strong>:Rquires local state caching events.</p></li>
+<li><p><strong>Asynchronous Microservices</strong>: Requires local state caching events.</p></li>
 </ul>
 </section>
 </section>
@@ -656,7 +657,7 @@ incoming data.</p></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#join-operations">Join operations</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#windowing">Windowing</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#time-in-streams">Time in Streams</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#streams-vs-database">Streams vs Database</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#streams-vs-database-tables">Streams vs Database/Tables</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#streams-design-patterns">Streams Design Patterns</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stream-frameworks">Stream Frameworks</a></li>
 </ul>
@@ -692,7 +693,7 @@ By Henrik A. Kjeldsberg
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on May 07, 2024.
+  Last updated on May 14, 2024.
   <br/>
 </p>
   </div>

@@ -28,9 +28,9 @@ Producer<String, String> producer = new KafkaProducer<>(props);
 
 // Send one record/log
 int i = 0;
-ProducerRecord record = new ProducerRecord<>("test_count", partition, "count",Integer.toString(i));
-producer.send(record)
-producer.close()
+ProducerRecord producer = new ProducerRecord<>("test_count", partition, "count",Integer.toString(i));
+producer.send(record);
+producer.close();
 ```
 
 ## Producer design and reliability
@@ -42,10 +42,10 @@ written to.
 What happens in the broker?
 
 - If `NONE` (Acks 0) sends it, we have no info what happened in the broker. Lowest latency.
-- If `LEADER` (Acks 1) sends the data, and waits for acknowlegement from broker. Does not wait for replication.
+- If `LEADER` (Acks 1) sends the data, and waits for acknowledgement from broker. Does not wait for replication.
 - If`ALL` (Acks -1) means the leader and all its replicas have sent data. Safest but produces more latency.
 
-Three processes can happen: "At most once" (may lose data), "At least once" (everythig goes through, may be doubled),
+Three processes can happen: "At most once" (may lose data), "At least once" (everything goes through, may be doubled),
 and "Exactly once" (one to one).
 
 - **At least once** (Default): Does not result in data loss, processes one or more times, and may result in duplicates
